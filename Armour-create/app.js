@@ -32,25 +32,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const workOrderForm = document.getElementById('work-order-form');
   const unsavedAlert = document.getElementById('unsaved-alert');
   const fieldId = document.getElementById('field-id');
-  const fieldBatch = document.getElementById('field-batch');
   const fieldPart = document.getElementById('field-part');
-  const fieldDescription = document.getElementById('field-description');
   const fieldCoating = document.getElementById('field-coating');
-  const fieldMaterial = document.getElementById('field-material');
-  const fieldStartDate = document.getElementById('field-start-date');
-  const fieldFinishDate = document.getElementById('field-finish-date');
-  const fieldQuantity = document.getElementById('field-quantity');
-  const fieldUm = document.getElementById('field-um');
   const fieldName = document.getElementById('field-name');
   const fieldPo = document.getElementById('field-po');
-  const fieldSalesOrd = document.getElementById('field-sales-ord');
-  const fieldDueDate = document.getElementById('field-due-date');
-  const fieldContact = document.getElementById('field-contact');
+  const fieldReceivingDate = document.getElementById('field-receiving-date');
   const fieldPriority = document.getElementById('field-priority');
-  const fieldSpecs = document.getElementById('field-specs');
+  const fieldDueDate = document.getElementById('field-due-date');
   const fieldInstructions = document.getElementById('field-instructions');
-  const fieldVisual = document.getElementById('field-visual');
-  const fieldHardness = document.getElementById('field-hardness');
+
+  // Middle Section
+  const fieldReceivingInitial = document.getElementById('field-receiving-initial');
+  const fieldShippingInitial = document.getElementById('field-shipping-initial');
+  const fieldSandblast = document.getElementById('field-sandblast');
+
+  // Footer Section
+  const fieldFooterRecDate = document.getElementById('field-footer-receiving-date');
+  const fieldFooterRecInitial = document.getElementById('field-footer-receiving-initial');
+  const fieldFooterQcInitial = document.getElementById('field-footer-qc-initial');
+  const fieldFooterShipDate = document.getElementById('field-footer-shipping-date');
+  const fieldFooterShipInitial = document.getElementById('field-footer-shipping-initial');
+  const fieldForTcs = document.getElementById('field-for-tcs');
   const metaCreated = document.getElementById('meta-created');
   const metaModified = document.getElementById('meta-modified');
 
@@ -82,6 +84,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const floatingExpandBtn = document.getElementById('floating-expand-btn');
   const btnExportCsv = document.getElementById('btn-export-csv');
   const importFileInput = document.getElementById('import-file-input');
+
+  // --- PARTS TABLE DATA HELPERS ---
+  function getPartsTableData() {
+    const parts = [];
+    for (let i = 0; i < 7; i++) {
+      const partVal = document.getElementById(`part-row-${i}`).value.trim();
+      const qtyVal = document.getElementById(`qty-row-${i}`).value;
+      parts.push({
+        part: partVal,
+        quantity: qtyVal !== '' ? parseInt(qtyVal) || '' : ''
+      });
+    }
+    return parts;
+  }
+
+  function setPartsTableData(partsArray) {
+    const parts = Array.isArray(partsArray) ? partsArray : [];
+    for (let i = 0; i < 7; i++) {
+      const partInput = document.getElementById(`part-row-${i}`);
+      const qtyInput = document.getElementById(`qty-row-${i}`);
+      if (parts[i]) {
+        partInput.value = parts[i].part || '';
+        qtyInput.value = parts[i].quantity !== undefined && parts[i].quantity !== null ? parts[i].quantity : '';
+      } else {
+        partInput.value = '';
+        qtyInput.value = '';
+      }
+    }
+  }
 
   // --- INITIALIZATION ---
   function init() {
@@ -123,7 +154,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function loadFromLocalStorage() {
-    const storedData = localStorage.getItem('work_orders');
+    let storedData = localStorage.getItem('work_orders');
+    if (storedData) {
+      try {
+        const parsed = JSON.parse(storedData);
+        const needsReset = Array.isArray(parsed) && parsed.some(r => r.batchNum !== undefined || r.specs !== undefined);
+        if (needsReset) {
+          console.log("Old schema detected in localStorage. Resetting to new default samples.");
+          storedData = null;
+        }
+      } catch (e) {
+        storedData = null;
+      }
+    }
+
     if (storedData) {
       workOrders = JSON.parse(storedData);
       console.log("Database loaded from browser LocalStorage.");
@@ -200,10 +244,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Compute Job Status
   function getJobStatus(record) {
-    if (record.finishDate && record.finishDate !== '') {
+    const shipDate = record.footerShippingDate || record.finishDate || '';
+    if (shipDate !== '') {
       return 'completed';
     }
-    if (record.startDate && record.startDate !== '') {
+    const recDate = record.receivingDate || record.startDate || '';
+    if (recDate !== '') {
       return 'in-progress';
     }
     return 'pending';
@@ -279,27 +325,57 @@ document.addEventListener('DOMContentLoaded', () => {
     // Hide welcome overlay
     welcomeOverlay.style.display = 'none';
 
-    // Populate Fields
+    // Make sure dynamically loaded coatings are appended to select if they don't exist
+    if (record.coating) {
+      const coatingOptions = Array.from(fieldCoating.options).map(opt => opt.value);
+      if (!coatingOptions.includes(record.coating)) {
+        const newOpt = document.createElement('option');
+        newOpt.value = record.coating;
+        newOpt.textContent = record.coating;
+        fieldCoating.appendChild(newOpt);
+      }
+    }
+
+    // Populate Fields with fallback mapping for old schemas
     fieldId.value = record.id;
-    fieldBatch.value = record.batchNum || '';
     fieldPart.value = record.partNo || '';
-    fieldDescription.value = record.description || '';
     fieldCoating.value = record.coating || '';
-    fieldMaterial.value = record.material || '';
-    fieldStartDate.value = record.startDate || '';
-    fieldFinishDate.value = record.finishDate || '';
-    fieldQuantity.value = record.quantity || '';
-    fieldUm.value = record.um || 'PCS';
     fieldName.value = record.customerName || '';
     fieldPo.value = record.poNumber || '';
-    fieldSalesOrd.value = record.salesOrd || '';
-    fieldDueDate.value = record.dueDate || '';
-    fieldContact.value = record.contact || '';
+    
+    // Fallback: receivingDate -> startDate
+    fieldReceivingDate.value = record.receivingDate || record.startDate || '';
+    
     fieldPriority.value = record.priority || 'Medium';
-    fieldSpecs.value = record.specs || '';
+    fieldDueDate.value = record.dueDate || '';
     fieldInstructions.value = record.instructions || '';
-    fieldVisual.value = record.visual || '';
-    fieldHardness.value = record.hardness || '';
+
+    // Middle initials & sandblast
+    fieldReceivingInitial.value = record.receivingInitial || '';
+    fieldShippingInitial.value = record.shippingInitial || '';
+    fieldSandblast.value = record.sandblast || 'NONE';
+
+    // Footer items
+    fieldFooterRecDate.value = record.footerReceivingDate || record.receivingDate || record.startDate || '';
+    fieldFooterRecInitial.value = record.footerReceivingInitial || record.receivingInitial || '';
+    fieldFooterQcInitial.value = record.footerQcInitial || '';
+    fieldFooterShipDate.value = record.footerShippingDate || record.finishDate || '';
+    fieldFooterShipInitial.value = record.footerShippingInitial || record.shippingInitial || '';
+    fieldForTcs.value = record.forTcs || '';
+
+    // Parts & Quantities Table
+    let partsData = record.parts;
+    if (!Array.isArray(partsData)) {
+      // Migrate old schema to parts table on-the-fly
+      partsData = [
+        { part: record.partNo || '', quantity: record.quantity || '' }
+      ];
+      // Pad to 7 rows
+      while (partsData.length < 7) {
+        partsData.push({ part: '', quantity: '' });
+      }
+    }
+    setPartsTableData(partsData);
 
     // Metadata
     metaCreated.textContent = record.createdTime ? formatTimestamp(record.createdTime) : 'N/A';
@@ -333,25 +409,28 @@ document.addEventListener('DOMContentLoaded', () => {
   function getFormState() {
     return {
       id: fieldId.value,
-      batchNum: fieldBatch.value.trim(),
       partNo: fieldPart.value.trim(),
-      description: fieldDescription.value.trim(),
-      coating: fieldCoating.value.trim(),
-      material: fieldMaterial.value.trim(),
-      startDate: fieldStartDate.value,
-      finishDate: fieldFinishDate.value,
-      quantity: parseInt(fieldQuantity.value) || 0,
-      um: fieldUm.value,
+      coating: fieldCoating.value,
       customerName: fieldName.value.trim(),
       poNumber: fieldPo.value.trim(),
-      salesOrd: fieldSalesOrd.value.trim(),
-      dueDate: fieldDueDate.value,
-      contact: fieldContact.value.trim(),
+      receivingDate: fieldReceivingDate.value,
       priority: fieldPriority.value,
-      specs: fieldSpecs.value.trim(),
+      dueDate: fieldDueDate.value,
       instructions: fieldInstructions.value.trim(),
-      visual: fieldVisual.value.trim(),
-      hardness: fieldHardness.value.trim()
+      receivingInitial: fieldReceivingInitial.value.trim(),
+      shippingInitial: fieldShippingInitial.value.trim(),
+      sandblast: fieldSandblast.value,
+      footerReceivingDate: fieldFooterRecDate.value,
+      footerReceivingInitial: fieldFooterRecInitial.value.trim(),
+      footerQcInitial: fieldFooterQcInitial.value.trim(),
+      footerShippingDate: fieldFooterShipDate.value,
+      footerShippingInitial: fieldFooterShipInitial.value.trim(),
+      forTcs: fieldForTcs.value.trim(),
+      parts: getPartsTableData(),
+      // Backward compatibility fields
+      startDate: fieldReceivingDate.value,
+      finishDate: fieldFooterShipDate.value,
+      quantity: getPartsTableData().reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0)
     };
   }
 
@@ -371,8 +450,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const hasAnyInput = Object.keys(currentForm).some(key => {
         if (key === 'id') return false;
         if (key === 'priority' && currentForm[key] === 'Medium') return false;
-        if (key === 'um' && currentForm[key] === 'PCS') return false;
-        if (key === 'quantity' && currentForm[key] === 0) return false;
+        if (key === 'sandblast' && currentForm[key] === 'NONE') return false;
+        if (key === 'quantity') return false;
+        if (key === 'startDate' || key === 'finishDate') return false;
+        if (key === 'parts') {
+          return currentForm.parts.some(p => p.part !== '' || p.quantity !== '');
+        }
         return currentForm[key] !== '' && currentForm[key] !== null;
       });
       isDirty = hasAnyInput;
@@ -381,9 +464,17 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Compare values
       isDirty = Object.keys(currentForm).some(key => {
-        // Quantities comparison
-        if (key === 'quantity') {
-          return (currentForm[key] || 0) !== (original[key] || 0);
+        if (key === 'quantity' || key === 'startDate' || key === 'finishDate') return false;
+        if (key === 'parts') {
+          const origParts = Array.isArray(original.parts) ? original.parts : [];
+          for (let i = 0; i < 7; i++) {
+            const curP = currentForm.parts[i] || { part: '', quantity: '' };
+            const origP = origParts[i] || { part: '', quantity: '' };
+            if ((curP.part || '') !== (origP.part || '') || (curP.quantity || '') !== (origP.quantity || '')) {
+              return true;
+            }
+          }
+          return false;
         }
         return (currentForm[key] || '') !== (original[key] || '');
       });
@@ -417,7 +508,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Set dates default
     const today = new Date().toISOString().split('T')[0];
-    fieldStartDate.value = today;
+    fieldReceivingDate.value = today;
+    fieldFooterRecDate.value = today;
     
     // Default due date: 7 days in future
     const nextWeek = new Date();
@@ -436,7 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.record-card').forEach(card => card.classList.remove('active'));
 
-    fieldBatch.focus();
+    fieldName.focus();
     isDirty = false;
     unsavedAlert.style.display = 'none';
   }
@@ -583,27 +675,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- FILTERING & SEARCH CONTROLS ---
 
   function applySearchAndFilters(resetIndexToLatest = true) {
-    const searchText = sidebarSearchInput.value.toLowerCase().trim();
-    const bottomSearchText = navSearchInput.value.toLowerCase().trim();
-    const activeSearch = bottomSearchText !== '' ? bottomSearchText : searchText;
+    const activeSearch = sidebarSearchInput.value.toLowerCase().trim();
     
     const priority = filterPriority.value;
     const statusFilter = filterStatus.value;
 
     // Filter main dataset
     filteredOrders = workOrders.filter(order => {
-      // 1. Text Search (Matches ID, Customer Name, Batch #, PO #, Description, Part #, Coating)
+      // 1. Text Search (Matches ID, Customer Name, PO #, Coating, Part No, and parts list)
       let matchesSearch = true;
       if (activeSearch !== '') {
+        const partsMatch = Array.isArray(order.parts) && order.parts.some(p => p.part && p.part.toLowerCase().includes(activeSearch));
         matchesSearch = (
           (order.id && order.id.toLowerCase().includes(activeSearch)) ||
           (order.customerName && order.customerName.toLowerCase().includes(activeSearch)) ||
-          (order.batchNum && order.batchNum.toLowerCase().includes(activeSearch)) ||
           (order.partNo && order.partNo.toLowerCase().includes(activeSearch)) ||
           (order.poNumber && order.poNumber.toLowerCase().includes(activeSearch)) ||
-          (order.description && order.description.toLowerCase().includes(activeSearch)) ||
           (order.coating && order.coating.toLowerCase().includes(activeSearch)) ||
-          (order.material && order.material.toLowerCase().includes(activeSearch))
+          (order.instructions && order.instructions.toLowerCase().includes(activeSearch)) ||
+          partsMatch
         );
       }
 
@@ -624,22 +714,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Handle Filter Indicator Status
-    const isFiltered = searchText !== '' || bottomSearchText !== '' || priority !== '' || statusFilter !== '';
+    const isFiltered = activeSearch !== '' || priority !== '' || statusFilter !== '';
     if (isFiltered) {
       navFilterIndicator.classList.add('active-filter');
       navFilterText.textContent = "Filtered";
     } else {
       navFilterIndicator.classList.remove('active-filter');
       navFilterText.textContent = "Unfiltered";
-    }
-
-    // Sync input displays
-    if (bottomSearchText !== searchText) {
-      if (bottomSearchText !== '') {
-        sidebarSearchInput.value = bottomSearchText;
-      } else {
-        navSearchInput.value = searchText;
-      }
     }
 
     // Draw Sidebar
@@ -743,38 +824,38 @@ document.addEventListener('DOMContentLoaded', () => {
   // Export Database to CSV file
   function exportToCsv() {
     const csvHeaders = [
-      "Work Order ID", "Batch Num", "Part No", "Description", "Coating", "Material",
-      "Start Date", "Finish Date", "Quantity", "UM", "Customer Name", "PO Number",
-      "Sales Ord", "Due Date", "Contact", "Priority", "Specs", "Instructions",
-      "Visual Assessment", "Substrate Hardness", "Created Time", "Last Modified Time"
+      "Work Order ID", "Customer Name", "Priority", "Part No", "PO Number", "Due Date",
+      "Coating", "Receiving Date", "Instructions", "Receiving Initial", "Shipping Initial",
+      "Sandblast", "Footer Receiving Date", "Footer Receiving Initial", "Footer QC Initial",
+      "Footer Shipping Date", "Footer Shipping Initial", "For TCS Notes", "Parts List"
     ];
 
     const csvRows = [csvHeaders.join(",")];
 
     workOrders.forEach(order => {
+      const partsText = Array.isArray(order.parts) ? 
+        order.parts.filter(p => p.part).map(p => `${p.part} (Qty: ${p.quantity})`).join(" | ") : "";
+
       const values = [
         order.id || '',
-        order.batchNum || '',
-        order.partNo || '',
-        order.description || '',
-        order.coating || '',
-        order.material || '',
-        order.startDate || '',
-        order.finishDate || '',
-        order.quantity || 0,
-        order.um || 'PCS',
         order.customerName || '',
-        order.poNumber || '',
-        order.salesOrd || '',
-        order.dueDate || '',
-        order.contact || '',
         order.priority || 'Medium',
-        order.specs || '',
+        order.partNo || '',
+        order.poNumber || '',
+        order.dueDate || '',
+        order.coating || '',
+        order.receivingDate || '',
         order.instructions || '',
-        order.visual || '',
-        order.hardness || '',
-        order.createdTime || '',
-        order.lastModifiedTime || ''
+        order.receivingInitial || '',
+        order.shippingInitial || '',
+        order.sandblast || '',
+        order.footerReceivingDate || '',
+        order.footerReceivingInitial || '',
+        order.footerQcInitial || '',
+        order.footerShippingDate || '',
+        order.footerShippingInitial || '',
+        order.forTcs || '',
+        partsText
       ];
 
       // Escape fields with quotes and commas
@@ -930,7 +1011,18 @@ document.addEventListener('DOMContentLoaded', () => {
       "Visual Assessment": "visual", "Visual": "visual", "visual": "visual",
       "Substrate Hardness": "hardness", "Hardness": "hardness", "hardness": "hardness",
       "Created Time": "createdTime", "createdTime": "createdTime",
-      "Last Modified Time": "lastModifiedTime", "lastModifiedTime": "lastModifiedTime"
+      "Last Modified Time": "lastModifiedTime", "lastModifiedTime": "lastModifiedTime",
+      "Receiving Date": "receivingDate", "receivingDate": "receivingDate",
+      "Receiving Initial": "receivingInitial", "receivingInitial": "receivingInitial",
+      "Shipping Initial": "shippingInitial", "shippingInitial": "shippingInitial",
+      "Sandblast": "sandblast", "sandblast": "sandblast",
+      "Footer Receiving Date": "footerReceivingDate", "footerReceivingDate": "footerReceivingDate",
+      "Footer Receiving Initial": "footerReceivingInitial", "footerReceivingInitial": "footerReceivingInitial",
+      "Footer QC Initial": "footerQcInitial", "footerQcInitial": "footerQcInitial",
+      "Footer Shipping Date": "footerShippingDate", "footerShippingDate": "footerShippingDate",
+      "Footer Shipping Initial": "footerShippingInitial", "footerShippingInitial": "footerShippingInitial",
+      "For TCS Notes": "forTcs", "forTcs": "forTcs",
+      "Parts List": "parts"
     };
 
     const records = [];
@@ -944,7 +1036,32 @@ document.addEventListener('DOMContentLoaded', () => {
         if (prop === 'quantity') {
           val = parseInt(val) || 0;
         }
-        record[prop] = val;
+        
+        if (prop === 'parts') {
+          const partsArray = [];
+          if (val) {
+            const items = val.split(' | ');
+            items.forEach(item => {
+              const qtyMatch = item.match(/\(Qty:\s*(\d+)\)/i);
+              let partName = item;
+              let qty = '';
+              if (qtyMatch) {
+                qty = parseInt(qtyMatch[1]) || '';
+                partName = item.replace(/\(Qty:\s*\d+\)/i, '').trim();
+              }
+              if (partName || qty) {
+                partsArray.push({ part: partName, quantity: qty });
+              }
+            });
+          }
+          // Pad to 7 rows
+          while (partsArray.length < 7) {
+            partsArray.push({ part: '', quantity: '' });
+          }
+          record[prop] = partsArray;
+        } else {
+          record[prop] = val;
+        }
       });
 
       if (record.id) {
@@ -979,12 +1096,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Sidebar search & filter events
-    sidebarSearchInput.addEventListener('input', () => applySearchAndFilters(true));
+    sidebarSearchInput.addEventListener('input', (e) => {
+      navSearchInput.value = e.target.value;
+      applySearchAndFilters(true);
+    });
     filterPriority.addEventListener('change', () => applySearchAndFilters(true));
     filterStatus.addEventListener('change', () => applySearchAndFilters(true));
 
     // Bottom Navigation Search input
-    navSearchInput.addEventListener('input', () => applySearchAndFilters(true));
+    navSearchInput.addEventListener('input', (e) => {
+      sidebarSearchInput.value = e.target.value;
+      applySearchAndFilters(true);
+    });
 
     // Form buttons
     btnPrint.addEventListener('click', printReport);
@@ -1018,15 +1141,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form change alerts tracking
     const formFields = [
-      fieldBatch, fieldPart, fieldDescription, fieldCoating, fieldMaterial,
-      fieldStartDate, fieldFinishDate, fieldQuantity, fieldUm, fieldName,
-      fieldPo, fieldSalesOrd, fieldDueDate, fieldContact, fieldPriority,
-      fieldSpecs, fieldInstructions, fieldVisual, fieldHardness
+      fieldPart, fieldCoating, fieldName, fieldPo, fieldReceivingDate,
+      fieldPriority, fieldDueDate, fieldInstructions,
+      fieldReceivingInitial, fieldShippingInitial, fieldSandblast,
+      fieldFooterRecDate, fieldFooterRecInitial, fieldFooterQcInitial,
+      fieldFooterShipDate, fieldFooterShipInitial, fieldForTcs
     ];
 
+    // Add Parts Table inputs for change alert tracking
+    for (let i = 0; i < 7; i++) {
+      formFields.push(document.getElementById(`part-row-${i}`));
+      formFields.push(document.getElementById(`qty-row-${i}`));
+    }
+
     formFields.forEach(field => {
-      field.addEventListener('input', checkDirtyState);
-      field.addEventListener('change', checkDirtyState);
+      if (field) {
+        field.addEventListener('input', checkDirtyState);
+        field.addEventListener('change', checkDirtyState);
+      }
     });
 
     // Prompt browser unload if dirty changes exist

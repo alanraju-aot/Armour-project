@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,12 @@
   <!-- Google Fonts: Outfit (modern, geometric) and Inter (highly readable UI font) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=3">
 </head>
+
 <body>
   <div class="app-container">
     <!-- Sidebar Panel: Records List & Search -->
@@ -17,13 +21,13 @@
       <div class="sidebar-header">
         <div class="logo-area">
           <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
           <h2>ArmorCoat DB</h2>
         </div>
         <button class="toggle-btn" id="sidebar-toggle" title="Collapse Sidebar">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
+            <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
         </button>
       </div>
@@ -31,12 +35,14 @@
       <!-- Quick Search & Filters -->
       <div class="sidebar-search">
         <div class="search-input-wrapper">
-          <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
           </svg>
           <input type="text" id="sidebar-search-input" placeholder="Search work orders...">
         </div>
-        
+
         <div class="filter-controls">
           <select id="filter-priority" class="filter-select">
             <option value="">All Priorities</option>
@@ -52,19 +58,26 @@
           </select>
         </div>
         <div class="sidebar-utilities" style="display: flex; gap: 0.5rem; margin-top: 0.25rem;">
-          <button type="button" class="btn btn-undo" id="btn-export-csv" title="Export database to Excel CSV file" style="padding: 0.4rem 0.6rem; font-size: 0.75rem; flex: 1; justify-content: center; gap: 0.25rem; border: 1px solid var(--border-color); background-color: var(--input-bg);">
+          <button type="button" class="btn btn-undo" id="btn-export-csv" title="Export database to Excel CSV file"
+            style="padding: 0.4rem 0.6rem; font-size: 0.75rem; flex: 1; justify-content: center; gap: 0.25rem; border: 1px solid var(--border-color); background-color: var(--input-bg);">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
             <span>Export CSV</span>
           </button>
-          
-          <button type="button" class="btn btn-undo" id="btn-import" title="Import database from JSON or CSV file" style="padding: 0.4rem 0.6rem; font-size: 0.75rem; flex: 1; justify-content: center; gap: 0.25rem; border: 1px solid var(--border-color); position: relative; background-color: var(--input-bg);">
+
+          <button type="button" class="btn btn-undo" id="btn-import" title="Import database from JSON or CSV file"
+            style="padding: 0.4rem 0.6rem; font-size: 0.75rem; flex: 1; justify-content: center; gap: 0.25rem; border: 1px solid var(--border-color); position: relative; background-color: var(--input-bg);">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
             </svg>
             <span>Import</span>
-            <input type="file" id="import-file-input" accept=".json,.csv" style="position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;">
+            <input type="file" id="import-file-input" accept=".json,.csv"
+              style="position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;">
           </button>
         </div>
       </div>
@@ -98,7 +111,9 @@
         <div class="header-left">
           <button class="menu-btn" id="menu-toggle" title="Expand Sidebar">
             <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
           </button>
           <h1>Work Order Manager</h1>
@@ -111,11 +126,21 @@
           </div>
           <!-- Dark Mode Toggle -->
           <button class="theme-toggle" id="theme-toggle" title="Toggle Light/Dark Mode">
-            <svg class="sun-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            <svg class="sun-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
             </svg>
-            <svg class="moon-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            <svg class="moon-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+              stroke-width="2" style="display:none;">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
           </button>
         </div>
@@ -126,15 +151,17 @@
         <div class="work-order-card" id="printable-area">
           <!-- Corporate Banner Header -->
           <div class="corporate-banner">
-            <h1 class="company-name">ARMOR COATING SERVICES, INC.</h1>
+            <h1 class="company-name">TITANIUM AERODYNAMICS, INC.</h1>
             <div class="banner-sub">Work Order</div>
-            <div class="watermark">ARMOR COATING SERVICES</div>
+            <div class="watermark">TITANIUM AERODYNAMICS</div>
           </div>
 
           <!-- Alert banner for unsaved changes -->
           <div class="unsaved-alert" id="unsaved-alert">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
             </svg>
             <span>You have unsaved changes to this record.</span>
           </div>
@@ -142,63 +169,42 @@
           <!-- Main Input Grid -->
           <form class="work-order-form" id="work-order-form" autocomplete="off">
             <div class="form-grid">
-              
-              <!-- Column 1: Core Identifiers & Metrics -->
+
+              <!-- Column 1: Identifiers & Coating -->
               <div class="form-column col-1">
                 <div class="form-group">
                   <label for="field-id">Work Order:</label>
                   <input type="text" id="field-id" name="id" readonly placeholder="AUTO-GEN">
                 </div>
                 <div class="form-group">
-                  <label for="field-batch">Batch #:</label>
-                  <input type="text" id="field-batch" name="batchNum" required placeholder="Enter batch number">
-                </div>
-                <div class="form-group">
-                  <label for="field-part">Part No:</label>
+                  <label for="field-part">Part No:-</label>
                   <input type="text" id="field-part" name="partNo" required placeholder="Enter part number">
                 </div>
                 <div class="form-group">
-                  <label for="field-description">Description:</label>
-                  <input type="text" id="field-description" name="description" required placeholder="Enter description">
-                </div>
-                <div class="form-group">
                   <label for="field-coating">Coating:</label>
-                  <input type="text" id="field-coating" name="coating" required placeholder="Enter coating type">
-                </div>
-                <div class="form-group">
-                  <label for="field-material">Material:</label>
-                  <input type="text" id="field-material" name="material" required placeholder="Enter base metal/material">
-                </div>
-                <div class="form-group">
-                  <label for="field-start-date">Start Date:</label>
-                  <input type="date" id="field-start-date" name="startDate">
-                </div>
-                <div class="form-group">
-                  <label for="field-finish-date">Finish Date:</label>
-                  <input type="date" id="field-finish-date" name="finishDate">
-                </div>
-                <div class="form-group-row">
-                  <div class="form-group w-65">
-                    <label for="field-quantity">Quantity:</label>
-                    <input type="number" id="field-quantity" name="quantity" min="1" required placeholder="Qty">
-                  </div>
-                  <div class="form-group w-35">
-                    <label for="field-um">UM:</label>
-                    <select id="field-um" name="um">
-                      <option value="PCS">PCS</option>
-                      <option value="SET">SET</option>
-                      <option value="LBS">LBS</option>
-                      <option value="FT">FT</option>
-                      <option value="SQFT">SQFT</option>
-                    </select>
-                  </div>
+                  <select id="field-coating" name="coating" required class="filter-select">
+                    <option value="">Select Coating...</option>
+                    <option value="ALPHA-T-TIN">ALPHA-T-TIN</option>
+                    <option value="ALPHA-TC-TICN">ALPHA-TC-TICN</option>
+                    <option value="ALPHA-AT-ALTIN">ALPHA-AT-ALTIN</option>
+                    <option value="ALPHA-ACR-AlCrN">ALPHA-ACR-AlCrN</option>
+                    <option value="AlPHA-ZR-ZrN">AlPHA-ZR-ZrN</option>
+                    <option value="ALPHA-CR-CrN">ALPHA-CR-CrN</option>
+                    <option value="BLACK PANTHER">BLACK PANTHER</option>
+                    <option value="TITANIUM-X-AlTiSiN">TITANIUM-X-AlTiSiN</option>
+                    <option value="BETA-DLC">BETA-DLC</option>
+                    <option value="ALPHA-TL-TiALN">ALPHA-TL-TiALN</option>
+                    <option value="ALPHA-TAC-TiAlCN">ALPHA-TAC-TiAlCN</option>
+                    <option value="SILIZIUM-X">SILIZIUM-X</option>
+                    <option value="ALPHA-ATCR-AlTiCrN">ALPHA-ATCR-AlTiCrN</option>
+                  </select>
                 </div>
               </div>
 
-              <!-- Column 2: Customer & Order Details -->
+              <!-- Column 2: Customer & Dates -->
               <div class="form-column col-2">
                 <div class="form-group">
-                  <label for="field-name">Name:</label>
+                  <label for="field-name">Customer:</label>
                   <input type="text" id="field-name" name="customerName" required placeholder="Customer company name">
                 </div>
                 <div class="form-group">
@@ -206,17 +212,13 @@
                   <input type="text" id="field-po" name="poNumber" placeholder="Purchase order #">
                 </div>
                 <div class="form-group">
-                  <label for="field-sales-ord">Sales Ord:</label>
-                  <input type="text" id="field-sales-ord" name="salesOrd" placeholder="Sales order #">
+                  <label for="field-receiving-date">Receiving Date:</label>
+                  <input type="date" id="field-receiving-date" name="receivingDate" required>
                 </div>
-                <div class="form-group">
-                  <label for="field-due-date">Due Date:</label>
-                  <input type="date" id="field-due-date" name="dueDate" required>
-                </div>
-                <div class="form-group">
-                  <label for="field-contact">Contact:</label>
-                  <input type="text" id="field-contact" name="contact" placeholder="Customer contact person">
-                </div>
+              </div>
+
+              <!-- Column 3: Priority, Due Date & Instructions -->
+              <div class="form-column col-3">
                 <div class="form-group">
                   <label for="field-priority">Priority:</label>
                   <select id="field-priority" name="priority">
@@ -225,35 +227,140 @@
                     <option value="High">High</option>
                   </select>
                 </div>
-              </div>
-
-              <!-- Column 3: Rich Specs & Instructions -->
-              <div class="form-column col-3">
-                <div class="form-group flex-grow">
-                  <label for="field-specs">Specs:</label>
-                  <textarea id="field-specs" name="specs" placeholder="Technical specifications or standards (e.g. MIL-PRF, ASTM)"></textarea>
+                <div class="form-group">
+                  <label for="field-due-date">Due Date:</label>
+                  <input type="date" id="field-due-date" name="dueDate" required>
                 </div>
-                <div class="form-group flex-grow mt-3">
+                <div class="form-group flex-grow">
                   <label for="field-instructions">Instructions:</label>
-                  <textarea id="field-instructions" name="instructions" placeholder="Detailed processing steps, curing temperature/duration, thickness targets"></textarea>
+                  <textarea id="field-instructions" name="instructions"
+                    placeholder="Detailed processing steps, curing temperature/duration, thickness targets"></textarea>
                 </div>
               </div>
             </div>
 
-            <!-- Before Coating Panel -->
-            <fieldset class="inspection-fieldset">
-              <legend>BEFORE COATING</legend>
-              <div class="inspection-grid">
+            <!-- Double Divider Line -->
+            <div class="divider-double"></div>
+
+            <!-- Middle Section: Parts Table & Initial Info -->
+            <div class="form-middle-grid">
+              <!-- Left side: Interactive Parts List -->
+              <div class="parts-table-wrapper">
+                <table class="parts-table">
+                  <thead>
+                    <tr>
+                      <th class="col-part-name">PART</th>
+                      <th class="col-part-qty">QUANTITY</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-0"
+                          placeholder="Part description/serial..."></td>
+                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-0" min="0"
+                          placeholder="Qty"></td>
+                    </tr>
+                    <tr>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-1" placeholder="...">
+                      </td>
+                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-1" min="0"></td>
+                    </tr>
+                    <tr>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-2" placeholder="...">
+                      </td>
+                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-2" min="0"></td>
+                    </tr>
+                    <tr>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-3" placeholder="...">
+                      </td>
+                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-3" min="0"></td>
+                    </tr>
+                    <tr>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-4" placeholder="...">
+                      </td>
+                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-4" min="0"></td>
+                    </tr>
+                    <tr>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-5" placeholder="...">
+                      </td>
+                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-5" min="0"></td>
+                    </tr>
+                    <tr>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-6" placeholder="...">
+                      </td>
+                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-6" min="0"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Right side: Sign-off Initials & Sandblast Options -->
+              <div class="middle-initials-col">
                 <div class="form-group">
-                  <label for="field-visual">Visual Assessment:</label>
-                  <input type="text" id="field-visual" name="visual" placeholder="e.g. Clean, blasted, minor oxidation, Pass">
+                  <label for="field-receiving-initial">Receiving Initial:</label>
+                  <input type="text" id="field-receiving-initial" name="receivingInitial" placeholder="Initials">
                 </div>
                 <div class="form-group">
-                  <label for="field-hardness">Substrate Hardness:</label>
-                  <input type="text" id="field-hardness" name="hardness" placeholder="e.g. 45 HRc, 5H Pencil, 12 GPa">
+                  <label for="field-shipping-initial">Shipping Initial:</label>
+                  <input type="text" id="field-shipping-initial" name="shippingInitial" placeholder="Initials">
+                </div>
+                <div class="form-group">
+                  <label for="field-sandblast">Sandblast:</label>
+                  <select id="field-sandblast" name="sandblast">
+                    <option value="NONE">NONE</option>
+                    <option value="FINE">FINE</option>
+                    <option value="ROUGH">ROUGH</option>
+                  </select>
                 </div>
               </div>
-            </fieldset>
+            </div>
+
+            <!-- Single Divider Line -->
+            <div class="divider-single"></div>
+
+            <!-- Footer Initials & For TCS Notes -->
+            <div class="form-footer-grid">
+              <!-- Left side: Dates and Initials stack -->
+              <div class="footer-initials-stack">
+                <div class="form-group-row">
+                  <div class="form-group w-65">
+                    <label for="field-footer-receiving-date">Receiving Date:</label>
+                    <input type="date" id="field-footer-receiving-date" name="footerReceivingDate">
+                  </div>
+                  <div class="form-group w-35">
+                    <label for="field-footer-receiving-initial">Initial:</label>
+                    <input type="text" id="field-footer-receiving-initial" name="footerReceivingInitial"
+                      placeholder="Initials">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="field-footer-qc-initial">QC Initial:</label>
+                  <input type="text" id="field-footer-qc-initial" name="footerQcInitial" placeholder="QC Initials">
+                </div>
+
+                <div class="form-group-row">
+                  <div class="form-group w-65">
+                    <label for="field-footer-shipping-date">Shipping Date:</label>
+                    <input type="date" id="field-footer-shipping-date" name="footerShippingDate">
+                  </div>
+                  <div class="form-group w-35">
+                    <label for="field-footer-shipping-initial">Initial:</label>
+                    <input type="text" id="field-footer-shipping-initial" name="footerShippingInitial"
+                      placeholder="Initials">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right side: For TCS box -->
+              <div class="footer-tcs-wrapper">
+                <div class="form-group flex-grow height-100">
+                  <label for="field-for-tcs">For TCS:</label>
+                  <textarea id="field-for-tcs" name="forTcs" class="tcs-textarea"
+                    placeholder="Internal TCS notes, inspection logs, or comments..."></textarea>
+                </div>
+              </div>
+            </div>
 
             <!-- Metadata Info Panel (Created/Modified Time - Read Only) -->
             <div class="metadata-row">
@@ -267,42 +374,55 @@
             <div class="action-bar">
               <button type="button" class="btn btn-print" id="btn-print" title="Print Current Work Order">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+                  <polyline points="6 9 6 2 18 2 18 9" />
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                  <rect x="6" y="14" width="12" height="8" />
                 </svg>
                 <span>Print Report</span>
               </button>
-              
+
               <button type="button" class="btn btn-undo" id="btn-undo" title="Revert current unsaved changes">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+                  <path d="M3 7v6h6" />
+                  <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
                 </svg>
                 <span>Undo</span>
               </button>
 
               <button type="button" class="btn btn-new" id="btn-new" title="Create a blank new work order">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/>
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="12" y1="18" x2="12" y2="12" />
+                  <line x1="9" y1="15" x2="15" y2="15" />
                 </svg>
                 <span>New Record</span>
               </button>
 
               <button type="button" class="btn btn-delete" id="btn-delete" title="Delete current record">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  <line x1="10" y1="11" x2="10" y2="17" />
+                  <line x1="14" y1="11" x2="14" y2="17" />
                 </svg>
                 <span>Delete</span>
               </button>
 
               <button type="button" class="btn btn-save" id="btn-save" title="Save current work order changes">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                  <polyline points="17 21 17 13 7 13 7 21" />
+                  <polyline points="7 3 7 8 15 8" />
                 </svg>
                 <span>Save Record</span>
               </button>
 
               <button type="button" class="btn btn-exit" id="btn-exit" title="Clear workspace & show help panel">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
                 </svg>
                 <span>Exit</span>
               </button>
@@ -315,12 +435,13 @@
           <div class="nav-controls">
             <button class="nav-btn" id="nav-first" title="First Record">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="6" y1="5" x2="6" y2="19"/><polygon points="18,5 18,19 9,12" fill="currentColor"/>
+                <line x1="6" y1="5" x2="6" y2="19" />
+                <polygon points="18,5 18,19 9,12" fill="currentColor" />
               </svg>
             </button>
             <button class="nav-btn" id="nav-prev" title="Previous Record">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="18,5 18,19 8,12" fill="currentColor"/>
+                <polygon points="18,5 18,19 8,12" fill="currentColor" />
               </svg>
             </button>
             <span class="nav-label">Record:</span>
@@ -328,17 +449,19 @@
             <span class="nav-total-label">of <span id="nav-total-count">1</span></span>
             <button class="nav-btn" id="nav-next" title="Next Record">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="6,5 6,19 16,12" fill="currentColor"/>
+                <polygon points="6,5 6,19 16,12" fill="currentColor" />
               </svg>
             </button>
             <button class="nav-btn" id="nav-last" title="Last Record">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="6,5 6,19 15,12" fill="currentColor"/><line x1="18" y1="5" x2="18" y2="19"/>
+                <polygon points="6,5 6,19 15,12" fill="currentColor" />
+                <line x1="18" y1="5" x2="18" y2="19" />
               </svg>
             </button>
             <button class="nav-btn new-record-nav-btn" id="nav-new" title="New Blank Record">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
               <span>*</span>
             </button>
@@ -365,11 +488,13 @@
       <div class="welcome-overlay" id="welcome-overlay">
         <div class="overlay-card">
           <h2>Armor Coating Services DB</h2>
-          <p>Please select a work order from the sidebar panel, search using the navigation controls at the bottom, or create a new order to begin editing.</p>
+          <p>Please select a work order from the sidebar panel, search using the navigation controls at the bottom, or
+            create a new order to begin editing.</p>
           <div class="overlay-buttons">
             <button class="btn btn-new" id="overlay-btn-new">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
               <span>New Work Order</span>
             </button>
@@ -383,7 +508,7 @@
     <!-- Floating Expand Button for Collapsed Sidebar -->
     <button class="floating-expand-btn" id="floating-expand-btn" title="Expand Sidebar">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
-        <polyline points="9 18 15 12 9 6"/>
+        <polyline points="9 18 15 12 9 6" />
       </svg>
     </button>
   </div>
@@ -395,4 +520,5 @@
   <script src="samples.js?v=3"></script>
   <script src="app.js?v=3"></script>
 </body>
+
 </html>
