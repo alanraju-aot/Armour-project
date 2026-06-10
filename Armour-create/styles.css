@@ -444,15 +444,44 @@ input, select, textarea, button {
 
 /* Corporate Banner (Remade style from screenshot but premium) */
 .corporate-banner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
   background: linear-gradient(135deg, hsl(225, 65%, 25%), hsl(225, 65%, 15%));
   color: #ffffff;
-  padding: 1.25rem 2rem;
+  padding: 1rem 2rem;
   border-radius: var(--border-radius-md);
-  text-align: center;
   margin-bottom: 2rem;
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.banner-text {
+  grid-column: 2;
+  text-align: center;
+  z-index: 2;
+}
+
+.logo-container {
+  grid-column: 1;
+  justify-self: start;
+  background: #ffffff;
+  padding: 4px 8px;
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  height: 48px;
+  width: auto;
+  z-index: 2;
+}
+
+.company-logo {
+  height: 40px;
+  width: auto;
+  display: block;
 }
 
 .company-name {
@@ -1136,6 +1165,19 @@ textarea {
     flex-wrap: wrap;
     justify-content: center;
   }
+  .corporate-banner {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.5rem 1rem;
+    justify-items: center;
+  }
+  .logo-container {
+    grid-column: 1;
+    justify-self: center;
+  }
+  .banner-text {
+    grid-column: 1;
+  }
 }
 
 /* Floating Expand Button for collapsed sidebar */
@@ -1243,6 +1285,32 @@ textarea {
     box-shadow: none !important;
     padding: 0.5rem 1rem !important;
     margin-bottom: 1.5rem !important;
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    align-items: center !important;
+  }
+
+  .logo-container {
+    grid-column: 1 !important;
+    justify-self: start !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    height: 40px !important;
+    width: auto !important;
+    border-radius: 0 !important;
+  }
+
+  .company-logo {
+    height: 32px !important;
+    width: auto !important;
+    max-width: none !important;
+    object-fit: contain !important;
+  }
+
+  .banner-text {
+    grid-column: 2 !important;
+    text-align: center !important;
   }
 
   .company-name {
@@ -1257,8 +1325,8 @@ textarea {
     font-size: 12pt !important;
     margin: 0 !important;
     text-shadow: none !important;
-    border-top: 1px solid #000000;
-    padding-top: 2px;
+    border-top: 1px solid #000000 !important;
+    padding-top: 2px !important;
   }
 
   .watermark {
