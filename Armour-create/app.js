@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnDelete = document.getElementById('btn-delete');
   const btnSave = document.getElementById('btn-save');
   const btnExit = document.getElementById('btn-exit');
+  const btnSavePdf = document.getElementById('btn-save-pdf');
 
   // Recreated MS Access Nav Bar Controls
   const navFirst = document.getElementById('nav-first');
@@ -821,6 +822,78 @@ document.addEventListener('DOMContentLoaded', () => {
     window.print();
   }
 
+  // Save Report as PDF to local folder
+  function savePdfReport() {
+    if (isDirty) {
+      showToast("Please save changes before exporting as PDF.", "warning");
+      return;
+    }
+
+    const orderId = fieldId.value;
+    if (!orderId || orderId === 'NEW') {
+      showToast("No active record selected to save as PDF.", "warning");
+      return;
+    }
+
+    // Capture the target element
+    const element = document.getElementById('printable-area');
+    if (!element) {
+      showToast("Printable area not found.", "danger");
+      return;
+    }
+
+    showToast("Generating PDF...", "info", 2000);
+
+    // html2pdf options
+    const opt = {
+      margin:       0.3,
+      filename:     `work_order_${orderId}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    // Use html2pdf to generate the PDF as a raw blob
+    html2pdf().set(opt).from(element).toPdf().output('blob').then(function (pdfBlob) {
+      // Convert Blob to Base64 to send to API
+      const reader = new FileReader();
+      reader.readAsDataURL(pdfBlob);
+      reader.onloadend = function () {
+        const base64data = reader.result.split(',')[1];
+        
+        // Post data to our local backend server API
+        fetch('/api/save-pdf', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: orderId,
+            pdfBase64: base64data
+          })
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("Server PDF write failed");
+          return response.json();
+        })
+        .then(result => {
+          if (result.status === 'success') {
+            showToast(`PDF saved to local folder: ${result.filename}`, "success", 5000);
+          } else {
+            throw new Error(result.message || "Unknown error saving PDF");
+          }
+        })
+        .catch(err => {
+          console.error("PDF upload error:", err);
+          showToast(`Error saving PDF: ${err.message}`, "danger", 5000);
+        });
+      };
+    }).catch(err => {
+      console.error("PDF generation error:", err);
+      showToast(`PDF generation error: ${err.message}`, "danger", 5000);
+    });
+  }
+
   // Export Database to CSV file
   function exportToCsv() {
     const csvHeaders = [
@@ -1111,6 +1184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form buttons
     btnPrint.addEventListener('click', printReport);
+    btnSavePdf.addEventListener('click', savePdfReport);
     btnUndo.addEventListener('click', undoChanges);
     btnNew.addEventListener('click', newRecord);
     btnDelete.addEventListener('click', deleteRecord);

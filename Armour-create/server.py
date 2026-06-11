@@ -51,6 +51,42 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header("Access-Control-Allow-Origin", "*")
                 self.end_headers()
                 self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode("utf-8"))
+        elif self.path == "/api/save-pdf":
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            
+            try:
+                payload = json.loads(post_data.decode("utf-8"))
+                order_id = payload.get("id")
+                pdf_base64 = payload.get("pdfBase64")
+                
+                if not order_id or not pdf_base64:
+                    raise Exception("Missing id or pdfBase64 payload parameters")
+                
+                import base64
+                pdf_data = base64.b64decode(pdf_base64)
+                
+                # Ensure pdf_reports folder exists
+                pdf_dir = "pdf_reports"
+                os.makedirs(pdf_dir, exist_ok=True)
+                
+                pdf_filename = os.path.join(pdf_dir, f"work_order_{order_id}.pdf")
+                
+                # Save binary PDF file
+                with open(pdf_filename, "wb") as f:
+                    f.write(pdf_data)
+                
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "success", "filename": f"{pdf_dir}/work_order_{order_id}.pdf"}).encode("utf-8"))
+            except Exception as e:
+                self.send_response(500)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode("utf-8"))
         else:
             self.send_response(404)
             self.end_headers()
