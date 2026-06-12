@@ -1,4 +1,4 @@
-// Armor Coating Services - Work Order Report Manager Logic
+// TITANIUM AERODYNAMICS, INC. - Work Order Report Manager Logic
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- APPLICATION STATE ---
@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const fieldReceivingInitial = document.getElementById('field-receiving-initial');
   const fieldShippingInitial = document.getElementById('field-shipping-initial');
   const fieldSandblast = document.getElementById('field-sandblast');
+  const fieldAdditionalInfo = document.getElementById('field-additional-info');
 
   // Footer Section
   const fieldFooterRecDate = document.getElementById('field-footer-receiving-date');
@@ -92,9 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < 7; i++) {
       const partVal = document.getElementById(`part-row-${i}`).value.trim();
       const qtyVal = document.getElementById(`qty-row-${i}`).value;
+      const sizeVal = document.getElementById(`size-row-${i}`).value.trim();
       parts.push({
         part: partVal,
-        quantity: qtyVal !== '' ? parseInt(qtyVal) || '' : ''
+        quantity: qtyVal !== '' ? parseInt(qtyVal) || '' : '',
+        size: sizeVal
       });
     }
     return parts;
@@ -105,14 +108,34 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < 7; i++) {
       const partInput = document.getElementById(`part-row-${i}`);
       const qtyInput = document.getElementById(`qty-row-${i}`);
+      const sizeInput = document.getElementById(`size-row-${i}`);
       if (parts[i]) {
         partInput.value = parts[i].part || '';
         qtyInput.value = parts[i].quantity !== undefined && parts[i].quantity !== null ? parts[i].quantity : '';
+        sizeInput.value = parts[i].size || '';
       } else {
         partInput.value = '';
         qtyInput.value = '';
+        sizeInput.value = '';
       }
     }
+  }
+
+  // Dynamically add a class to track empty values for print/PDF transparent overrides
+  function updateEmptyClasses() {
+    if (!workOrderForm) return;
+    const inputs = workOrderForm.querySelectorAll('input, select, textarea');
+    inputs.forEach(el => {
+      if (el.id === 'field-id' && el.value === 'NEW') {
+        el.classList.add('is-empty');
+        return;
+      }
+      if (el.value === '' || (el.tagName === 'SELECT' && el.selectedIndex === 0 && el.options[0].value === '')) {
+        el.classList.add('is-empty');
+      } else {
+        el.classList.remove('is-empty');
+      }
+    });
   }
 
   // --- INITIALIZATION ---
@@ -200,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
     const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
     const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-    
+
     liveClockDate.textContent = now.toLocaleDateString(undefined, dateOptions);
     liveClockTime.textContent = now.toLocaleTimeString(undefined, timeOptions);
   }
@@ -210,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
     activeTheme = theme;
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
-    
+
     if (theme === 'dark') {
       sunIcon.style.display = 'none';
       moonIcon.style.display = 'block';
@@ -224,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function showToast(message, type = 'success', duration = 3000) {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    
+
     let svgIcon = '';
     if (type === 'success') {
       svgIcon = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`;
@@ -259,14 +282,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Calculate & Refresh Stats Panel
   function updateStats() {
     statsTotal.textContent = workOrders.length;
-    statsHigh.textContent = workOrders.filter(w => w.priority === 'High').length;
+    statsHigh.textContent = workOrders.filter(w => w.priority === 'High' || w.priority === 'Rush').length;
     statsPending.textContent = workOrders.filter(w => getJobStatus(w) === 'in-progress').length;
   }
 
   // --- RECORD LIST VIEW / SIDEBAR RENDERING ---
   function renderSidebar() {
     recordsFeed.innerHTML = '';
-    
+
     if (filteredOrders.length === 0) {
       recordsFeed.innerHTML = `<div class="no-records-msg" style="padding: 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;">No matching records found.</div>`;
       return;
@@ -277,9 +300,17 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = `record-card ${currentIndex !== null && filteredOrders[currentIndex]?.id === order.id ? 'active' : ''}`;
       card.dataset.index = index;
 
-      const priorityClass = `badge-${order.priority ? order.priority.toLowerCase() : 'medium'}`;
+      let priorityClass = 'badge-medium';
+      const p = order.priority ? order.priority.toLowerCase() : '';
+      if (p === 'high' || p === 'rush') {
+        priorityClass = 'badge-high';
+      } else if (p === 'medium' || p === 'priority') {
+        priorityClass = 'badge-medium';
+      } else if (p === 'low' || p === 'standard') {
+        priorityClass = 'badge-low';
+      }
       const status = getJobStatus(order);
-      
+
       let statusIndicator = '';
       if (status === 'completed') {
         statusIndicator = `<span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-success); display: inline-block; margin-right: 4px;" title="Completed"></span>`;
@@ -343,18 +374,32 @@ document.addEventListener('DOMContentLoaded', () => {
     fieldCoating.value = record.coating || '';
     fieldName.value = record.customerName || '';
     fieldPo.value = record.poNumber || '';
-    
+
     // Fallback: receivingDate -> startDate
     fieldReceivingDate.value = record.receivingDate || record.startDate || '';
-    
-    fieldPriority.value = record.priority || 'Medium';
+
+    // Map legacy priority values
+    let priorityVal = record.priority || '';
+    if (priorityVal === 'High') priorityVal = 'Rush';
+    else if (priorityVal === 'Medium') priorityVal = 'Priority';
+    else if (priorityVal === 'Low') priorityVal = 'Standard';
+    fieldPriority.value = priorityVal;
+
     fieldDueDate.value = record.dueDate || '';
     fieldInstructions.value = record.instructions || '';
 
-    // Middle initials & sandblast
+    // Middle initials, sandblast & additional info
     fieldReceivingInitial.value = record.receivingInitial || '';
     fieldShippingInitial.value = record.shippingInitial || '';
-    fieldSandblast.value = record.sandblast || 'NONE';
+
+    // Map legacy sandblast values
+    let sbValue = record.sandblast || '';
+    if (sbValue.toUpperCase() === 'NONE') sbValue = 'none';
+    else if (sbValue.toUpperCase() === 'FINE') sbValue = 'matte';
+    else if (sbValue.toUpperCase() === 'ROUGH') sbValue = 'satin';
+    fieldSandblast.value = sbValue;
+
+    fieldAdditionalInfo.value = record.additionalInfo || '';
 
     // Footer items
     fieldFooterRecDate.value = record.footerReceivingDate || record.receivingDate || record.startDate || '';
@@ -369,14 +414,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!Array.isArray(partsData)) {
       // Migrate old schema to parts table on-the-fly
       partsData = [
-        { part: record.partNo || '', quantity: record.quantity || '' }
+        { part: record.partNo || '', quantity: record.quantity || '', size: '' }
       ];
       // Pad to 7 rows
       while (partsData.length < 7) {
-        partsData.push({ part: '', quantity: '' });
+        partsData.push({ part: '', quantity: '', size: '' });
       }
     }
     setPartsTableData(partsData);
+
+    // Track empty classes for print overrides
+    updateEmptyClasses();
 
     // Metadata
     metaCreated.textContent = record.createdTime ? formatTimestamp(record.createdTime) : 'N/A';
@@ -394,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update Bottom Nav controls
     navCurrentInput.value = currentIndex + 1;
     navTotalCount.textContent = filteredOrders.length;
-    
+
     // Enable/disable buttons based on positions
     navFirst.disabled = currentIndex === 0;
     navPrev.disabled = currentIndex === 0;
@@ -421,6 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
       receivingInitial: fieldReceivingInitial.value.trim(),
       shippingInitial: fieldShippingInitial.value.trim(),
       sandblast: fieldSandblast.value,
+      additionalInfo: fieldAdditionalInfo.value.trim(),
       footerReceivingDate: fieldFooterRecDate.value,
       footerReceivingInitial: fieldFooterRecInitial.value.trim(),
       footerQcInitial: fieldFooterQcInitial.value.trim(),
@@ -450,28 +499,28 @@ document.addEventListener('DOMContentLoaded', () => {
       // It's a new unsaved record. Check if any fields are typed.
       const hasAnyInput = Object.keys(currentForm).some(key => {
         if (key === 'id') return false;
-        if (key === 'priority' && currentForm[key] === 'Medium') return false;
-        if (key === 'sandblast' && currentForm[key] === 'NONE') return false;
+        if (key === 'priority' && currentForm[key] === '') return false;
+        if (key === 'sandblast' && currentForm[key] === '') return false;
         if (key === 'quantity') return false;
         if (key === 'startDate' || key === 'finishDate') return false;
         if (key === 'parts') {
-          return currentForm.parts.some(p => p.part !== '' || p.quantity !== '');
+          return currentForm.parts.some(p => p.part !== '' || p.quantity !== '' || p.size !== '');
         }
         return currentForm[key] !== '' && currentForm[key] !== null;
       });
       isDirty = hasAnyInput;
     } else {
       original = filteredOrders[currentIndex];
-      
+
       // Compare values
       isDirty = Object.keys(currentForm).some(key => {
         if (key === 'quantity' || key === 'startDate' || key === 'finishDate') return false;
         if (key === 'parts') {
           const origParts = Array.isArray(original.parts) ? original.parts : [];
           for (let i = 0; i < 7; i++) {
-            const curP = currentForm.parts[i] || { part: '', quantity: '' };
-            const origP = origParts[i] || { part: '', quantity: '' };
-            if ((curP.part || '') !== (origP.part || '') || (curP.quantity || '') !== (origP.quantity || '')) {
+            const curP = currentForm.parts[i] || { part: '', quantity: '', size: '' };
+            const origP = origParts[i] || { part: '', quantity: '', size: '' };
+            if ((curP.part || '') !== (origP.part || '') || (curP.quantity || '') !== (origP.quantity || '') || (curP.size || '') !== (origP.size || '')) {
               return true;
             }
           }
@@ -506,16 +555,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear and preset defaults
     workOrderForm.reset();
     fieldId.value = 'NEW';
-    
-    // Set dates default
-    const today = new Date().toISOString().split('T')[0];
-    fieldReceivingDate.value = today;
-    fieldFooterRecDate.value = today;
-    
-    // Default due date: 7 days in future
-    const nextWeek = new Date();
-    nextWeek.setDate(nextWeek.getDate() + 7);
-    fieldDueDate.value = nextWeek.toISOString().split('T')[0];
+
+    // Clear dates to avoid default values showing in empty reports
+    fieldReceivingDate.value = '';
+    fieldFooterRecDate.value = '';
+    fieldDueDate.value = '';
 
     // Reset controls
     navCurrentInput.value = '*';
@@ -532,6 +576,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fieldName.focus();
     isDirty = false;
     unsavedAlert.style.display = 'none';
+    updateEmptyClasses();
   }
 
   // Revert form state back to original record values
@@ -564,7 +609,7 @@ document.addEventListener('DOMContentLoaded', () => {
           nextId = Math.max(...ids) + 1;
         }
       }
-      
+
       const newOrder = {
         ...formState,
         id: nextId.toString(),
@@ -575,11 +620,11 @@ document.addEventListener('DOMContentLoaded', () => {
       workOrders.push(newOrder);
       saveDatabaseState();
       showToast(`Work Order #${newOrder.id} created successfully!`, "success");
-      
+
       // Update view
       updateStats();
       applySearchAndFilters();
-      
+
       // Find new item index in filtered view and load
       const newIndexInFilter = filteredOrders.findIndex(w => w.id === newOrder.id);
       loadRecord(newIndexInFilter !== -1 ? newIndexInFilter : filteredOrders.length - 1);
@@ -606,11 +651,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Preserve current filter state and refresh
       updateStats();
-      
+
       // Refresh sidebar content list without resetting search
       const currentSelectedId = formState.id;
       applySearchAndFilters(false); // don't reset index to 0
-      
+
       const newIndexInFilter = filteredOrders.findIndex(w => w.id === currentSelectedId);
       loadRecord(newIndexInFilter !== -1 ? newIndexInFilter : 0);
     }
@@ -658,10 +703,10 @@ document.addEventListener('DOMContentLoaded', () => {
     isDirty = false;
     unsavedAlert.style.display = 'none';
     welcomeOverlay.style.display = 'flex';
-    
+
     // Clear elements
     workOrderForm.reset();
-    
+
     // Reset Navigation input
     navCurrentInput.value = '0';
     navTotalCount.textContent = '0';
@@ -671,22 +716,26 @@ document.addEventListener('DOMContentLoaded', () => {
     navLast.disabled = true;
 
     document.querySelectorAll('.record-card').forEach(card => card.classList.remove('active'));
+    updateEmptyClasses();
   }
 
   // --- FILTERING & SEARCH CONTROLS ---
 
   function applySearchAndFilters(resetIndexToLatest = true) {
     const activeSearch = sidebarSearchInput.value.toLowerCase().trim();
-    
+
     const priority = filterPriority.value;
     const statusFilter = filterStatus.value;
 
     // Filter main dataset
     filteredOrders = workOrders.filter(order => {
-      // 1. Text Search (Matches ID, Customer Name, PO #, Coating, Part No, and parts list)
+      // 1. Text Search (Matches ID, Customer Name, PO #, Coating, Part No, additional info, and parts list/size)
       let matchesSearch = true;
       if (activeSearch !== '') {
-        const partsMatch = Array.isArray(order.parts) && order.parts.some(p => p.part && p.part.toLowerCase().includes(activeSearch));
+        const partsMatch = Array.isArray(order.parts) && order.parts.some(p =>
+          (p.part && p.part.toLowerCase().includes(activeSearch)) ||
+          (p.size && p.size.toLowerCase().includes(activeSearch))
+        );
         matchesSearch = (
           (order.id && order.id.toLowerCase().includes(activeSearch)) ||
           (order.customerName && order.customerName.toLowerCase().includes(activeSearch)) ||
@@ -694,6 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
           (order.poNumber && order.poNumber.toLowerCase().includes(activeSearch)) ||
           (order.coating && order.coating.toLowerCase().includes(activeSearch)) ||
           (order.instructions && order.instructions.toLowerCase().includes(activeSearch)) ||
+          (order.additionalInfo && order.additionalInfo.toLowerCase().includes(activeSearch)) ||
           partsMatch
         );
       }
@@ -701,7 +751,17 @@ document.addEventListener('DOMContentLoaded', () => {
       // 2. Priority Filter
       let matchesPriority = true;
       if (priority !== '') {
-        matchesPriority = order.priority === priority;
+        const orderPriority = (order.priority || '').toLowerCase();
+        const filterPriorityVal = priority.toLowerCase();
+        if (filterPriorityVal === 'standard') {
+          matchesPriority = orderPriority === 'standard' || orderPriority === 'low';
+        } else if (filterPriorityVal === 'priority') {
+          matchesPriority = orderPriority === 'priority' || orderPriority === 'medium';
+        } else if (filterPriorityVal === 'rush') {
+          matchesPriority = orderPriority === 'rush' || orderPriority === 'high';
+        } else {
+          matchesPriority = orderPriority === filterPriorityVal;
+        }
       }
 
       // 3. Status Filter
@@ -781,7 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function saveDatabaseState() {
     // 1. Browser LocalStorage cache
     localStorage.setItem('work_orders', JSON.stringify(workOrders));
-    
+
     // 2. Physical JSON file on server
     saveToServerOnly();
   }
@@ -794,23 +854,23 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       body: JSON.stringify(workOrders)
     })
-    .then(response => {
-      if (!response.ok) throw new Error("Server file write failure");
-      return response.json();
-    })
-    .then(result => {
-      console.log("Database successfully written to server disk data/work_orders.json:", result);
-    })
-    .catch(err => {
-      console.warn("Could not save database to server disk:", err);
-    });
+      .then(response => {
+        if (!response.ok) throw new Error("Server file write failure");
+        return response.json();
+      })
+      .then(result => {
+        console.log("Database successfully written to server disk data/work_orders.json:", result);
+      })
+      .catch(err => {
+        console.warn("Could not save database to server disk:", err);
+      });
   }
 
   // Format timestamps nicely
   function formatTimestamp(isoString) {
     if (!isoString) return '--';
     const date = new Date(isoString);
-    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
   // Trigger Print Dialog
@@ -846,11 +906,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // html2pdf options
     const opt = {
-      margin:       0.3,
-      filename:     `work_order_${orderId}.pdf`,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true },
-      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      margin: 0.3,
+      filename: `work_order_${orderId}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
 
     // Use html2pdf to generate the PDF as a raw blob
@@ -860,7 +920,7 @@ document.addEventListener('DOMContentLoaded', () => {
       reader.readAsDataURL(pdfBlob);
       reader.onloadend = function () {
         const base64data = reader.result.split(',')[1];
-        
+
         // Post data to our local backend server API
         fetch('/api/save-pdf', {
           method: 'POST',
@@ -872,21 +932,21 @@ document.addEventListener('DOMContentLoaded', () => {
             pdfBase64: base64data
           })
         })
-        .then(response => {
-          if (!response.ok) throw new Error("Server PDF write failed");
-          return response.json();
-        })
-        .then(result => {
-          if (result.status === 'success') {
-            showToast(`PDF saved to local folder: ${result.filename}`, "success", 5000);
-          } else {
-            throw new Error(result.message || "Unknown error saving PDF");
-          }
-        })
-        .catch(err => {
-          console.error("PDF upload error:", err);
-          showToast(`Error saving PDF: ${err.message}`, "danger", 5000);
-        });
+          .then(response => {
+            if (!response.ok) throw new Error("Server PDF write failed");
+            return response.json();
+          })
+          .then(result => {
+            if (result.status === 'success') {
+              showToast(`PDF saved to local folder: ${result.filename}`, "success", 5000);
+            } else {
+              throw new Error(result.message || "Unknown error saving PDF");
+            }
+          })
+          .catch(err => {
+            console.error("PDF upload error:", err);
+            showToast(`Error saving PDF: ${err.message}`, "danger", 5000);
+          });
       };
     }).catch(err => {
       console.error("PDF generation error:", err);
@@ -899,20 +959,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const csvHeaders = [
       "Work Order ID", "Customer Name", "Priority", "Part No", "PO Number", "Due Date",
       "Coating", "Receiving Date", "Instructions", "Receiving Initial", "Shipping Initial",
-      "Sandblast", "Footer Receiving Date", "Footer Receiving Initial", "Footer QC Initial",
+      "Sandblast", "Additional Information", "Footer Receiving Date", "Footer Receiving Initial", "Footer QC Initial",
       "Footer Shipping Date", "Footer Shipping Initial", "For TCS Notes", "Parts List"
     ];
 
     const csvRows = [csvHeaders.join(",")];
 
     workOrders.forEach(order => {
-      const partsText = Array.isArray(order.parts) ? 
-        order.parts.filter(p => p.part).map(p => `${p.part} (Qty: ${p.quantity})`).join(" | ") : "";
+      const partsText = Array.isArray(order.parts) ?
+        order.parts.filter(p => p.part || p.quantity || p.size).map(p => {
+          let partInfo = p.part || 'Unnamed';
+          let details = [];
+          if (p.quantity !== undefined && p.quantity !== '') details.push(`Qty: ${p.quantity}`);
+          if (p.size) details.push(`Size: ${p.size}`);
+          return details.length > 0 ? `${partInfo} (${details.join(", ")})` : partInfo;
+        }).join(" | ") : "";
 
       const values = [
         order.id || '',
         order.customerName || '',
-        order.priority || 'Medium',
+        order.priority || '',
         order.partNo || '',
         order.poNumber || '',
         order.dueDate || '',
@@ -922,6 +988,7 @@ document.addEventListener('DOMContentLoaded', () => {
         order.receivingInitial || '',
         order.shippingInitial || '',
         order.sandblast || '',
+        order.additionalInfo || '',
         order.footerReceivingDate || '',
         order.footerReceivingInitial || '',
         order.footerQcInitial || '',
@@ -965,7 +1032,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reader = new FileReader();
     const fileExtension = file.name.split('.').pop().toLowerCase();
 
-    reader.onload = function(evt) {
+    reader.onload = function (evt) {
       try {
         const text = evt.target.result;
         let importedRecords = [];
@@ -1002,7 +1069,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           saveDatabaseState();
           showToast(`Successfully imported ${importedRecords.length} records!`, "success");
-          
+
           updateStats();
           applySearchAndFilters(true);
         }
@@ -1089,6 +1156,7 @@ document.addEventListener('DOMContentLoaded', () => {
       "Receiving Initial": "receivingInitial", "receivingInitial": "receivingInitial",
       "Shipping Initial": "shippingInitial", "shippingInitial": "shippingInitial",
       "Sandblast": "sandblast", "sandblast": "sandblast",
+      "Additional Information": "additionalInfo", "additionalInfo": "additionalInfo",
       "Footer Receiving Date": "footerReceivingDate", "footerReceivingDate": "footerReceivingDate",
       "Footer Receiving Initial": "footerReceivingInitial", "footerReceivingInitial": "footerReceivingInitial",
       "Footer QC Initial": "footerQcInitial", "footerQcInitial": "footerQcInitial",
@@ -1102,34 +1170,39 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let r = 1; r < lines.length; r++) {
       const rowData = lines[r];
       const record = {};
-      
+
       headers.forEach((header, colIdx) => {
         const prop = propertyMapping[header] || header;
         let val = rowData[colIdx] || '';
         if (prop === 'quantity') {
           val = parseInt(val) || 0;
         }
-        
+
         if (prop === 'parts') {
           const partsArray = [];
           if (val) {
             const items = val.split(' | ');
             items.forEach(item => {
-              const qtyMatch = item.match(/\(Qty:\s*(\d+)\)/i);
+              const qtyMatch = item.match(/Qty:\s*(\d+)/i);
+              const sizeMatch = item.match(/Size:\s*([^,)]+)/i);
               let partName = item;
               let qty = '';
+              let size = '';
               if (qtyMatch) {
                 qty = parseInt(qtyMatch[1]) || '';
-                partName = item.replace(/\(Qty:\s*\d+\)/i, '').trim();
               }
-              if (partName || qty) {
-                partsArray.push({ part: partName, quantity: qty });
+              if (sizeMatch) {
+                size = sizeMatch[1].trim();
+              }
+              partName = item.replace(/\s*\([^)]+\)/g, '').trim();
+              if (partName || qty || size) {
+                partsArray.push({ part: partName, quantity: qty, size: size });
               }
             });
           }
           // Pad to 7 rows
           while (partsArray.length < 7) {
-            partsArray.push({ part: '', quantity: '' });
+            partsArray.push({ part: '', quantity: '', size: '' });
           }
           record[prop] = partsArray;
         } else {
@@ -1217,7 +1290,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formFields = [
       fieldPart, fieldCoating, fieldName, fieldPo, fieldReceivingDate,
       fieldPriority, fieldDueDate, fieldInstructions,
-      fieldReceivingInitial, fieldShippingInitial, fieldSandblast,
+      fieldReceivingInitial, fieldShippingInitial, fieldSandblast, fieldAdditionalInfo,
       fieldFooterRecDate, fieldFooterRecInitial, fieldFooterQcInitial,
       fieldFooterShipDate, fieldFooterShipInitial, fieldForTcs
     ];
@@ -1226,12 +1299,19 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < 7; i++) {
       formFields.push(document.getElementById(`part-row-${i}`));
       formFields.push(document.getElementById(`qty-row-${i}`));
+      formFields.push(document.getElementById(`size-row-${i}`));
     }
 
     formFields.forEach(field => {
       if (field) {
-        field.addEventListener('input', checkDirtyState);
-        field.addEventListener('change', checkDirtyState);
+        field.addEventListener('input', () => {
+          checkDirtyState();
+          updateEmptyClasses();
+        });
+        field.addEventListener('change', () => {
+          checkDirtyState();
+          updateEmptyClasses();
+        });
       }
     });
 

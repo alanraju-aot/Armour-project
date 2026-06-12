@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Armor Coating Services - Work Order Report Manager</title>
+  <title>TITANIUM AERODYNAMICS, INC. - Work Order Report Manager</title>
   <!-- Google Fonts: Outfit (modern, geometric) and Inter (highly readable UI font) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,9 +46,9 @@
         <div class="filter-controls">
           <select id="filter-priority" class="filter-select">
             <option value="">All Priorities</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
+            <option value="Rush">High</option>
+            <option value="Priority">Medium</option>
+            <option value="Standard">Low</option>
           </select>
           <select id="filter-status" class="filter-select">
             <option value="">All Statuses</option>
@@ -183,7 +183,7 @@
                 </div>
                 <div class="form-group">
                   <label for="field-part">Part No:-</label>
-                  <input type="text" id="field-part" name="partNo" required placeholder="Enter part number">
+                  <input type="text" id="field-part" name="partNo" placeholder="Enter part number">
                 </div>
                 <div class="form-group">
                   <label for="field-coating">Coating:</label>
@@ -227,9 +227,9 @@
                 <div class="form-group">
                   <label for="field-priority">Priority:</label>
                   <select id="field-priority" name="priority">
-                    <option value="Low">Low</option>
-                    <option value="Medium" selected>Medium</option>
-                    <option value="High">High</option>
+                    <option value="Standard">Standard</option>
+                    <option value="Priority">Priority</option>
+                    <option value="Rush">Rush</option>
                   </select>
                 </div>
                 <div class="form-group">
@@ -255,7 +255,8 @@
                   <thead>
                     <tr>
                       <th class="col-part-name">PART</th>
-                      <th class="col-part-qty">QUANTITY</th>
+                      <th class="col-part-qty">QTY</th>
+                      <th class="col-part-size">SIZE</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -264,36 +265,50 @@
                           placeholder="Part description/serial..."></td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-0" min="0"
                           placeholder="Qty"></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-0" placeholder="Size...">
+                      </td>
                     </tr>
                     <tr>
                       <td><input type="text" class="parts-table-input parts-part" id="part-row-1" placeholder="...">
                       </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-1" min="0"></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-1" placeholder="...">
+                      </td>
                     </tr>
                     <tr>
                       <td><input type="text" class="parts-table-input parts-part" id="part-row-2" placeholder="...">
                       </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-2" min="0"></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-2" placeholder="...">
+                      </td>
                     </tr>
                     <tr>
                       <td><input type="text" class="parts-table-input parts-part" id="part-row-3" placeholder="...">
                       </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-3" min="0"></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-3" placeholder="...">
+                      </td>
                     </tr>
                     <tr>
                       <td><input type="text" class="parts-table-input parts-part" id="part-row-4" placeholder="...">
                       </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-4" min="0"></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-4" placeholder="...">
+                      </td>
                     </tr>
                     <tr>
                       <td><input type="text" class="parts-table-input parts-part" id="part-row-5" placeholder="...">
                       </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-5" min="0"></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-5" placeholder="...">
+                      </td>
                     </tr>
                     <tr>
                       <td><input type="text" class="parts-table-input parts-part" id="part-row-6" placeholder="...">
                       </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-6" min="0"></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-6" placeholder="...">
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -312,10 +327,15 @@
                 <div class="form-group">
                   <label for="field-sandblast">Sandblast:</label>
                   <select id="field-sandblast" name="sandblast">
-                    <option value="NONE">NONE</option>
-                    <option value="FINE">FINE</option>
-                    <option value="ROUGH">ROUGH</option>
+                    <option value="matte">Matte</option>
+                    <option value="satin">Satin</option>
+                    <option value="none">None</option>
                   </select>
+                </div>
+                <div class="form-group flex-grow" style="margin-top: 0.25rem;">
+                  <label for="field-additional-info">Additional Information:</label>
+                  <textarea id="field-additional-info" name="additionalInfo" placeholder="Any additional information..."
+                    style="resize: none; height: 80px;"></textarea>
                 </div>
               </div>
             </div>
@@ -503,7 +523,7 @@
       <!-- Welcome Overlay / Information Pane when exited/no record selected -->
       <div class="welcome-overlay" id="welcome-overlay">
         <div class="overlay-card">
-          <h2>Armor Coating Services DB</h2>
+          <h2>TITANIUM AERODYNAMICS, INC. DB</h2>
           <p>Please select a work order from the sidebar panel, search using the navigation controls at the bottom, or
             create a new order to begin editing.</p>
           <div class="overlay-buttons">

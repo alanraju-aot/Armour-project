@@ -209,54 +209,128 @@
   },
   {
     "id": "3284",
-    "customerName": "Titan Infrastructure",
-    "priority": "Low",
     "partNo": "CS-5044-B",
-    "poNumber": "PO-TI-88901",
-    "dueDate": "2026-06-20",
     "coating": "ALPHA-T-TIN",
+    "customerName": "Titan Infrastructure",
+    "poNumber": "PO-TI-88901",
     "receivingDate": "2026-06-04",
+    "priority": "Standard",
+    "dueDate": "2026-06-20",
     "instructions": "Dip-spin coating application. Cure at 600°F for 25 minutes. Ensure no accumulation in bracket holes or recesses. Check thread clearance.",
-    "parts": [
-      {
-        "part": "CS-5044-B Structural Bracket",
-        "quantity": 500
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      }
-    ],
     "receivingInitial": "DK",
     "shippingInitial": "",
-    "sandblast": "NONE",
+    "sandblast": "none",
+    "additionalInfo": "Coating thickness must be strictly within 1.5-2.0 mil range.",
     "footerReceivingDate": "2026-06-04",
     "footerReceivingInitial": "DK",
     "footerQcInitial": "",
     "footerShippingDate": "",
     "footerShippingInitial": "",
-    "forTcs": "Zinc flake dip-spin curing pending validation.",
+    "forTcs": "TCS inspection passed. Uniform coating thickness verified.",
+    "parts": [
+      {
+        "part": "High-Temp Turbine Blade",
+        "quantity": 12,
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      }
+    ],
+    "startDate": "2026-06-04",
+    "finishDate": "",
+    "quantity": 12,
     "createdTime": "2026-06-04T10:10:00Z",
-    "lastModifiedTime": "2026-06-04T10:15:00Z"
+    "lastModifiedTime": "2026-06-12T17:32:52.979Z"
+  },
+  {
+    "id": "3285",
+    "partNo": "",
+    "coating": "ALPHA-TAC-TiAlCN",
+    "customerName": "Alan",
+    "poNumber": "PO-12345",
+    "receivingDate": "60612-02-02",
+    "priority": "Rush",
+    "dueDate": "60630-02-02",
+    "instructions": "Apply coating as per aerospace specs.",
+    "receivingInitial": "JD",
+    "shippingInitial": "1",
+    "sandblast": "matte",
+    "additionalInfo": "",
+    "footerReceivingDate": "60612-02-02",
+    "footerReceivingInitial": "JD",
+    "footerQcInitial": "s",
+    "footerShippingDate": "",
+    "footerShippingInitial": "1",
+    "forTcs": "",
+    "parts": [
+      {
+        "part": "Turbine Housing",
+        "quantity": 5,
+        "size": "3"
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      }
+    ],
+    "startDate": "60612-02-02",
+    "finishDate": "",
+    "quantity": 5,
+    "createdTime": "2026-06-12T17:36:53.930Z",
+    "lastModifiedTime": "2026-06-12T17:40:51.303Z"
   }
 ]

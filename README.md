@@ -1,6 +1,6 @@
-# Armor Coating Services - Work Order Report Manager
+# TITANIUM AERODYNAMICS, INC. - Work Order Report Manager
 
-A high-fidelity, self-contained Work Order Report Generation and Database Management tool designed for **Armor Coating Services, Inc.**
+A high-fidelity, self-contained Work Order Report Generation and Database Management tool designed for **TITANIUM AERODYNAMICS, INC., Inc.**
 
 This application is completely portable. It runs locally on any computer using Python's built-in web server and saves data directly as a local JSON file. No heavy database engine or complex software installation is required!
 

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------
- * ARMOR COATING SERVICES - WORK ORDER MANAGER
+ * TITANIUM AERODYNAMICS, INC. - WORK ORDER MANAGER
  * Custom Vanilla CSS Design System
  * ------------------------------------------------------------- */
 
@@ -8,11 +8,11 @@
   /* HSL Tailored Palettes - Sleek Slate / High-tech Indigo */
   --primary-hue: 225;
   --primary-sat: 65%;
-  
+
   --primary: hsl(var(--primary-hue), var(--primary-sat), 55%);
   --primary-hover: hsl(var(--primary-hue), var(--primary-sat), 45%);
   --primary-light: hsl(var(--primary-hue), var(--primary-sat), 95%);
-  
+
   /* Slate Neutrals (Light Mode) */
   --bg-app: hsl(215, 30%, 94%);
   --bg-card: rgba(255, 255, 255, 0.7);
@@ -22,13 +22,13 @@
   --input-bg: hsl(0, 0%, 100%);
   --input-border: hsl(217, 20%, 82%);
   --input-focus: hsl(var(--primary-hue), var(--primary-sat), 55%);
-  
+
   /* Status Colors */
   --color-success: hsl(145, 63%, 42%);
   --color-warning: hsl(35, 90%, 50%);
   --color-danger: hsl(355, 75%, 50%);
   --color-info: hsl(195, 80%, 45%);
-  
+
   /* Glassmorphism & UI Properties */
   --glass-blur: 12px;
   --glass-border: rgba(255, 255, 255, 0.4);
@@ -55,7 +55,9 @@
 }
 
 /* Reset & Global Styles */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -71,7 +73,10 @@ body {
   transition: background-color 0.3s ease;
 }
 
-input, select, textarea, button {
+input,
+select,
+textarea,
+button {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
@@ -133,7 +138,8 @@ input, select, textarea, button {
   letter-spacing: -0.5px;
 }
 
-.toggle-btn, .menu-btn {
+.toggle-btn,
+.menu-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -147,16 +153,18 @@ input, select, textarea, button {
   transition: var(--transition);
 }
 
-.toggle-btn:hover, .menu-btn:hover {
+.toggle-btn:hover,
+.menu-btn:hover {
   background-color: var(--border-color);
   color: var(--text-main);
 }
 
 .menu-btn {
-  display: none; /* Only visible when sidebar collapsed */
+  display: none;
+  /* Only visible when sidebar collapsed */
 }
 
-.sidebar.collapsed ~ .main-content .menu-btn {
+.sidebar.collapsed~.main-content .menu-btn {
   display: flex;
 }
 
@@ -297,9 +305,20 @@ input, select, textarea, button {
   letter-spacing: 0.3px;
 }
 
-.badge-high { background-color: rgba(355, 75%, 50%, 0.12); color: var(--color-danger); }
-.badge-medium { background-color: rgba(35, 90%, 50%, 0.12); color: var(--color-warning); }
-.badge-low { background-color: rgba(145, 63%, 42%, 0.12); color: var(--color-success); }
+.badge-high {
+  background-color: rgba(355, 75%, 50%, 0.12);
+  color: var(--color-danger);
+}
+
+.badge-medium {
+  background-color: rgba(35, 90%, 50%, 0.12);
+  color: var(--color-warning);
+}
+
+.badge-low {
+  background-color: rgba(145, 63%, 42%, 0.12);
+  color: var(--color-success);
+}
 
 /* Sidebar Stats Footer */
 .sidebar-stats {
@@ -330,8 +349,13 @@ input, select, textarea, button {
   font-family: 'Outfit', sans-serif;
 }
 
-.text-red { color: var(--color-danger); }
-.text-blue { color: var(--primary); }
+.text-red {
+  color: var(--color-danger);
+}
+
+.text-blue {
+  color: var(--primary);
+}
 
 /* Main Content Area */
 .main-content {
@@ -384,7 +408,7 @@ input, select, textarea, button {
   display: flex;
   gap: 0.75rem;
   color: var(--text-muted);
-  background-color: rgba(0,0,0,0.04);
+  background-color: rgba(0, 0, 0, 0.04);
   padding: 0.35rem 0.75rem;
   border-radius: var(--border-radius-sm);
   border: 1px solid var(--border-color);
@@ -491,7 +515,7 @@ input, select, textarea, button {
   letter-spacing: 2px;
   margin-bottom: 0.25rem;
   text-transform: uppercase;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .banner-sub {
@@ -500,8 +524,9 @@ input, select, textarea, button {
   font-size: 1.25rem;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: hsl(45, 95%, 60%); /* Gold color accent */
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  color: hsl(45, 95%, 60%);
+  /* Gold color accent */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .watermark {
@@ -520,7 +545,8 @@ input, select, textarea, button {
 
 /* Unsaved warning */
 .unsaved-alert {
-  display: none; /* Shown dynamically */
+  display: none;
+  /* Shown dynamically */
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
@@ -539,8 +565,15 @@ input, select, textarea, button {
 }
 
 @keyframes slideDown {
-  from { transform: translateY(-10px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Form Layout Grid */
@@ -577,9 +610,17 @@ input, select, textarea, button {
   gap: 0.75rem;
 }
 
-.w-65 { width: 65%; }
-.w-35 { width: 35%; }
-.mt-3 { margin-top: 0.75rem; }
+.w-65 {
+  width: 65%;
+}
+
+.w-35 {
+  width: 35%;
+}
+
+.mt-3 {
+  margin-top: 0.75rem;
+}
 
 /* Labels & Inputs */
 label {
@@ -608,14 +649,14 @@ textarea {
 }
 
 input:read-only {
-  background-color: rgba(0,0,0,0.03) !important;
+  background-color: rgba(0, 0, 0, 0.03) !important;
   color: var(--text-muted);
   cursor: not-allowed;
   font-weight: 600;
 }
 
 [data-theme="dark"] input:read-only {
-  background-color: rgba(255,255,255,0.02) !important;
+  background-color: rgba(255, 255, 255, 0.02) !important;
 }
 
 input[type="text"]:focus,
@@ -666,7 +707,8 @@ textarea {
   border-collapse: collapse;
 }
 
-.parts-table th, .parts-table td {
+.parts-table th,
+.parts-table td {
   padding: 0.4rem 0.5rem;
   border-bottom: 1px solid var(--border-color);
   text-align: left;
@@ -702,15 +744,21 @@ textarea {
 }
 
 .col-part-name {
-  width: 75%;
+  width: 60%;
 }
 
 .col-part-qty {
-  width: 25%;
+  width: 20%;
   text-align: center;
 }
 
-.parts-qty {
+.col-part-size {
+  width: 20%;
+  text-align: center;
+}
+
+.parts-qty,
+.parts-size {
   text-align: center;
 }
 
@@ -769,7 +817,8 @@ textarea {
 
 .action-bar {
   display: flex;
-  background-color: #0f172a; /* Sleek dark slate background */
+  background-color: #0f172a;
+  /* Sleek dark slate background */
   border: 1px solid #1e293b;
   border-radius: var(--border-radius-md);
   padding: 0.55rem 1rem;
@@ -801,51 +850,65 @@ textarea {
 
 /* Specific button style categories matching to screenshot colors */
 .btn-print {
-  color: #3b82f6; /* Blue */
+  color: #3b82f6;
+  /* Blue */
 }
+
 .btn-print:hover {
   background-color: rgba(59, 130, 246, 0.15);
 }
 
 .btn-pdf {
-  color: #e11d48; /* PDF Red */
+  color: #e11d48;
+  /* PDF Red */
 }
+
 .btn-pdf:hover {
   background-color: rgba(225, 29, 72, 0.15);
 }
 
 .btn-undo {
-  color: #94a3b8; /* Slate Grey */
+  color: #94a3b8;
+  /* Slate Grey */
 }
+
 .btn-undo:hover {
   background-color: rgba(148, 163, 184, 0.15);
 }
 
 .btn-new {
-  color: #10b981; /* Green */
+  color: #10b981;
+  /* Green */
 }
+
 .btn-new:hover {
   background-color: rgba(16, 185, 129, 0.15);
 }
 
 .btn-delete {
-  color: #ef4444; /* Red */
+  color: #ef4444;
+  /* Red */
 }
+
 .btn-delete:hover {
   background-color: rgba(239, 68, 68, 0.15);
 }
 
 .btn-save {
-  color: #6366f1; /* Indigo/Blue */
+  color: #6366f1;
+  /* Indigo/Blue */
   font-weight: 700;
 }
+
 .btn-save:hover {
   background-color: rgba(99, 102, 241, 0.15);
 }
 
 .btn-exit {
-  color: #f43f5e; /* Rose Red */
+  color: #f43f5e;
+  /* Rose Red */
 }
+
 .btn-exit:hover {
   background-color: rgba(244, 63, 94, 0.15);
 }
@@ -1040,7 +1103,8 @@ textarea {
  * WELCOME OVERLAY / HELP CARD
  * ------------------------------------------------------------- */
 .welcome-overlay {
-  display: none; /* Shown dynamically when workspace exited */
+  display: none;
+  /* Shown dynamically when workspace exited */
   position: absolute;
   top: 60px;
   left: 0;
@@ -1102,7 +1166,7 @@ textarea {
   background: var(--bg-card);
   backdrop-filter: blur(10px);
   border-left: 4px solid var(--primary);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   border-radius: var(--border-radius-sm);
   display: flex;
   align-items: center;
@@ -1113,12 +1177,22 @@ textarea {
   animation: toastIn 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.toast-success { border-left-color: var(--color-success); }
-.toast-warning { border-left-color: var(--color-warning); }
-.toast-danger { border-left-color: var(--color-danger); }
+.toast-success {
+  border-left-color: var(--color-success);
+}
+
+.toast-warning {
+  border-left-color: var(--color-warning);
+}
+
+.toast-danger {
+  border-left-color: var(--color-danger);
+}
 
 @keyframes toastIn {
-  to { transform: translateX(0); }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .toast.fade-out {
@@ -1126,7 +1200,10 @@ textarea {
 }
 
 @keyframes toastOut {
-  to { transform: translateX(120%); opacity: 0; }
+  to {
+    transform: translateX(120%);
+    opacity: 0;
+  }
 }
 
 /* -------------------------------------------------------------
@@ -1136,6 +1213,7 @@ textarea {
   .form-grid {
     grid-template-columns: 1fr 1fr;
   }
+
   .col-3 {
     grid-column: span 2;
   }
@@ -1145,6 +1223,7 @@ textarea {
   .app-container {
     flex-direction: column;
   }
+
   .sidebar {
     width: 100%;
     height: auto;
@@ -1152,36 +1231,45 @@ textarea {
     border-right: none;
     border-bottom: 1px solid var(--border-color);
   }
+
   .sidebar.collapsed {
     margin-left: 0;
     display: none;
   }
+
   .menu-btn {
     display: flex;
   }
+
   .form-grid {
     grid-template-columns: 1fr;
   }
+
   .col-3 {
     grid-column: span 1;
   }
+
   .inspection-grid {
     grid-template-columns: 1fr;
   }
+
   .action-bar {
     flex-wrap: wrap;
     justify-content: center;
   }
+
   .corporate-banner {
     grid-template-columns: 1fr;
     gap: 1rem;
     padding: 1.5rem 1rem;
     justify-items: center;
   }
+
   .logo-container {
     grid-column: 1;
     justify-self: center;
   }
+
   .banner-text {
     grid-column: 1;
   }
@@ -1206,13 +1294,13 @@ textarea {
   justify-content: center;
   cursor: pointer;
   z-index: 150;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
   transition: var(--transition);
   opacity: 0;
   pointer-events: none;
 }
 
-.sidebar.collapsed ~ .floating-expand-btn {
+.sidebar.collapsed~.floating-expand-btn {
   transform: translateY(-50%) translateX(0);
   opacity: 1;
   pointer-events: auto;
@@ -1235,8 +1323,10 @@ textarea {
  * PRINT MEDIA OVERRIDES
  * ------------------------------------------------------------- */
 @media print {
+
   /* Set document sizing and hide background colors */
-  html, body {
+  html,
+  body {
     background-color: #ffffff !important;
     color: #000000 !important;
     font-size: 11pt !important;
@@ -1387,11 +1477,28 @@ textarea {
     white-space: pre-wrap !important;
   }
 
+  textarea#field-additional-info {
+    height: 80px !important;
+  }
+
+  /* Hide placeholders and empty values in printed report */
+  input::placeholder,
+  textarea::placeholder {
+    color: transparent !important;
+  }
+
+  select.is-empty,
+  input.is-empty,
+  textarea.is-empty {
+    color: transparent !important;
+  }
+
   /* Dividers in print */
   .divider-double {
     border-top: 2px double #000000 !important;
     margin: 1rem 0 !important;
   }
+
   .divider-single {
     border-top: 1px solid #000000 !important;
     margin: 1rem 0 !important;
@@ -1403,10 +1510,13 @@ textarea {
     border-radius: 0 !important;
     box-shadow: none !important;
   }
-  .parts-table th, .parts-table td {
+
+  .parts-table th,
+  .parts-table td {
     border-bottom: 1px solid #000000 !important;
     padding: 4px 6px !important;
   }
+
   .parts-table-input {
     border: none !important;
     background: transparent !important;
@@ -1414,23 +1524,29 @@ textarea {
     padding: 0 !important;
     font-size: 9pt !important;
   }
+
   .parts-table th {
     background-color: #f0f0f0 !important;
     color: #000000 !important;
   }
 
   /* Grids in print */
-  .form-middle-grid, .form-footer-grid {
+  .form-middle-grid,
+  .form-footer-grid {
     display: grid !important;
     grid-template-columns: 2fr 1fr !important;
     gap: 15px !important;
   }
+
   .form-footer-grid {
     grid-template-columns: 1.2fr 2fr !important;
   }
-  .footer-initials-stack, .middle-initials-col {
+
+  .footer-initials-stack,
+  .middle-initials-col {
     gap: 5px !important;
   }
+
   .tcs-textarea {
     border: 1px solid #000000 !important;
     height: 120px !important;

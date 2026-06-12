@@ -1,4 +1,4 @@
-// Sample Work Order records for Armor Coating Services, Inc. (matching Mockup layout schema)
+// Sample Work Order records for TITANIUM AERODYNAMICS, INC., Inc. (matching Mockup layout schema)
 const defaultWorkOrders = [
   {
     id: "3280",
