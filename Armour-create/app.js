@@ -663,31 +663,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Delete current record
   function deleteRecord() {
-    if (fieldId.value === 'NEW') {
-      newRecord();
-      showToast("Cleared new blank form.", "info");
-      return;
-    }
-
-    if (currentIndex === null) return;
-    const currentId = filteredOrders[currentIndex].id;
-
-    if (confirm(`Are you sure you want to delete Work Order #${currentId}?`)) {
-      // Remove from main DB
-      workOrders = workOrders.filter(w => w.id !== currentId);
-      saveDatabaseState();
-      showToast(`Work Order #${currentId} deleted.`, "warning");
-
-      updateStats();
-      applySearchAndFilters();
-
-      // Load next available record, or clear
-      if (filteredOrders.length > 0) {
-        const nextIdx = Math.min(currentIndex, filteredOrders.length - 1);
-        loadRecord(nextIdx);
-      } else {
-        showWelcomeOverlay();
+    try {
+      if (fieldId.value === 'NEW') {
+        newRecord();
+        showToast("Cleared new blank form.", "info");
+        return;
       }
+
+      if (currentIndex === null || !filteredOrders[currentIndex]) {
+        showToast("No active record selected to delete.", "warning");
+        return;
+      }
+
+      const currentId = filteredOrders[currentIndex].id;
+
+      if (confirm(`Are you sure you want to delete Work Order #${currentId}?`)) {
+        // Remove from main DB with type-safe string comparisons
+        workOrders = workOrders.filter(w => String(w.id) !== String(currentId));
+        saveDatabaseState();
+        showToast(`Work Order #${currentId} deleted.`, "warning");
+
+        updateStats();
+        
+        // Pass false so applySearchAndFilters does not reset the record index inside it
+        applySearchAndFilters(false);
+
+        // Load next available neighboring record, or clear
+        if (filteredOrders.length > 0) {
+          const nextIdx = Math.min(currentIndex, filteredOrders.length - 1);
+          loadRecord(nextIdx);
+        } else {
+          showWelcomeOverlay();
+        }
+      }
+    } catch (error) {
+      console.error("Error in deleteRecord:", error);
+      showToast("Error deleting record: " + error.message, "danger");
     }
   }
 
