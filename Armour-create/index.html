@@ -268,38 +268,51 @@
                     <tr>
                       <td><input type="text" class="parts-table-input parts-part" id="part-row-0"
                           placeholder="Part description/serial..."></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-0" placeholder="Size..."></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-0" placeholder="Size...">
+                      </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-0" min="0"
                           placeholder="Qty"></td>
                     </tr>
                     <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-1" placeholder="..."></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-1" placeholder="..."></td>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-1" placeholder="...">
+                      </td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-1" placeholder="...">
+                      </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-1" min="0"></td>
                     </tr>
                     <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-2" placeholder="..."></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-2" placeholder="..."></td>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-2" placeholder="...">
+                      </td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-2" placeholder="...">
+                      </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-2" min="0"></td>
                     </tr>
                     <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-3" placeholder="..."></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-3" placeholder="..."></td>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-3" placeholder="...">
+                      </td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-3" placeholder="...">
+                      </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-3" min="0"></td>
                     </tr>
                     <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-4" placeholder="..."></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-4" placeholder="..."></td>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-4" placeholder="...">
+                      </td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-4" placeholder="...">
+                      </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-4" min="0"></td>
                     </tr>
                     <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-5" placeholder="..."></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-5" placeholder="..."></td>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-5" placeholder="...">
+                      </td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-5" placeholder="...">
+                      </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-5" min="0"></td>
                     </tr>
                     <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-6" placeholder="..."></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-6" placeholder="..."></td>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-6" placeholder="...">
+                      </td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-6" placeholder="...">
+                      </td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-6" min="0"></td>
                     </tr>
                   </tbody>
@@ -319,11 +332,11 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="field-receiving-initial">Recieving Initial:</label>
+                  <label for="field-receiving-initial">Initial In:</label>
                   <input type="text" id="field-receiving-initial" name="receivingInitial" placeholder="Initials">
                 </div>
                 <div class="form-group">
-                  <label for="field-shipping-initial">Shipping Initial:</label>
+                  <label for="field-shipping-initial">Initial Out:</label>
                   <input type="text" id="field-shipping-initial" name="shippingInitial" placeholder="Initials">
                 </div>
                 <div class="form-group flex-grow">
@@ -344,10 +357,25 @@
                 <div class="form-group">
                   <label for="field-description">Description:</label>
                   <select id="field-description" name="description">
-                    <option value="">Select description</option>
                     <option value="GUN PARTS">GUN PARTS</option>
                     <option value="FORM TOOLS">FORM TOOLS</option>
                     <option value="SCREWS">SCREWS</option>
+                    <option value="PARTS">Parts</option>
+                    <option value="FORM TOOLS">Form Tools</option>
+                    <option value="CREWS">CREWS</option>
+                    <option value="MACHINE PARTS">Machine Parts</option>
+                    <option value="ENDMILL">Endmill</option>
+                    <option value="DRILL">Drill</option>
+                    <option value="SPROCKET">Sprocket</option>
+                    <option value="DIES">Dies</option>
+                    <option value="PUNCHES">PUNCHES</option>
+                    <option value="BURRS">BURRS</option>
+                    <option value="VAPES">VAPES</option>
+                    <option value="KEY CUTTER">KEY CUTTER</option>
+                    <option value="INSERTS">INSERTS</option>
+                    <option value="TAPS">TAPS</option>
+                    <option value="ROTORS">ROTORS</option>
+                    <option value="OTHER">OTHER</option>
                   </select>
                 </div>
               </div>
