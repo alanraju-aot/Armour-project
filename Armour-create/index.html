@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TITANIUM AERODYNAMICS, INC. - Work Order Report Manager</title>
+  <title>Titanium Coating Services Az, LLC - Work Order</title>
   <!-- Google Fonts: Outfit (modern, geometric) and Inter (highly readable UI font) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=9">
 </head>
 
 <body>
@@ -152,13 +152,12 @@
           <!-- Corporate Banner Header -->
           <div class="corporate-banner">
             <div class="logo-container">
-              <img src="logo.jpg" class="company-logo" alt="Titanium Aerodynamics Logo">
+              <img src="logo.jpg" class="company-logo" alt="Titanium Coating Services Logo">
             </div>
             <div class="banner-text">
-              <h1 class="company-name">TITANIUM AERODYNAMICS, INC.</h1>
-              <div class="banner-sub">Work Order</div>
+              <h1 class="company-name">WORK ORDER</h1>
+              <div class="banner-sub">Titanium Coating Services Az, LLC</div>
             </div>
-            <div class="watermark">TITANIUM AERODYNAMICS</div>
           </div>
 
           <!-- Alert banner for unsaved changes -->
@@ -219,12 +218,20 @@
                   <input type="text" id="field-po" name="poNumber" placeholder="Purchase order #">
                 </div>
                 <div class="form-group">
-                  <label for="field-receiving-date">Receiving Date:</label>
+                  <label for="field-receiving-date">Recieving Date:</label>
                   <input type="date" id="field-receiving-date" name="receivingDate" required>
+                </div>
+                <div class="form-group">
+                  <label for="field-due-date">Due Date:</label>
+                  <input type="date" id="field-due-date" name="dueDate" required>
+                </div>
+                <div class="form-group">
+                  <label for="field-shipping-date-top">Shipping Date:</label>
+                  <input type="date" id="field-shipping-date-top" name="shippingDateTop">
                 </div>
               </div>
 
-              <!-- Column 3: Priority, Due Date & Instructions -->
+              <!-- Column 3: Priority & Instructions -->
               <div class="form-column col-3">
                 <div class="form-group">
                   <label for="field-priority">Priority:</label>
@@ -233,10 +240,6 @@
                     <option value="Medium">Medium</option>
                     <option value="High">High</option>
                   </select>
-                </div>
-                <div class="form-group">
-                  <label for="field-due-date">Due Date:</label>
-                  <input type="date" id="field-due-date" name="dueDate" required>
                 </div>
                 <div class="form-group flex-grow">
                   <label for="field-instructions">Instructions:</label>
@@ -251,92 +254,81 @@
 
             <!-- Middle Section: Parts Table & Initial Info -->
             <div class="form-middle-grid">
-              <!-- Left side: Interactive Parts List -->
+              <!-- Left side: Interactive Parts List (Columns Swapped) -->
               <div class="parts-table-wrapper">
                 <table class="parts-table">
                   <thead>
                     <tr>
                       <th class="col-part-name">PART</th>
-                      <th class="col-part-qty">QTY</th>
                       <th class="col-part-size">SIZE</th>
+                      <th class="col-part-qty">QUANTITY</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td><input type="text" class="parts-table-input parts-part" id="part-row-0"
                           placeholder="Part description/serial..."></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-0" placeholder="Size..."></td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-0" min="0"
                           placeholder="Qty"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-0" placeholder="Size...">
-                      </td>
                     </tr>
                     <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-1" placeholder="...">
-                      </td>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-1" placeholder="..."></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-1" placeholder="..."></td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-1" min="0"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-1" placeholder="...">
-                      </td>
                     </tr>
                     <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-2" placeholder="...">
-                      </td>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-2" placeholder="..."></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-2" placeholder="..."></td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-2" min="0"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-2" placeholder="...">
-                      </td>
                     </tr>
                     <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-3" placeholder="...">
-                      </td>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-3" placeholder="..."></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-3" placeholder="..."></td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-3" min="0"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-3" placeholder="...">
-                      </td>
                     </tr>
                     <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-4" placeholder="...">
-                      </td>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-4" placeholder="..."></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-4" placeholder="..."></td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-4" min="0"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-4" placeholder="...">
-                      </td>
                     </tr>
                     <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-5" placeholder="...">
-                      </td>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-5" placeholder="..."></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-5" placeholder="..."></td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-5" min="0"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-5" placeholder="...">
-                      </td>
                     </tr>
                     <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-6" placeholder="...">
-                      </td>
+                      <td><input type="text" class="parts-table-input parts-part" id="part-row-6" placeholder="..."></td>
+                      <td><input type="text" class="parts-table-input parts-size" id="size-row-6" placeholder="..."></td>
                       <td><input type="number" class="parts-table-input parts-qty" id="qty-row-6" min="0"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-6" placeholder="...">
-                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
-              <!-- Right side: Sign-off Initials & Sandblast Options -->
+              <!-- Right side: Ship Via, Initials & Other Info -->
               <div class="middle-initials-col">
                 <div class="form-group">
-                  <label for="field-receiving-initial">Receiving Initial:</label>
+                  <label for="field-ship-via">Ship Via:</label>
+                  <select id="field-ship-via" name="shipVia">
+                    <option value="">Select option</option>
+                    <option value="UPS">UPS</option>
+                    <option value="WILL CALL">WILL CALL</option>
+                    <option value="DELIVERY">DELIVERY</option>
+                    <option value="other">other</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="field-receiving-initial">Recieving Initial:</label>
                   <input type="text" id="field-receiving-initial" name="receivingInitial" placeholder="Initials">
                 </div>
                 <div class="form-group">
                   <label for="field-shipping-initial">Shipping Initial:</label>
                   <input type="text" id="field-shipping-initial" name="shippingInitial" placeholder="Initials">
                 </div>
-                <div class="form-group">
-                  <label for="field-sandblast">Sandblast:</label>
-                  <select id="field-sandblast" name="sandblast">
-                    <option value="matte">Matte</option>
-                    <option value="satin">Satin</option>
-                    <option value="none">None</option>
-                  </select>
-                </div>
-                <div class="form-group flex-grow" style="margin-top: 0.25rem;">
-                  <label for="field-additional-info">Additional Information:</label>
-                  <textarea id="field-additional-info" name="additionalInfo" placeholder="Any additional information..."
+                <div class="form-group flex-grow">
+                  <label for="field-additional-info">Othere Info:</label>
+                  <textarea id="field-additional-info" name="additionalInfo" placeholder="Any other information..."
                     style="resize: none; height: 80px;"></textarea>
                 </div>
               </div>
@@ -345,48 +337,55 @@
             <!-- Single Divider Line -->
             <div class="divider-single"></div>
 
-            <!-- Footer Initials & For TCS Notes -->
+            <!-- Bottom Section: Description, Sandblast & Special Info -->
             <div class="form-footer-grid">
-              <!-- Left side: Dates and Initials stack -->
-              <div class="footer-initials-stack">
-                <div class="form-group-row">
-                  <div class="form-group w-65">
-                    <label for="field-footer-receiving-date">Receiving Date:</label>
-                    <input type="date" id="field-footer-receiving-date" name="footerReceivingDate">
-                  </div>
-                  <div class="form-group w-35">
-                    <label for="field-footer-receiving-initial">Initial:</label>
-                    <input type="text" id="field-footer-receiving-initial" name="footerReceivingInitial"
-                      placeholder="Initials">
-                  </div>
-                </div>
-
+              <!-- Bottom Left: Description Options -->
+              <div class="bottom-column col-desc">
                 <div class="form-group">
-                  <label for="field-footer-qc-initial">QC Initial:</label>
-                  <input type="text" id="field-footer-qc-initial" name="footerQcInitial" placeholder="QC Initials">
-                </div>
-
-                <div class="form-group-row">
-                  <div class="form-group w-65">
-                    <label for="field-footer-shipping-date">Shipping Date:</label>
-                    <input type="date" id="field-footer-shipping-date" name="footerShippingDate">
-                  </div>
-                  <div class="form-group w-35">
-                    <label for="field-footer-shipping-initial">Initial:</label>
-                    <input type="text" id="field-footer-shipping-initial" name="footerShippingInitial"
-                      placeholder="Initials">
-                  </div>
+                  <label for="field-description">Description:</label>
+                  <select id="field-description" name="description">
+                    <option value="">Select description</option>
+                    <option value="GUN PARTS">GUN PARTS</option>
+                    <option value="FORM TOOLS">FORM TOOLS</option>
+                    <option value="SCREWS">SCREWS</option>
+                  </select>
                 </div>
               </div>
 
-              <!-- Right side: For TCS box -->
-              <div class="footer-tcs-wrapper">
+              <!-- Bottom Middle: Sandblast & Shipping Date -->
+              <div class="bottom-column col-sandblast">
+                <div class="form-group">
+                  <label for="field-sandblast">Sandblast:</label>
+                  <select id="field-sandblast" name="sandblast">
+                    <option value="">Select sandblast</option>
+                    <option value="matte">Matte</option>
+                    <option value="satin">Satin</option>
+                    <option value="none">None</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-top: 0.5rem;">
+                  <label for="field-shipping-date-bottom">Shipping Date:</label>
+                  <input type="date" id="field-shipping-date-bottom" name="shippingDateBottom">
+                </div>
+              </div>
+
+              <!-- Bottom Right: Special Info -->
+              <div class="bottom-column col-spl-info">
                 <div class="form-group flex-grow height-100">
-                  <label for="field-for-tcs">For TCS:</label>
+                  <label for="field-for-tcs">SPL INFO:</label>
                   <textarea id="field-for-tcs" name="forTcs" class="tcs-textarea"
-                    placeholder="Internal TCS notes, inspection logs, or comments..."></textarea>
+                    placeholder="Special instructions, inspection logs, or comments..."></textarea>
                 </div>
               </div>
+            </div>
+
+            <!-- Hidden inputs to preserve compatibility with existing data schemas -->
+            <div style="display: none;">
+              <input type="date" id="field-footer-receiving-date" name="footerReceivingDate">
+              <input type="text" id="field-footer-receiving-initial" name="footerReceivingInitial">
+              <input type="text" id="field-footer-qc-initial" name="footerQcInitial">
+              <input type="date" id="field-footer-shipping-date" name="footerShippingDate">
+              <input type="text" id="field-footer-shipping-initial" name="footerShippingInitial">
             </div>
 
             <!-- Metadata Info Panel (Created/Modified Time - Read Only) -->
@@ -605,8 +604,8 @@
 
   <!-- JS Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="samples.js?v=5"></script>
-  <script src="app.js?v=5"></script>
+  <script src="samples.js?v=9"></script>
+  <script src="app.js?v=9"></script>
 </body>
 
 </html>

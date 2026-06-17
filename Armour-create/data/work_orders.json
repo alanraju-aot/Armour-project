@@ -53,55 +53,68 @@
   },
   {
     "id": "3282",
-    "customerName": "AeroJet Engineering",
-    "priority": "High",
     "partNo": "TI-9910-A",
-    "poNumber": "PO-AJ-5582",
-    "dueDate": "2026-06-15",
     "coating": "ALPHA-AT-ALTIN",
+    "customerName": "AeroJet Engineering",
+    "poNumber": "PO-AJ-5582",
     "receivingDate": "2026-05-28",
+    "priority": "Medium",
+    "dueDate": "2026-06-15",
     "instructions": "Preheat substrate to 300°F. Apply TBC top coat to 12.0 mils thickness. Perform non-destructive thermal cycling inspection. Check adhesion strength.",
-    "parts": [
-      {
-        "part": "TI-9910-A Rotor Hub A",
-        "quantity": 2
-      },
-      {
-        "part": "TI-9910-A Rotor Hub B",
-        "quantity": 2
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      }
-    ],
     "receivingInitial": "JV",
     "shippingInitial": "KS",
-    "sandblast": "FINE",
+    "sandblast": "matte",
+    "additionalInfo": "",
     "footerReceivingDate": "2026-05-28",
     "footerReceivingInitial": "JV",
     "footerQcInitial": "QC1",
     "footerShippingDate": "2026-06-02",
     "footerShippingInitial": "KS",
     "forTcs": "Thermal barrier verified. Adhesion test passed.",
+    "shipVia": "",
+    "description": "",
+    "parts": [
+      {
+        "part": "TI-9910-A Rotor Hub A",
+        "quantity": 2,
+        "size": ""
+      },
+      {
+        "part": "TI-9910-A Rotor Hub B",
+        "quantity": 2,
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      }
+    ],
+    "startDate": "2026-05-28",
+    "finishDate": "2026-06-02",
+    "quantity": 4,
     "createdTime": "2026-05-28T08:00:00Z",
-    "lastModifiedTime": "2026-06-02T17:20:00Z"
+    "lastModifiedTime": "2026-06-17T17:50:52.575Z"
   },
   {
     "id": "3283",
@@ -110,7 +123,7 @@
     "customerName": "AeroDynamics Propulsion Inc.",
     "poNumber": "PO-998822-AD",
     "receivingDate": "2026-06-01",
-    "priority": "Low",
+    "priority": "High",
     "dueDate": "2026-06-12",
     "instructions": "Apply double pass coating. Pre-bake parts at 150°F for 30 mins, cure at 400°F for 1 hour. Verify thickness in 5 random areas per batch. Target: >4H Pencil Hardness.",
     "receivingInitial": "SJ",
@@ -123,6 +136,8 @@
     "footerShippingDate": "2026-06-05",
     "footerShippingInitial": "TR",
     "forTcs": "Uniform cure achieved. Hardness target met.",
+    "shipVia": "",
+    "description": "",
     "parts": [
       {
         "part": "AC-8890 Fan Blade Right",
@@ -164,6 +179,6 @@
     "finishDate": "2026-06-05",
     "quantity": 48,
     "createdTime": "2026-06-01T08:30:00Z",
-    "lastModifiedTime": "2026-06-17T16:22:56.708Z"
+    "lastModifiedTime": "2026-06-17T17:47:57.989Z"
   }
 ]

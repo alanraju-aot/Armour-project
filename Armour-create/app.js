@@ -46,6 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const fieldShippingInitial = document.getElementById('field-shipping-initial');
   const fieldSandblast = document.getElementById('field-sandblast');
   const fieldAdditionalInfo = document.getElementById('field-additional-info');
+  const fieldShipVia = document.getElementById('field-ship-via');
+  const fieldDescription = document.getElementById('field-description');
+  const fieldShippingDateTop = document.getElementById('field-shipping-date-top');
+  const fieldShippingDateBottom = document.getElementById('field-shipping-date-bottom');
 
   // Footer Section
   const fieldFooterRecDate = document.getElementById('field-footer-receiving-date');
@@ -416,11 +420,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fieldAdditionalInfo.value = record.additionalInfo || '';
 
+    // Load new elements
+    if (fieldShipVia) fieldShipVia.value = record.shipVia || '';
+    if (fieldDescription) fieldDescription.value = record.description || '';
+    
+    const shipDate = record.footerShippingDate || record.finishDate || '';
+    if (fieldShippingDateTop) fieldShippingDateTop.value = shipDate;
+    if (fieldShippingDateBottom) fieldShippingDateBottom.value = shipDate;
+
     // Footer items
     fieldFooterRecDate.value = record.footerReceivingDate || record.receivingDate || record.startDate || '';
     fieldFooterRecInitial.value = record.footerReceivingInitial || record.receivingInitial || '';
     fieldFooterQcInitial.value = record.footerQcInitial || '';
-    fieldFooterShipDate.value = record.footerShippingDate || record.finishDate || '';
+    fieldFooterShipDate.value = shipDate;
     fieldFooterShipInitial.value = record.footerShippingInitial || record.shippingInitial || '';
     fieldForTcs.value = record.forTcs || '';
 
@@ -491,6 +503,8 @@ document.addEventListener('DOMContentLoaded', () => {
       footerShippingDate: fieldFooterShipDate.value,
       footerShippingInitial: fieldFooterShipInitial.value.trim(),
       forTcs: fieldForTcs.value.trim(),
+      shipVia: fieldShipVia ? fieldShipVia.value : '',
+      description: fieldDescription ? fieldDescription.value : '',
       parts: getPartsTableData(),
       // Backward compatibility fields
       startDate: fieldReceivingDate.value,
@@ -516,6 +530,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (key === 'id') return false;
         if (key === 'priority' && currentForm[key] === '') return false;
         if (key === 'sandblast' && currentForm[key] === '') return false;
+        if (key === 'shipVia' && currentForm[key] === '') return false;
+        if (key === 'description' && currentForm[key] === '') return false;
         if (key === 'quantity') return false;
         if (key === 'startDate' || key === 'finishDate') return false;
         if (key === 'parts') {
@@ -1039,7 +1055,7 @@ document.addEventListener('DOMContentLoaded', () => {
       "Work Order ID", "Customer Name", "Priority", "Part No", "PO Number", "Due Date",
       "Coating", "Receiving Date", "Instructions", "Receiving Initial", "Shipping Initial",
       "Sandblast", "Additional Information", "Footer Receiving Date", "Footer Receiving Initial", "Footer QC Initial",
-      "Footer Shipping Date", "Footer Shipping Initial", "For TCS Notes", "Parts List"
+      "Footer Shipping Date", "Footer Shipping Initial", "For TCS Notes", "Parts List", "Ship Via", "Description"
     ];
 
     const csvRows = [csvHeaders.join(",")];
@@ -1074,7 +1090,9 @@ document.addEventListener('DOMContentLoaded', () => {
         order.footerShippingDate || '',
         order.footerShippingInitial || '',
         order.forTcs || '',
-        partsText
+        partsText,
+        order.shipVia || '',
+        order.description || ''
       ];
 
       // Escape fields with quotes and commas
@@ -1242,7 +1260,9 @@ document.addEventListener('DOMContentLoaded', () => {
       "Footer Shipping Date": "footerShippingDate", "footerShippingDate": "footerShippingDate",
       "Footer Shipping Initial": "footerShippingInitial", "footerShippingInitial": "footerShippingInitial",
       "For TCS Notes": "forTcs", "forTcs": "forTcs",
-      "Parts List": "parts"
+      "Parts List": "parts",
+      "Ship Via": "shipVia", "shipVia": "shipVia",
+      "Description": "description", "description": "description"
     };
 
     const records = [];
@@ -1298,6 +1318,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- EVENT LISTENERS REGISTRATION ---
   function setupEventListeners() {
+    // Date synchronization
+    if (fieldShippingDateTop) {
+      fieldShippingDateTop.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (fieldShippingDateBottom) fieldShippingDateBottom.value = val;
+        if (fieldFooterShipDate) fieldFooterShipDate.value = val;
+        checkDirtyState();
+        updateEmptyClasses();
+      });
+      fieldShippingDateTop.addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (fieldShippingDateBottom) fieldShippingDateBottom.value = val;
+        if (fieldFooterShipDate) fieldFooterShipDate.value = val;
+        checkDirtyState();
+        updateEmptyClasses();
+      });
+    }
+    if (fieldShippingDateBottom) {
+      fieldShippingDateBottom.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (fieldShippingDateTop) fieldShippingDateTop.value = val;
+        if (fieldFooterShipDate) fieldFooterShipDate.value = val;
+        checkDirtyState();
+        updateEmptyClasses();
+      });
+      fieldShippingDateBottom.addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (fieldShippingDateTop) fieldShippingDateTop.value = val;
+        if (fieldFooterShipDate) fieldFooterShipDate.value = val;
+        checkDirtyState();
+        updateEmptyClasses();
+      });
+    }
+
     // Sidebar toggle (Collapse/Expand)
     sidebarToggle.addEventListener('click', () => {
       sidebar.classList.add('collapsed');
@@ -1371,7 +1425,8 @@ document.addEventListener('DOMContentLoaded', () => {
       fieldPriority, fieldDueDate, fieldInstructions,
       fieldReceivingInitial, fieldShippingInitial, fieldSandblast, fieldAdditionalInfo,
       fieldFooterRecDate, fieldFooterRecInitial, fieldFooterQcInitial,
-      fieldFooterShipDate, fieldFooterShipInitial, fieldForTcs
+      fieldFooterShipDate, fieldFooterShipInitial, fieldForTcs,
+      fieldShipVia, fieldDescription, fieldShippingDateTop, fieldShippingDateBottom
     ];
 
     // Add Parts Table inputs for change alert tracking
