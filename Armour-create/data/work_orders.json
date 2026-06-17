@@ -1,57 +1,5 @@
 [
   {
-    "id": "3280",
-    "customerName": "HydraForce Systems",
-    "priority": "Medium",
-    "partNo": "AL-4022-T",
-    "poNumber": "PO-2026-0518",
-    "dueDate": "2026-06-01",
-    "coating": "ALPHA-T-TIN",
-    "receivingDate": "2026-05-20",
-    "instructions": "Rack parts on internal threads to prevent damage. Anodize at 32°F for 45 minutes. Seal in hot nickel acetate bath for 15 minutes. Check bore dimension post-coating.",
-    "parts": [
-      {
-        "part": "AL-4022-T End Cap A",
-        "quantity": 60
-      },
-      {
-        "part": "AL-4022-T End Cap B",
-        "quantity": 60
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      }
-    ],
-    "receivingInitial": "RM",
-    "shippingInitial": "JS",
-    "sandblast": "FINE",
-    "footerReceivingDate": "2026-05-20",
-    "footerReceivingInitial": "RM",
-    "footerQcInitial": "QC1",
-    "footerShippingDate": "2026-05-24",
-    "footerShippingInitial": "JS",
-    "forTcs": "Batch meets MIL specs. Processed under control line 2.",
-    "createdTime": "2026-05-20T09:15:00Z",
-    "lastModifiedTime": "2026-05-24T15:30:00Z"
-  },
-  {
     "id": "3281",
     "customerName": "Deepwater Energy Corp",
     "priority": "High",
@@ -157,85 +105,33 @@
   },
   {
     "id": "3283",
-    "customerName": "AeroDynamics Propulsion Inc.",
-    "priority": "High",
     "partNo": "AC-8890",
+    "coating": "BLACK PANTHER",
+    "customerName": "AeroDynamics Propulsion Inc.",
     "poNumber": "PO-998822-AD",
-    "dueDate": "2026-06-12",
-    "coating": "ALPHA-TC-TICN",
     "receivingDate": "2026-06-01",
+    "priority": "Low",
+    "dueDate": "2026-06-12",
     "instructions": "Apply double pass coating. Pre-bake parts at 150°F for 30 mins, cure at 400°F for 1 hour. Verify thickness in 5 random areas per batch. Target: >4H Pencil Hardness.",
-    "parts": [
-      {
-        "part": "AC-8890 Fan Blade Right",
-        "quantity": 24
-      },
-      {
-        "part": "AC-8890 Fan Blade Left",
-        "quantity": 24
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      },
-      {
-        "part": "",
-        "quantity": ""
-      }
-    ],
     "receivingInitial": "SJ",
     "shippingInitial": "TR",
-    "sandblast": "FINE",
+    "sandblast": "matte",
+    "additionalInfo": "",
     "footerReceivingDate": "2026-06-01",
     "footerReceivingInitial": "SJ",
     "footerQcInitial": "QC3",
     "footerShippingDate": "2026-06-05",
     "footerShippingInitial": "TR",
     "forTcs": "Uniform cure achieved. Hardness target met.",
-    "createdTime": "2026-06-01T08:30:00Z",
-    "lastModifiedTime": "2026-06-05T16:45:00Z"
-  },
-  {
-    "id": "3284",
-    "partNo": "CS-5044-B",
-    "coating": "ALPHA-T-TIN",
-    "customerName": "Titan Infrastructure",
-    "poNumber": "PO-TI-88901",
-    "receivingDate": "2026-06-04",
-    "priority": "Standard",
-    "dueDate": "2026-06-20",
-    "instructions": "Dip-spin coating application. Cure at 600°F for 25 minutes. Ensure no accumulation in bracket holes or recesses. Check thread clearance.",
-    "receivingInitial": "DK",
-    "shippingInitial": "",
-    "sandblast": "none",
-    "additionalInfo": "Coating thickness must be strictly within 1.5-2.0 mil range.",
-    "footerReceivingDate": "2026-06-04",
-    "footerReceivingInitial": "DK",
-    "footerQcInitial": "",
-    "footerShippingDate": "",
-    "footerShippingInitial": "",
-    "forTcs": "TCS inspection passed. Uniform coating thickness verified.",
     "parts": [
       {
-        "part": "High-Temp Turbine Blade",
-        "quantity": 12,
+        "part": "AC-8890 Fan Blade Right",
+        "quantity": 24,
         "size": ""
       },
       {
-        "part": "",
-        "quantity": "",
+        "part": "AC-8890 Fan Blade Left",
+        "quantity": 24,
         "size": ""
       },
       {
@@ -264,10 +160,10 @@
         "size": ""
       }
     ],
-    "startDate": "2026-06-04",
-    "finishDate": "",
-    "quantity": 12,
-    "createdTime": "2026-06-04T10:10:00Z",
-    "lastModifiedTime": "2026-06-12T18:03:06.527Z"
+    "startDate": "2026-06-01",
+    "finishDate": "2026-06-05",
+    "quantity": 48,
+    "createdTime": "2026-06-01T08:30:00Z",
+    "lastModifiedTime": "2026-06-17T16:22:56.708Z"
   }
 ]

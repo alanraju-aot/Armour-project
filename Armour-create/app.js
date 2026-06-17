@@ -138,6 +138,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function updatePriorityStyles() {
+    if (!fieldPriority) return;
+    const val = fieldPriority.value;
+    fieldPriority.classList.remove('priority-high', 'priority-medium', 'priority-low');
+    if (val === 'High' || val === 'Rush') {
+      fieldPriority.classList.add('priority-high');
+    } else if (val === 'Medium' || val === 'Priority') {
+      fieldPriority.classList.add('priority-medium');
+    } else if (val === 'Low' || val === 'Standard') {
+      fieldPriority.classList.add('priority-low');
+    }
+  }
+
   // --- INITIALIZATION ---
   function init() {
     // 1. Theme Configuration
@@ -379,11 +392,13 @@ document.addEventListener('DOMContentLoaded', () => {
     fieldReceivingDate.value = record.receivingDate || record.startDate || '';
 
     // Map legacy priority values
-    let priorityVal = record.priority || '';
-    if (priorityVal === 'High') priorityVal = 'Rush';
-    else if (priorityVal === 'Medium') priorityVal = 'Priority';
-    else if (priorityVal === 'Low') priorityVal = 'Standard';
+    let priorityVal = record.priority || 'Medium';
+    if (priorityVal === 'Rush' || priorityVal === 'High') priorityVal = 'High';
+    else if (priorityVal === 'Priority' || priorityVal === 'Medium') priorityVal = 'Medium';
+    else if (priorityVal === 'Standard' || priorityVal === 'Low') priorityVal = 'Low';
     fieldPriority.value = priorityVal;
+
+    updatePriorityStyles();
 
     fieldDueDate.value = record.dueDate || '';
     fieldInstructions.value = record.instructions || '';
@@ -545,10 +560,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
-  // Create a new empty Work Order form
-  function newRecord() {
-    if (!confirmNavigation()) return;
-
+  // Create a new empty Work Order form (Direct method)
+  function newRecordDirect() {
     currentIndex = null;
     welcomeOverlay.style.display = 'none';
 
@@ -577,12 +590,42 @@ document.addEventListener('DOMContentLoaded', () => {
     isDirty = false;
     unsavedAlert.style.display = 'none';
     updateEmptyClasses();
+    updatePriorityStyles();
+  }
+
+  // Handle Create New Record with modal check for unsaved changes
+  function newRecord() {
+    if (isDirty) {
+      const modal = document.getElementById('unsaved-changes-modal');
+      modal.style.display = 'flex';
+
+      const btnSaveNew = document.getElementById('modal-btn-save-new');
+      const btnDiscardNew = document.getElementById('modal-btn-discard-new');
+      const btnCancelNew = document.getElementById('modal-btn-cancel-new');
+
+      btnSaveNew.onclick = () => {
+        modal.style.display = 'none';
+        saveRecord(); // Save changes
+        newRecordDirect(); // Clear form for new record
+      };
+
+      btnDiscardNew.onclick = () => {
+        modal.style.display = 'none';
+        newRecordDirect(); // Discard and create new
+      };
+
+      btnCancelNew.onclick = () => {
+        modal.style.display = 'none'; // Close modal
+      };
+    } else {
+      newRecordDirect();
+    }
   }
 
   // Revert form state back to original record values
   function undoChanges() {
     if (fieldId.value === 'NEW') {
-      newRecord();
+      newRecordDirect();
     } else if (currentIndex !== null) {
       loadRecord(currentIndex);
       showToast("Changes reverted.", "info");
@@ -663,21 +706,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Delete current record
   function deleteRecord() {
+    console.log("deleteRecord: function invoked");
     try {
       if (fieldId.value === 'NEW') {
-        newRecord();
+        console.log("deleteRecord: clearing new unsaved form");
+        newRecordDirect();
         showToast("Cleared new blank form.", "info");
         return;
       }
 
       if (currentIndex === null || !filteredOrders[currentIndex]) {
+        console.warn("deleteRecord: aborting delete due to null index or missing record data");
         showToast("No active record selected to delete.", "warning");
         return;
       }
 
       const currentId = filteredOrders[currentIndex].id;
+      console.log("deleteRecord: displaying custom modal for target ID:", currentId);
 
-      if (confirm(`Are you sure you want to delete Work Order #${currentId}?`)) {
+      // Display custom confirmation modal
+      const modal = document.getElementById('delete-confirm-modal');
+      const textId = document.getElementById('delete-modal-order-id');
+      const btnConfirm = document.getElementById('modal-btn-delete-confirm');
+      const btnCancel = document.getElementById('modal-btn-delete-cancel');
+
+      textId.textContent = `#${currentId}`;
+      modal.style.display = 'flex';
+
+      btnConfirm.onclick = () => {
+        console.log("deleteRecord: deletion confirmed via custom modal");
+        modal.style.display = 'none';
+
         // Remove from main DB with type-safe string comparisons
         workOrders = workOrders.filter(w => String(w.id) !== String(currentId));
         saveDatabaseState();
@@ -691,11 +750,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // Load next available neighboring record, or clear
         if (filteredOrders.length > 0) {
           const nextIdx = Math.min(currentIndex, filteredOrders.length - 1);
+          console.log("deleteRecord: loading neighboring record at index", nextIdx);
           loadRecord(nextIdx);
         } else {
+          console.log("deleteRecord: no records left in active list");
           showWelcomeOverlay();
         }
-      }
+      };
+
+      btnCancel.onclick = () => {
+        console.log("deleteRecord: deletion cancelled via custom modal");
+        modal.style.display = 'none';
+      };
+
     } catch (error) {
       console.error("Error in deleteRecord:", error);
       showToast("Error deleting record: " + error.message, "danger");
@@ -728,6 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.record-card').forEach(card => card.classList.remove('active'));
     updateEmptyClasses();
+    updatePriorityStyles();
   }
 
   // --- FILTERING & SEARCH CONTROLS ---
@@ -1318,10 +1386,12 @@ document.addEventListener('DOMContentLoaded', () => {
         field.addEventListener('input', () => {
           checkDirtyState();
           updateEmptyClasses();
+          updatePriorityStyles();
         });
         field.addEventListener('change', () => {
           checkDirtyState();
           updateEmptyClasses();
+          updatePriorityStyles();
         });
       }
     });
