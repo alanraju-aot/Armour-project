@@ -1,4 +1,4 @@
-// TITANIUM AERODYNAMICS, INC. - Work Order Report Manager Logic
+// TITANIUM COATING SERVICES, INC. - Work Order Report Manager Logic
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- APPLICATION STATE ---
@@ -45,11 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const fieldReceivingInitial = document.getElementById('field-receiving-initial');
   const fieldShippingInitial = document.getElementById('field-shipping-initial');
   const fieldSandblast = document.getElementById('field-sandblast');
-  const fieldAdditionalInfo = document.getElementById('field-additional-info');
+  const fieldBoxText = document.getElementById('field-box-text');
+  const fieldQcText = document.getElementById('field-qc-text');
   const fieldShipVia = document.getElementById('field-ship-via');
   const fieldDescription = document.getElementById('field-description');
   const fieldShippingDateTop = document.getElementById('field-shipping-date-top');
-  const fieldShippingDateBottom = document.getElementById('field-shipping-date-bottom');
 
   // Footer Section
   const fieldFooterRecDate = document.getElementById('field-footer-receiving-date');
@@ -418,15 +418,15 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (sbValue.toUpperCase() === 'ROUGH') sbValue = 'satin';
     fieldSandblast.value = sbValue;
 
-    fieldAdditionalInfo.value = record.additionalInfo || '';
+    if (fieldBoxText) fieldBoxText.value = record.boxText || record.additionalInfo || '';
+    if (fieldQcText) fieldQcText.value = record.qcText || '';
 
     // Load new elements
     if (fieldShipVia) fieldShipVia.value = record.shipVia || '';
     if (fieldDescription) fieldDescription.value = record.description || '';
-    
+
     const shipDate = record.footerShippingDate || record.finishDate || '';
     if (fieldShippingDateTop) fieldShippingDateTop.value = shipDate;
-    if (fieldShippingDateBottom) fieldShippingDateBottom.value = shipDate;
 
     // Footer items
     fieldFooterRecDate.value = record.footerReceivingDate || record.receivingDate || record.startDate || '';
@@ -496,7 +496,8 @@ document.addEventListener('DOMContentLoaded', () => {
       receivingInitial: fieldReceivingInitial.value.trim(),
       shippingInitial: fieldShippingInitial.value.trim(),
       sandblast: fieldSandblast.value,
-      additionalInfo: fieldAdditionalInfo.value.trim(),
+      boxText: fieldBoxText ? fieldBoxText.value.trim() : '',
+      qcText: fieldQcText ? fieldQcText.value.trim() : '',
       footerReceivingDate: fieldFooterRecDate.value,
       footerReceivingInitial: fieldFooterRecInitial.value.trim(),
       footerQcInitial: fieldFooterQcInitial.value.trim(),
@@ -759,7 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(`Work Order #${currentId} deleted.`, "warning");
 
         updateStats();
-        
+
         // Pass false so applySearchAndFilters does not reset the record index inside it
         applySearchAndFilters(false);
 
@@ -838,7 +839,8 @@ document.addEventListener('DOMContentLoaded', () => {
           (order.poNumber && order.poNumber.toLowerCase().includes(activeSearch)) ||
           (order.coating && order.coating.toLowerCase().includes(activeSearch)) ||
           (order.instructions && order.instructions.toLowerCase().includes(activeSearch)) ||
-          (order.additionalInfo && order.additionalInfo.toLowerCase().includes(activeSearch)) ||
+          (order.boxText && order.boxText.toLowerCase().includes(activeSearch)) ||
+          (order.qcText && order.qcText.toLowerCase().includes(activeSearch)) ||
           partsMatch
         );
       }
@@ -1054,7 +1056,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const csvHeaders = [
       "Work Order ID", "Customer Name", "Priority", "Part No", "PO Number", "Due Date",
       "Coating", "Receiving Date", "Instructions", "Receiving Initial", "Shipping Initial",
-      "Sandblast", "Additional Information", "Footer Receiving Date", "Footer Receiving Initial", "Footer QC Initial",
+      "Sandblast", "BOX(TEXT)", "QC(TEXT)", "Footer Receiving Date", "Footer Receiving Initial", "Footer QC Initial",
       "Footer Shipping Date", "Footer Shipping Initial", "For TCS Notes", "Parts List", "Ship Via", "Description"
     ];
 
@@ -1083,7 +1085,8 @@ document.addEventListener('DOMContentLoaded', () => {
         order.receivingInitial || '',
         order.shippingInitial || '',
         order.sandblast || '',
-        order.additionalInfo || '',
+        order.boxText || '',
+        order.qcText || '',
         order.footerReceivingDate || '',
         order.footerReceivingInitial || '',
         order.footerQcInitial || '',
@@ -1253,7 +1256,8 @@ document.addEventListener('DOMContentLoaded', () => {
       "Receiving Initial": "receivingInitial", "receivingInitial": "receivingInitial",
       "Shipping Initial": "shippingInitial", "shippingInitial": "shippingInitial",
       "Sandblast": "sandblast", "sandblast": "sandblast",
-      "Additional Information": "additionalInfo", "additionalInfo": "additionalInfo",
+      "BOX(TEXT)": "boxText", "boxText": "boxText",
+      "QC(TEXT)": "qcText", "qcText": "qcText",
       "Footer Receiving Date": "footerReceivingDate", "footerReceivingDate": "footerReceivingDate",
       "Footer Receiving Initial": "footerReceivingInitial", "footerReceivingInitial": "footerReceivingInitial",
       "Footer QC Initial": "footerQcInitial", "footerQcInitial": "footerQcInitial",
@@ -1322,30 +1326,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fieldShippingDateTop) {
       fieldShippingDateTop.addEventListener('input', (e) => {
         const val = e.target.value;
-        if (fieldShippingDateBottom) fieldShippingDateBottom.value = val;
         if (fieldFooterShipDate) fieldFooterShipDate.value = val;
         checkDirtyState();
         updateEmptyClasses();
       });
       fieldShippingDateTop.addEventListener('change', (e) => {
         const val = e.target.value;
-        if (fieldShippingDateBottom) fieldShippingDateBottom.value = val;
-        if (fieldFooterShipDate) fieldFooterShipDate.value = val;
-        checkDirtyState();
-        updateEmptyClasses();
-      });
-    }
-    if (fieldShippingDateBottom) {
-      fieldShippingDateBottom.addEventListener('input', (e) => {
-        const val = e.target.value;
-        if (fieldShippingDateTop) fieldShippingDateTop.value = val;
-        if (fieldFooterShipDate) fieldFooterShipDate.value = val;
-        checkDirtyState();
-        updateEmptyClasses();
-      });
-      fieldShippingDateBottom.addEventListener('change', (e) => {
-        const val = e.target.value;
-        if (fieldShippingDateTop) fieldShippingDateTop.value = val;
         if (fieldFooterShipDate) fieldFooterShipDate.value = val;
         checkDirtyState();
         updateEmptyClasses();
@@ -1423,10 +1409,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const formFields = [
       fieldPart, fieldCoating, fieldName, fieldPo, fieldReceivingDate,
       fieldPriority, fieldDueDate, fieldInstructions,
-      fieldReceivingInitial, fieldShippingInitial, fieldSandblast, fieldAdditionalInfo,
+      fieldReceivingInitial, fieldShippingInitial, fieldSandblast, fieldBoxText, fieldQcText,
       fieldFooterRecDate, fieldFooterRecInitial, fieldFooterQcInitial,
       fieldFooterShipDate, fieldFooterShipInitial, fieldForTcs,
-      fieldShipVia, fieldDescription, fieldShippingDateTop, fieldShippingDateBottom
+      fieldShipVia, fieldDescription, fieldShippingDateTop
     ];
 
     // Add Parts Table inputs for change alert tracking

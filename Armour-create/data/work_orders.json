@@ -64,7 +64,8 @@
     "receivingInitial": "JV",
     "shippingInitial": "KS",
     "sandblast": "matte",
-    "additionalInfo": "",
+    "boxText": "",
+    "qcText": "",
     "footerReceivingDate": "2026-05-28",
     "footerReceivingInitial": "JV",
     "footerQcInitial": "QC1",
@@ -129,7 +130,8 @@
     "receivingInitial": "SJ",
     "shippingInitial": "TR",
     "sandblast": "matte",
-    "additionalInfo": "",
+    "boxText": "",
+    "qcText": "",
     "footerReceivingDate": "2026-06-01",
     "footerReceivingInitial": "SJ",
     "footerQcInitial": "QC3",
@@ -179,6 +181,6 @@
     "finishDate": "2026-06-05",
     "quantity": 48,
     "createdTime": "2026-06-01T08:30:00Z",
-    "lastModifiedTime": "2026-06-17T17:47:57.989Z"
+    "lastModifiedTime": "2026-06-17T20:01:20.445Z"
   }
 ]

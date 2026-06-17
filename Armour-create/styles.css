@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------
- * TITANIUM AERODYNAMICS, INC. - WORK ORDER MANAGER
+ * TITANIUM COATING SERVICES, INC. - WORK ORDER MANAGER
  * Custom Vanilla CSS Design System
  * ------------------------------------------------------------- */
 
@@ -1512,13 +1512,25 @@ textarea {
 }
 
 @keyframes modalFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes modalScaleUp {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* -------------------------------------------------------------
@@ -1688,9 +1700,7 @@ textarea {
     white-space: pre-wrap !important;
   }
 
-  textarea#field-additional-info {
-    height: 50px !important;
-  }
+
 
   /* Hide placeholders and empty values in printed report */
   input::placeholder,

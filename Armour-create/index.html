@@ -20,10 +20,9 @@
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div class="logo-area">
-          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          </svg>
-          <h2>TITANIUM AERODYNAMICS</h2>
+          <img src="logo.jpg?v=10" class="logo-icon" alt="TITANIUM COATING SERVICES Logo"
+            style="border-radius: var(--border-radius-sm); background: #ffffff; padding: 2px; object-fit: contain;">
+          <h2>TITANIUM COATING SERVICES</h2>
         </div>
         <button class="toggle-btn" id="sidebar-toggle" title="Collapse Sidebar">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
@@ -152,7 +151,7 @@
           <!-- Corporate Banner Header -->
           <div class="corporate-banner">
             <div class="logo-container">
-              <img src="logo.jpg" class="company-logo" alt="Titanium Coating Services Logo">
+              <img src="logo.jpg?v=10" class="company-logo" alt="Titanium Coating Services Logo">
             </div>
             <div class="banner-text">
               <h1 class="company-name">WORK ORDER</h1>
@@ -339,10 +338,13 @@
                   <label for="field-shipping-initial">Initial Out:</label>
                   <input type="text" id="field-shipping-initial" name="shippingInitial" placeholder="Initials">
                 </div>
-                <div class="form-group flex-grow">
-                  <label for="field-additional-info">Othere Info:</label>
-                  <textarea id="field-additional-info" name="additionalInfo" placeholder="Any other information..."
-                    style="resize: none; height: 80px;"></textarea>
+                <div class="form-group">
+                  <label for="field-box-text">BOX(TEXT):</label>
+                  <input type="text" id="field-box-text" name="boxText" placeholder="BOX(TEXT)">
+                </div>
+                <div class="form-group">
+                  <label for="field-qc-text">QC(TEXT):</label>
+                  <input type="text" id="field-qc-text" name="qcText" placeholder="QC(TEXT)">
                 </div>
               </div>
             </div>
@@ -391,10 +393,7 @@
                     <option value="none">None</option>
                   </select>
                 </div>
-                <div class="form-group" style="margin-top: 0.5rem;">
-                  <label for="field-shipping-date-bottom">Shipping Date:</label>
-                  <input type="date" id="field-shipping-date-bottom" name="shippingDateBottom">
-                </div>
+
               </div>
 
               <!-- Bottom Right: Special Info -->
@@ -552,7 +551,7 @@
       <!-- Welcome Overlay / Information Pane when exited/no record selected -->
       <div class="welcome-overlay" id="welcome-overlay">
         <div class="overlay-card">
-          <h2>TITANIUM AERODYNAMICS, INC. DB</h2>
+          <h2>TITANIUM COATING SERVICES, INC. DB</h2>
           <p>Please select a work order from the sidebar panel, search using the navigation controls at the bottom, or
             create a new order to begin editing.</p>
           <div class="overlay-buttons">
