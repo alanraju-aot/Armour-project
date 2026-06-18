@@ -37,6 +37,14 @@
       {
         "part": "",
         "quantity": ""
+      },
+      {
+        "part": "",
+        "quantity": ""
+      },
+      {
+        "part": "",
+        "quantity": ""
       }
     ],
     "receivingInitial": "ER",
@@ -109,13 +117,23 @@
         "part": "",
         "quantity": "",
         "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
       }
     ],
     "startDate": "2026-05-28",
     "finishDate": "2026-06-02",
     "quantity": 4,
     "createdTime": "2026-05-28T08:00:00Z",
-    "lastModifiedTime": "2026-06-17T17:50:52.575Z"
+    "lastModifiedTime": "2026-06-18T18:21:06.425Z"
   },
   {
     "id": "3283",
@@ -149,6 +167,16 @@
       {
         "part": "AC-8890 Fan Blade Left",
         "quantity": 24,
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
+        "size": ""
+      },
+      {
+        "part": "",
+        "quantity": "",
         "size": ""
       },
       {
