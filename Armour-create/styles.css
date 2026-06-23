@@ -647,39 +647,23 @@ button {
   transition: background-color 0.3s ease;
 }
 
-/* QC Result Container */
-.qc-result-container {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 2rem;
-  align-items: flex-start;
-}
-
-.qc-result-checklist {
+/* PROCESS TO BE DONE Checklist styling */
+.process-checklist-container {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   padding: 1.25rem;
   background-color: var(--input-bg);
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.checklist-label {
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--text-main);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.process-checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
-.checklist-options {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.checklist-option {
+.process-option {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -688,11 +672,11 @@ button {
   user-select: none;
 }
 
-.checklist-option input[type="checkbox"] {
+.process-option input[type="checkbox"] {
   display: none;
 }
 
-.checklist-option .custom-checkbox {
+.process-option .custom-checkbox {
   width: 18px;
   height: 18px;
   border: 1.5px solid var(--input-border);
@@ -701,14 +685,15 @@ button {
   position: relative;
   transition: var(--transition);
   background-color: var(--input-bg);
+  flex-shrink: 0;
 }
 
-.checklist-option input[type="checkbox"]:checked + .custom-checkbox {
+.process-option input[type="checkbox"]:checked + .custom-checkbox {
   background-color: var(--primary);
   border-color: var(--primary);
 }
 
-.checklist-option input[type="checkbox"]:checked + .custom-checkbox::after {
+.process-option input[type="checkbox"]:checked + .custom-checkbox::after {
   content: "";
   position: absolute;
   left: 5px;
@@ -720,19 +705,126 @@ button {
   transform: rotate(45deg);
 }
 
-.checklist-option:hover .custom-checkbox {
+.process-option:hover .custom-checkbox {
   border-color: var(--primary);
 }
 
-.checklist-option .option-text {
+.process-option .option-text {
   font-weight: 500;
   color: var(--text-main);
 }
 
-.bottom-sig-grid {
+.other-option {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.other-text-input {
+  border: none !important;
+  border-bottom: 1.5px solid var(--input-border) !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  padding: 0 0.5rem !important;
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  height: 24px;
+}
+
+.other-text-input:focus {
+  border-bottom-color: var(--primary) !important;
+  box-shadow: none !important;
+}
+
+/* REWORK SIGN-OFF styling */
+.rework-signoff-container {
   display: flex;
   flex-direction: column;
+  gap: 1.25rem;
+}
+
+.signoff-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.qc-reinspection-checklist {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 1.25rem;
+  background-color: var(--input-bg);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.qc-reinspection-checklist .checklist-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.qc-reinspection-checklist .checklist-options {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.qc-reinspection-checklist .checklist-option {
+  display: flex;
+  align-items: center;
   gap: 0.75rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.qc-reinspection-checklist .checklist-option input[type="checkbox"] {
+  display: none;
+}
+
+.qc-reinspection-checklist .checklist-option .custom-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--input-border);
+  border-radius: 3px;
+  display: inline-block;
+  position: relative;
+  transition: var(--transition);
+  background-color: var(--input-bg);
+  flex-shrink: 0;
+}
+
+.qc-reinspection-checklist .checklist-option input[type="checkbox"]:checked + .custom-checkbox {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.qc-reinspection-checklist .checklist-option input[type="checkbox"]:checked + .custom-checkbox::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.qc-reinspection-checklist .checklist-option:hover .custom-checkbox {
+  border-color: var(--primary);
+}
+
+.qc-reinspection-checklist .checklist-option .option-text {
+  font-weight: 500;
+  color: var(--text-main);
 }
 
 /* Labels & Inputs */
@@ -941,22 +1033,30 @@ textarea {
   border-radius: var(--border-radius-sm);
 }
 
-.col-part-name {
-  width: 60%;
+.col-part-desc {
+  width: 32%;
 }
 
-.col-part-qty {
-  width: 20%;
+.col-qty-rej {
+  width: 12%;
   text-align: center;
 }
 
-.col-part-size {
-  width: 20%;
+.col-reason-rework {
+  width: 26%;
+}
+
+.col-qty-completed {
+  width: 15%;
   text-align: center;
 }
 
-.parts-qty,
-.parts-size {
+.col-notes {
+  width: 15%;
+}
+
+.parts-qty-rej,
+.parts-qty-rework-completed {
   text-align: center;
 }
 
@@ -1853,55 +1953,103 @@ textarea {
     color: #000000 !important;
   }
 
-  /* QC Result Grid in print */
-  .qc-result-container {
-    display: grid !important;
-    grid-template-columns: 1.2fr 1fr !important;
-    gap: 15px !important;
-    align-items: flex-start !important;
-    margin-top: 5px !important;
-  }
-
-  .qc-result-checklist {
+  /* PROCESS TO BE DONE and REWORK SIGN-OFF Grid in print */
+  .process-checklist-container {
     border: 1px solid #000000 !important;
     border-radius: 0 !important;
     padding: 8px !important;
     background: transparent !important;
-    gap: 5px !important;
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
   }
 
-  .checklist-label {
-    font-size: 8pt !important;
-    color: #000000 !important;
-    font-weight: bold !important;
+  .process-checklist {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
   }
 
-  .checklist-options {
-    gap: 4px !important;
-  }
-
-  .checklist-option {
+  .process-option {
     font-size: 8.5pt !important;
     gap: 6px !important;
   }
 
-  .checklist-option .custom-checkbox {
+  .process-option .custom-checkbox {
     border: 1.5px solid #000000 !important;
     border-radius: 0 !important;
     background-color: transparent !important;
   }
 
-  .checklist-option input[type="checkbox"]:checked + .custom-checkbox {
+  .process-option input[type="checkbox"]:checked + .custom-checkbox {
     background-color: #000000 !important;
     border-color: #000000 !important;
   }
 
-  .checklist-option input[type="checkbox"]:checked + .custom-checkbox::after {
+  .process-option input[type="checkbox"]:checked + .custom-checkbox::after {
     border-color: #ffffff !important;
   }
 
-  .bottom-sig-grid {
+  .other-text-input {
+    border: none !important;
+    border-bottom: 1px solid #000000 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  .rework-signoff-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    margin-top: 5px !important;
+  }
+
+  .signoff-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  .qc-reinspection-checklist {
+    border: 1px solid #000000 !important;
+    border-radius: 0 !important;
+    padding: 8px !important;
+    background: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+  }
+
+  .qc-reinspection-checklist .checklist-label {
+    font-size: 8pt !important;
+    color: #000000 !important;
+    font-weight: bold !important;
+  }
+
+  .qc-reinspection-checklist .checklist-options {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 15px !important;
+  }
+
+  .qc-reinspection-checklist .checklist-option {
+    font-size: 8.5pt !important;
     gap: 6px !important;
+  }
+
+  .qc-reinspection-checklist .checklist-option .custom-checkbox {
+    border: 1.5px solid #000000 !important;
+    border-radius: 0 !important;
+    background-color: transparent !important;
+  }
+
+  .qc-reinspection-checklist .checklist-option input[type="checkbox"]:checked + .custom-checkbox {
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+  }
+
+  .qc-reinspection-checklist .checklist-option input[type="checkbox"]:checked + .custom-checkbox::after {
+    border-color: #ffffff !important;
   }
 
   /* Prevent page breaks inside form blocks */

@@ -38,16 +38,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const fieldCustomer = document.getElementById('field-customer'); // CUSTOMER
   const fieldPartCoating = document.getElementById('field-part-coating'); // PART/COATING
 
+  // Process Checkboxes
+  const checkUltrasonic = document.getElementById('proc-ultrasonic');
+  const checkStripping = document.getElementById('proc-stripping');
+  const checkSandBlasting = document.getElementById('proc-sandblasting');
+  const checkPolishing = document.getElementById('proc-polishing');
+  const checkCoating = document.getElementById('proc-coating');
+  const checkOther = document.getElementById('proc-other');
+  const fieldOtherText = document.getElementById('proc-other-text');
+  const processCheckboxes = [checkUltrasonic, checkStripping, checkSandBlasting, checkPolishing, checkCoating, checkOther];
+
+  // Rework Sign-off Fields
+  const fieldReworkPerformedBy = document.getElementById('field-rework-performed-by');
+  const fieldReworkDate = document.getElementById('field-rework-date');
+
   // QC Result Checklist Checkboxes
-  const checkAccepted = document.getElementById('res-accepted');
-  const checkRework = document.getElementById('res-rework');
-  const checkHold = document.getElementById('res-hold');
-  const checkScrap = document.getElementById('res-scrap');
-  const resultCheckboxes = [checkAccepted, checkRework, checkHold, checkScrap];
+  const checkPassed = document.getElementById('signoff-passed');
+  const checkFailed = document.getElementById('signoff-failed');
+  const checkNeedsRework = document.getElementById('signoff-needs-rework');
+  const resultCheckboxes = [checkPassed, checkFailed, checkNeedsRework];
 
   // Signature Section
-  const fieldQcInitial = document.getElementById('field-qc-initial');
-  const fieldQcDate = document.getElementById('field-qc-date');
+  const fieldQcInitial = document.getElementById('field-rework-qc-initial');
+  const fieldQcDate = document.getElementById('field-rework-qc-date');
   const metaCreated = document.getElementById('meta-created');
   const metaModified = document.getElementById('meta-modified');
 
@@ -86,17 +99,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const parts = [];
     for (let i = 0; i < 8; i++) {
       const partDesc = document.getElementById(`part-desc-row-${i}`).value.trim();
-      const qtyRec = document.getElementById(`qty-rec-row-${i}`).value;
-      const qtyInsp = document.getElementById(`qty-insp-row-${i}`).value;
-      const qtyApp = document.getElementById(`qty-app-row-${i}`).value;
       const qtyRej = document.getElementById(`qty-rej-row-${i}`).value;
+      const reason = document.getElementById(`reason-row-${i}`).value.trim();
+      const qtyCompleted = document.getElementById(`qty-rework-completed-row-${i}`).value;
       const notes = document.getElementById(`notes-row-${i}`).value.trim();
       parts.push({
         partNoDescription: partDesc,
-        qtyReceived: qtyRec !== '' ? parseInt(qtyRec) || '' : '',
-        qtyInspected: qtyInsp !== '' ? parseInt(qtyInsp) || '' : '',
-        qtyApproved: qtyApp !== '' ? parseInt(qtyApp) || '' : '',
         qtyRejected: qtyRej !== '' ? parseInt(qtyRej) || '' : '',
+        reasonForRework: reason,
+        qtyReworkCompleted: qtyCompleted !== '' ? parseInt(qtyCompleted) || '' : '',
         notes: notes
       });
     }
@@ -107,26 +118,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const parts = Array.isArray(partsArray) ? partsArray : [];
     for (let i = 0; i < 8; i++) {
       const partInput = document.getElementById(`part-desc-row-${i}`);
-      const qtyRecInput = document.getElementById(`qty-rec-row-${i}`);
-      const qtyInspInput = document.getElementById(`qty-insp-row-${i}`);
-      const qtyAppInput = document.getElementById(`qty-app-row-${i}`);
       const qtyRejInput = document.getElementById(`qty-rej-row-${i}`);
+      const reasonInput = document.getElementById(`reason-row-${i}`);
+      const qtyCompletedInput = document.getElementById(`qty-rework-completed-row-${i}`);
       const notesInput = document.getElementById(`notes-row-${i}`);
       
       const item = parts[i];
       if (item) {
         partInput.value = item.partNoDescription || item.part || '';
-        qtyRecInput.value = item.qtyReceived !== undefined && item.qtyReceived !== null ? item.qtyReceived : (item.quantity !== undefined ? item.quantity : '');
-        qtyInspInput.value = item.qtyInspected !== undefined && item.qtyInspected !== null ? item.qtyInspected : (item.quantity !== undefined ? item.quantity : '');
-        qtyAppInput.value = item.qtyApproved !== undefined && item.qtyApproved !== null ? item.qtyApproved : (item.quantity !== undefined ? item.quantity : '');
-        qtyRejInput.value = item.qtyRejected !== undefined && item.qtyRejected !== null ? item.qtyRejected : '';
+        
+        // Backward compatibility mapping for old fields:
+        let fallbackQtyRej = '';
+        if (item.qtyRejected !== undefined && item.qtyRejected !== null && item.qtyRejected !== '') {
+          fallbackQtyRej = item.qtyRejected;
+        } else if (item.qtyReceived !== undefined && item.qtyReceived !== null && item.qtyReceived !== '') {
+          fallbackQtyRej = item.qtyReceived;
+        } else if (item.quantity !== undefined && item.quantity !== null && item.quantity !== '') {
+          fallbackQtyRej = item.quantity;
+        }
+        qtyRejInput.value = fallbackQtyRej;
+        
+        reasonInput.value = item.reasonForRework || item.notes || '';
+        
+        let fallbackQtyCompleted = '';
+        if (item.qtyReworkCompleted !== undefined && item.qtyReworkCompleted !== null && item.qtyReworkCompleted !== '') {
+          fallbackQtyCompleted = item.qtyReworkCompleted;
+        } else if (item.qtyApproved !== undefined && item.qtyApproved !== null && item.qtyApproved !== '') {
+          fallbackQtyCompleted = item.qtyApproved;
+        }
+        qtyCompletedInput.value = fallbackQtyCompleted;
+        
         notesInput.value = item.notes || '';
       } else {
         partInput.value = '';
-        qtyRecInput.value = '';
-        qtyInspInput.value = '';
-        qtyAppInput.value = '';
         qtyRejInput.value = '';
+        reasonInput.value = '';
+        qtyCompletedInput.value = '';
         notesInput.value = '';
       }
     }
@@ -315,12 +342,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Compute Job Status
   function getJobStatus(record) {
-    if (record.finalResult) {
-      return record.finalResult;
+    if (record.reworkQcResult) {
+      return record.reworkQcResult;
     }
-    const shipDate = record.footerShippingDate || record.finishDate || '';
-    if (shipDate !== '') {
-      return 'All Accepted';
+    // Fallback for legacy records
+    if (record.finalResult) {
+      if (record.finalResult === 'All Accepted') return 'Passed';
+      if (record.finalResult === 'Rework Required') return 'Needs Additional Rework';
+      if (record.finalResult === 'Hold') return 'Failed';
+      return record.finalResult;
     }
     return 'pending';
   }
@@ -328,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Calculate & Refresh Stats Panel
   function updateStats() {
     statsTotal.textContent = workOrders.length;
-    statsHigh.textContent = workOrders.filter(w => getJobStatus(w) === 'All Accepted').length;
+    statsHigh.textContent = workOrders.filter(w => getJobStatus(w) === 'Passed').length;
     statsPending.textContent = workOrders.filter(w => getJobStatus(w) === 'pending').length;
   }
 
@@ -439,23 +469,36 @@ document.addEventListener('DOMContentLoaded', () => {
       fieldPartCoating.value = partsArr.join(" / ");
     }
 
+    // Process Checkboxes
+    checkUltrasonic.checked = !!record.processUltrasonic;
+    checkStripping.checked = !!record.processStripping;
+    checkSandBlasting.checked = !!record.processSandBlasting;
+    checkPolishing.checked = !!record.processPolishing;
+    checkCoating.checked = !!record.processCoating;
+    checkOther.checked = !!record.processOther;
+    fieldOtherText.value = record.processOtherText || '';
+
+    // Rework Sign-off
+    fieldReworkPerformedBy.value = record.reworkPerformedBy || '';
+    fieldReworkDate.value = record.reworkDate || '';
+
     // QC Checkboxes
     const currentStatus = getJobStatus(record);
     setCheckedFinalResult(currentStatus);
 
-    fieldQcInitial.value = record.qcInitial || record.footerQcInitial || record.receivingInitial || '';
-    fieldQcDate.value = record.qcDate || record.footerShippingDate || record.finishDate || '';
+    fieldQcInitial.value = record.reworkQcInitial || record.qcInitial || record.footerQcInitial || '';
+    fieldQcDate.value = record.reworkQcDate || record.qcDate || record.footerShippingDate || '';
 
     // Parts & Quantities Table (Pad to 8 rows)
     let partsData = record.parts;
     if (!Array.isArray(partsData)) {
       partsData = [
-        { partNoDescription: record.partNo || '', qtyReceived: record.quantity || '', qtyInspected: record.quantity || '', qtyApproved: record.quantity || '', qtyRejected: '', notes: '' }
+        { partNoDescription: record.partNo || '', qtyRejected: record.quantity || '', reasonForRework: record.instructions || '', qtyReworkCompleted: '', notes: '' }
       ];
     }
     const targetParts = [...partsData];
     while (targetParts.length < 8) {
-      targetParts.push({ partNoDescription: '', qtyReceived: '', qtyInspected: '', qtyApproved: '', qtyRejected: '', notes: '' });
+      targetParts.push({ partNoDescription: '', qtyRejected: '', reasonForRework: '', qtyReworkCompleted: '', notes: '' });
     }
     setPartsTableData(targetParts);
 
@@ -496,7 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const partsData = getPartsTableData();
     
     // For backward compatibility and stats, we calculate total quantity
-    const totalQty = partsData.reduce((sum, item) => sum + (parseInt(item.qtyReceived) || 0), 0);
+    const totalQty = partsData.reduce((sum, item) => sum + (parseInt(item.qtyRejected) || 0), 0);
     
     // Pick the first part description as partNo for older systems
     const firstPart = partsData.find(p => p.partNoDescription)?.partNoDescription || '';
@@ -508,12 +551,26 @@ document.addEventListener('DOMContentLoaded', () => {
       inspector: fieldInspector.value.trim(),
       customer: fieldCustomer.value.trim(),
       partCoating: fieldPartCoating.value.trim(),
-      finalResult: finalRes,
-      qcInitial: fieldQcInitial.value.trim(),
-      qcDate: fieldQcDate.value,
       parts: partsData,
       
+      processUltrasonic: checkUltrasonic.checked,
+      processStripping: checkStripping.checked,
+      processSandBlasting: checkSandBlasting.checked,
+      processPolishing: checkPolishing.checked,
+      processCoating: checkCoating.checked,
+      processOther: checkOther.checked,
+      processOtherText: fieldOtherText.value.trim(),
+      
+      reworkPerformedBy: fieldReworkPerformedBy.value.trim(),
+      reworkDate: fieldReworkDate.value,
+      reworkQcResult: finalRes,
+      reworkQcInitial: fieldQcInitial.value.trim(),
+      reworkQcDate: fieldQcDate.value,
+
       // Backward compatibility fields
+      finalResult: finalRes === 'Passed' ? 'All Accepted' : (finalRes === 'Failed' ? 'Hold' : (finalRes === 'Needs Additional Rework' ? 'Rework Required' : finalRes)),
+      qcInitial: fieldQcInitial.value.trim(),
+      qcDate: fieldQcDate.value,
       customerName: fieldCustomer.value.trim(),
       receivingDate: fieldDate.value,
       startDate: fieldDate.value,
@@ -540,14 +597,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fieldId.value === 'NEW') {
       // It's a new unsaved record. Check if any fields are typed.
       const hasAnyInput = Object.keys(currentForm).some(key => {
-        if (key === 'id') return false;
-        if (key === 'quantity') return false;
-        if (key === 'startDate' || key === 'finishDate') return false;
-        if (key === 'customerName' || key === 'receivingDate' || key === 'receivingInitial' || key === 'footerQcInitial' || key === 'footerShippingDate' || key === 'partNo') return false;
+        if (['id', 'quantity', 'startDate', 'finishDate', 'customerName', 'receivingDate', 'receivingInitial', 'footerQcInitial', 'footerShippingDate', 'partNo', 'finalResult', 'qcInitial', 'qcDate'].includes(key)) return false;
         if (key === 'parts') {
-          return currentForm.parts.some(p => p.partNoDescription !== '' || p.qtyReceived !== '' || p.qtyInspected !== '' || p.qtyApproved !== '' || p.qtyRejected !== '' || p.notes !== '');
+          return currentForm.parts.some(p => p.partNoDescription !== '' || p.qtyRejected !== '' || p.reasonForRework !== '' || p.qtyReworkCompleted !== '' || p.notes !== '');
         }
-        return currentForm[key] !== '' && currentForm[key] !== null;
+        return currentForm[key] !== '' && currentForm[key] !== null && currentForm[key] !== false;
       });
       isDirty = hasAnyInput;
     } else {
@@ -555,29 +609,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Compare values
       isDirty = Object.keys(currentForm).some(key => {
-        if (key === 'quantity' || key === 'startDate' || key === 'finishDate') return false;
-        if (key === 'customerName' || key === 'receivingDate' || key === 'receivingInitial' || key === 'footerQcInitial' || key === 'footerShippingDate' || key === 'partNo') return false;
+        if (['quantity', 'startDate', 'finishDate', 'customerName', 'receivingDate', 'receivingInitial', 'footerQcInitial', 'footerShippingDate', 'partNo', 'finalResult', 'qcInitial', 'qcDate'].includes(key)) return false;
         if (key === 'parts') {
           const origParts = Array.isArray(original.parts) ? original.parts : [];
           for (let i = 0; i < 8; i++) {
-            const curP = currentForm.parts[i] || { partNoDescription: '', qtyReceived: '', qtyInspected: '', qtyApproved: '', qtyRejected: '', notes: '' };
-            const origP = origParts[i] || { partNoDescription: '', qtyReceived: '', qtyInspected: '', qtyApproved: '', qtyRejected: '', notes: '' };
+            const curP = currentForm.parts[i] || { partNoDescription: '', qtyRejected: '', reasonForRework: '', qtyReworkCompleted: '', notes: '' };
+            const origP = origParts[i] || { partNoDescription: '', qtyRejected: '', reasonForRework: '', qtyReworkCompleted: '', notes: '' };
             const origDesc = origP.partNoDescription || origP.part || '';
-            const origQtyRec = origP.qtyReceived !== undefined && origP.qtyReceived !== null ? origP.qtyReceived : (origP.quantity !== undefined ? origP.quantity : '');
+            
+            // Backward compatibility fallbacks
+            let origQtyRej = '';
+            if (origP.qtyRejected !== undefined && origP.qtyRejected !== null) {
+              origQtyRej = origP.qtyRejected;
+            } else if (origP.qtyReceived !== undefined && origP.qtyReceived !== null) {
+              origQtyRej = origP.qtyReceived;
+            } else if (origP.quantity !== undefined && origP.quantity !== null) {
+              origQtyRej = origP.quantity;
+            }
+            
+            const origReason = origP.reasonForRework || origP.notes || '';
+            
+            let origQtyCompleted = '';
+            if (origP.qtyReworkCompleted !== undefined && origP.qtyReworkCompleted !== null) {
+              origQtyCompleted = origP.qtyReworkCompleted;
+            } else if (origP.qtyApproved !== undefined && origP.qtyApproved !== null) {
+              origQtyCompleted = origP.qtyApproved;
+            }
+
             if ((curP.partNoDescription || '') !== origDesc || 
-                (curP.qtyReceived || '') !== origQtyRec || 
-                (curP.qtyInspected || '') !== (origP.qtyInspected !== undefined ? origP.qtyInspected : '') || 
-                (curP.qtyApproved || '') !== (origP.qtyApproved !== undefined ? origP.qtyApproved : '') || 
-                (curP.qtyRejected || '') !== (origP.qtyRejected !== undefined ? origP.qtyRejected : '') || 
+                String(curP.qtyRejected || '') !== String(origQtyRej || '') || 
+                (curP.reasonForRework || '') !== origReason || 
+                String(curP.qtyReworkCompleted || '') !== String(origQtyCompleted || '') || 
                 (curP.notes || '') !== (origP.notes || '')) {
               return true;
             }
           }
           return false;
         }
-        const curVal = currentForm[key] || '';
-        const origVal = original[key] || (key === 'date' ? original.receivingDate : (key === 'customer' ? original.customerName : ''));
-        return String(curVal) !== String(origVal || '');
+        const curVal = currentForm[key];
+        const origVal = original[key] !== undefined ? original[key] : (
+          key === 'date' ? (original.receivingDate || original.startDate || '') : (
+            key === 'customer' ? (original.customerName || '') : (
+              key === 'inspector' ? (original.receivingInitial || original.footerQcInitial || '') : ''
+            )
+          )
+        );
+        
+        if (typeof curVal === 'boolean') {
+          return curVal !== !!origVal;
+        }
+        return String(curVal || '') !== String(origVal || '');
       });
     }
 
@@ -1066,23 +1147,31 @@ document.addEventListener('DOMContentLoaded', () => {
   // Export Database to CSV file
   function exportToCsv() {
     const csvHeaders = [
-      "Work Order ID", "Customer Name", "PO Number", "Date", "Inspector", "Part/Coating", "QC Initial", "QC Date", "Final Result", "Parts List"
+      "Work Order ID", "Customer Name", "PO Number", "Date", "Inspector", "Part/Coating", "Performed By", "Rework Date", "QC Initial", "QC Date", "Rework QC Result", "Processes", "Parts List"
     ];
 
     const csvRows = [csvHeaders.join(",")];
 
     workOrders.forEach(order => {
       const partsText = Array.isArray(order.parts) ?
-        order.parts.filter(p => p.partNoDescription || p.qtyReceived || p.notes).map(p => {
+        order.parts.filter(p => p.partNoDescription || p.qtyRejected || p.notes).map(p => {
           let partInfo = p.partNoDescription || 'Unnamed';
           let details = [];
-          if (p.qtyReceived !== undefined && p.qtyReceived !== '') details.push(`Received: ${p.qtyReceived}`);
-          if (p.qtyInspected !== undefined && p.qtyInspected !== '') details.push(`Inspected: ${p.qtyInspected}`);
-          if (p.qtyApproved !== undefined && p.qtyApproved !== '') details.push(`Approved: ${p.qtyApproved}`);
           if (p.qtyRejected !== undefined && p.qtyRejected !== '') details.push(`Rejected: ${p.qtyRejected}`);
+          if (p.reasonForRework) details.push(`Reason: ${p.reasonForRework}`);
+          if (p.qtyReworkCompleted !== undefined && p.qtyReworkCompleted !== '') details.push(`Completed: ${p.qtyReworkCompleted}`);
           if (p.notes) details.push(`Notes: ${p.notes}`);
           return details.length > 0 ? `${partInfo} (${details.join(", ")})` : partInfo;
         }).join(" | ") : "";
+
+      const procs = [];
+      if (order.processUltrasonic) procs.push("Ultrasonic Cleaning");
+      if (order.processStripping) procs.push("Stripping");
+      if (order.processSandBlasting) procs.push("Sand Blasting");
+      if (order.processPolishing) procs.push("Polishing");
+      if (order.processCoating) procs.push("Coating");
+      if (order.processOther) procs.push(`Other (${order.processOtherText || ''})`);
+      const processesText = procs.join(" | ");
 
       const values = [
         order.id || '',
@@ -1091,9 +1180,12 @@ document.addEventListener('DOMContentLoaded', () => {
         order.date || order.receivingDate || '',
         order.inspector || order.receivingInitial || '',
         order.partCoating || (order.partNo ? `${order.partNo} / ${order.coating || ''}` : ''),
-        order.qcInitial || order.footerQcInitial || '',
-        order.qcDate || order.footerShippingDate || '',
+        order.reworkPerformedBy || '',
+        order.reworkDate || '',
+        order.reworkQcInitial || order.qcInitial || '',
+        order.reworkQcDate || order.qcDate || '',
         getJobStatus(order),
+        processesText,
         partsText
       ];
 
@@ -1378,10 +1470,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add Parts Table inputs for change alert tracking
     for (let i = 0; i < 8; i++) {
       formFields.push(document.getElementById(`part-desc-row-${i}`));
-      formFields.push(document.getElementById(`qty-rec-row-${i}`));
-      formFields.push(document.getElementById(`qty-insp-row-${i}`));
-      formFields.push(document.getElementById(`qty-app-row-${i}`));
       formFields.push(document.getElementById(`qty-rej-row-${i}`));
+      formFields.push(document.getElementById(`reason-row-${i}`));
+      formFields.push(document.getElementById(`qty-rework-completed-row-${i}`));
       formFields.push(document.getElementById(`notes-row-${i}`));
     }
 
@@ -1389,6 +1480,14 @@ document.addEventListener('DOMContentLoaded', () => {
     resultCheckboxes.forEach(cb => {
       if (cb) formFields.push(cb);
     });
+
+    processCheckboxes.forEach(cb => {
+      if (cb) formFields.push(cb);
+    });
+
+    formFields.push(fieldOtherText);
+    formFields.push(fieldReworkPerformedBy);
+    formFields.push(fieldReworkDate);
 
     formFields.forEach(field => {
       if (field) {

@@ -52,10 +52,9 @@
           </select>
           <select id="filter-status" class="filter-select" style="flex: 1;">
             <option value="">All Results</option>
-            <option value="All Accepted">All Accepted</option>
-            <option value="Rework Required">Rework Required</option>
-            <option value="Hold">Hold</option>
-            <option value="Scrap">Scrap</option>
+            <option value="Passed">Passed</option>
+            <option value="Failed">Failed</option>
+            <option value="Needs Additional Rework">Needs Additional Rework</option>
             <option value="pending">Pending</option>
           </select>
         </div>
@@ -96,7 +95,7 @@
           <span class="stat-value" id="stats-total">0</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Accepted</span>
+          <span class="stat-label">Passed</span>
           <span class="stat-value text-green" id="stats-high" style="color: var(--color-success) !important;">0</span>
         </div>
         <div class="stat-item">
@@ -158,7 +157,7 @@
             </div>
             <div class="header-title-box">
               <div class="header-title-main">TITANIUM COATING SERVICES</div>
-              <div class="header-title-sub">QC - INSPECTION LOG</div>
+              <div class="header-title-sub">Coating Rework Sheet</div>
             </div>
           </div>
 
@@ -210,9 +209,9 @@
 
             </div>
 
-            <!-- Part Inspection Details Header Box -->
+            <!-- Rejected/Rework Items Header Box -->
             <div class="section-header-box">
-              PART INSPECTION DETAILS
+              REJECTED/ REWORK ITEMS
             </div>
 
             <!-- Parts Table Section -->
@@ -221,124 +220,162 @@
                 <thead>
                   <tr>
                     <th class="col-part-desc">Part No / Description</th>
-                    <th class="col-qty-rec">Qty Received</th>
-                    <th class="col-qty-insp">Qty Inspected</th>
-                    <th class="col-qty-app">Qty Approved</th>
-                    <th class="col-qty-rej">Qty Rejected</th>
+                    <th class="col-qty-rej">Rejected Qty</th>
+                    <th class="col-reason-rework">Reason for Rework</th>
+                    <th class="col-qty-completed">Rework Completed Qty</th>
                     <th class="col-notes">Notes</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-0" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-0" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-0" min="0" placeholder="..."></td>
                     <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-0" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-reason" id="reason-row-0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rework-completed" id="qty-rework-completed-row-0" min="0" placeholder="..."></td>
                     <td><input type="text" class="parts-table-input parts-notes" id="notes-row-0" placeholder="..."></td>
                   </tr>
                   <tr>
                     <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-1" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-1" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-1" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-1" min="0" placeholder="..."></td>
                     <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-1" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-reason" id="reason-row-1" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rework-completed" id="qty-rework-completed-row-1" min="0" placeholder="..."></td>
                     <td><input type="text" class="parts-table-input parts-notes" id="notes-row-1" placeholder="..."></td>
                   </tr>
                   <tr>
                     <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-2" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-2" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-2" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-2" min="0" placeholder="..."></td>
                     <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-2" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-reason" id="reason-row-2" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rework-completed" id="qty-rework-completed-row-2" min="0" placeholder="..."></td>
                     <td><input type="text" class="parts-table-input parts-notes" id="notes-row-2" placeholder="..."></td>
                   </tr>
                   <tr>
                     <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-3" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-3" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-3" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-3" min="0" placeholder="..."></td>
                     <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-3" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-reason" id="reason-row-3" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rework-completed" id="qty-rework-completed-row-3" min="0" placeholder="..."></td>
                     <td><input type="text" class="parts-table-input parts-notes" id="notes-row-3" placeholder="..."></td>
                   </tr>
                   <tr>
                     <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-4" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-4" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-4" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-4" min="0" placeholder="..."></td>
                     <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-4" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-reason" id="reason-row-4" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rework-completed" id="qty-rework-completed-row-4" min="0" placeholder="..."></td>
                     <td><input type="text" class="parts-table-input parts-notes" id="notes-row-4" placeholder="..."></td>
                   </tr>
                   <tr>
                     <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-5" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-5" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-5" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-5" min="0" placeholder="..."></td>
                     <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-5" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-reason" id="reason-row-5" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rework-completed" id="qty-rework-completed-row-5" min="0" placeholder="..."></td>
                     <td><input type="text" class="parts-table-input parts-notes" id="notes-row-5" placeholder="..."></td>
                   </tr>
                   <tr>
                     <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-6" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-6" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-6" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-6" min="0" placeholder="..."></td>
                     <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-6" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-reason" id="reason-row-6" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rework-completed" id="qty-rework-completed-row-6" min="0" placeholder="..."></td>
                     <td><input type="text" class="parts-table-input parts-notes" id="notes-row-6" placeholder="..."></td>
                   </tr>
                   <tr>
                     <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-7" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-7" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-7" min="0" placeholder="..."></td>
-                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-7" min="0" placeholder="..."></td>
                     <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-7" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-reason" id="reason-row-7" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rework-completed" id="qty-rework-completed-row-7" min="0" placeholder="..."></td>
                     <td><input type="text" class="parts-table-input parts-notes" id="notes-row-7" placeholder="..."></td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
-            <!-- QC Result Section Header Box -->
+            <!-- PROCESS TO BE DONE Section Header Box -->
             <div class="section-header-box">
-              QC RESULT
+              PROCESS TO BE DONE
             </div>
 
-            <!-- QC Result Area -->
-            <div class="qc-result-container">
-              <div class="qc-result-checklist">
-                <span class="checklist-label">Final Result:</span>
+            <!-- PROCESS TO BE DONE Area -->
+            <div class="process-checklist-container">
+              <div class="process-checklist">
+                <label class="process-option">
+                  <input type="checkbox" id="proc-ultrasonic" class="process-checkbox" name="processUltrasonic" value="Ultrasonic Cleaning">
+                  <span class="custom-checkbox"></span>
+                  <span class="option-text">Ultrasonic Cleaning</span>
+                </label>
+                <label class="process-option">
+                  <input type="checkbox" id="proc-stripping" class="process-checkbox" name="processStripping" value="Stripping">
+                  <span class="custom-checkbox"></span>
+                  <span class="option-text">Stripping</span>
+                </label>
+                <label class="process-option">
+                  <input type="checkbox" id="proc-sandblasting" class="process-checkbox" name="processSandBlasting" value="Sand Blasting">
+                  <span class="custom-checkbox"></span>
+                  <span class="option-text">Sand Blasting</span>
+                </label>
+                <label class="process-option">
+                  <input type="checkbox" id="proc-polishing" class="process-checkbox" name="processPolishing" value="Polishing">
+                  <span class="custom-checkbox"></span>
+                  <span class="option-text">Polishing</span>
+                </label>
+                <label class="process-option">
+                  <input type="checkbox" id="proc-coating" class="process-checkbox" name="processCoating" value="Coating">
+                  <span class="custom-checkbox"></span>
+                  <span class="option-text">Coating</span>
+                </label>
+                <label class="process-option other-option">
+                  <input type="checkbox" id="proc-other" class="process-checkbox" name="processOther" value="Other">
+                  <span class="custom-checkbox"></span>
+                  <span class="option-text">Other:</span>
+                  <input type="text" id="proc-other-text" name="processOtherText" class="other-text-input" placeholder="__________________">
+                </label>
+              </div>
+            </div>
+
+            <!-- REWORK SIGN-OFF Section Header Box -->
+            <div class="section-header-box">
+              REWORK SIGN-OFF
+            </div>
+
+            <!-- REWORK SIGN-OFF Area -->
+            <div class="rework-signoff-container">
+              <div class="signoff-grid">
+                <div class="field-box">
+                  <div class="field-label">Performed By</div>
+                  <input type="text" id="field-rework-performed-by" name="reworkPerformedBy" placeholder="Enter name">
+                </div>
+                <div class="field-box">
+                  <div class="field-label">Date</div>
+                  <input type="date" id="field-rework-date" name="reworkDate">
+                </div>
+              </div>
+
+              <div class="qc-reinspection-checklist">
+                <span class="checklist-label">QC Re-Inspection:</span>
                 <div class="checklist-options">
                   <label class="checklist-option">
-                    <input type="checkbox" id="res-accepted" class="result-checkbox" name="finalResult" value="All Accepted">
+                    <input type="checkbox" id="signoff-passed" class="signoff-checkbox" name="reworkQcResult" value="Passed">
                     <span class="custom-checkbox"></span>
-                    <span class="option-text">All Accepted</span>
+                    <span class="option-text">Passed</span>
                   </label>
                   <label class="checklist-option">
-                    <input type="checkbox" id="res-rework" class="result-checkbox" name="finalResult" value="Rework Required">
+                    <input type="checkbox" id="signoff-failed" class="signoff-checkbox" name="reworkQcResult" value="Failed">
                     <span class="custom-checkbox"></span>
-                    <span class="option-text">Rework Required</span>
+                    <span class="option-text">Failed</span>
                   </label>
                   <label class="checklist-option">
-                    <input type="checkbox" id="res-hold" class="result-checkbox" name="finalResult" value="Hold">
+                    <input type="checkbox" id="signoff-needs-rework" class="signoff-checkbox" name="reworkQcResult" value="Needs Additional Rework">
                     <span class="custom-checkbox"></span>
-                    <span class="option-text">Hold</span>
-                  </label>
-                  <label class="checklist-option">
-                    <input type="checkbox" id="res-scrap" class="result-checkbox" name="finalResult" value="Scrap">
-                    <span class="custom-checkbox"></span>
-                    <span class="option-text">Scrap</span>
+                    <span class="option-text">Needs Additional Rework</span>
                   </label>
                 </div>
               </div>
 
-              <!-- Signature Fields Stacked inside Container -->
-              <div class="bottom-sig-grid">
+              <div class="signoff-grid">
                 <div class="field-box">
-                  <div class="field-label">QC INITIAL</div>
-                  <input type="text" id="field-qc-initial" name="qcInitial" placeholder="Enter initials">
+                  <div class="field-label">QC Initial</div>
+                  <input type="text" id="field-rework-qc-initial" name="reworkQcInitial" placeholder="Enter initials">
                 </div>
                 <div class="field-box">
-                  <div class="field-label">DATE</div>
-                  <input type="date" id="field-qc-date" name="qcDate">
+                  <div class="field-label">Date</div>
+                  <input type="date" id="field-rework-qc-date" name="reworkQcDate">
                 </div>
               </div>
             </div>
