@@ -31,29 +31,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // Form Elements
   const workOrderForm = document.getElementById('work-order-form');
   const unsavedAlert = document.getElementById('unsaved-alert');
-  const fieldId = document.getElementById('field-id');
-  const fieldPart = document.getElementById('field-part');
-  const fieldCoating = document.getElementById('field-coating');
-  const fieldName = document.getElementById('field-name');
-  const fieldPo = document.getElementById('field-po');
-  const fieldReceivingDate = document.getElementById('field-receiving-date');
-  const fieldPriority = document.getElementById('field-priority');
-  const fieldDueDate = document.getElementById('field-due-date');
-  const fieldInstructions = document.getElementById('field-instructions');
+  const fieldId = document.getElementById('field-id'); // WORK ORDER NO
+  const fieldDate = document.getElementById('field-date'); // DATE
+  const fieldPo = document.getElementById('field-po'); // PO NUMBER
+  const fieldInspector = document.getElementById('field-inspector'); // INSPECTOR
+  const fieldCustomer = document.getElementById('field-customer'); // CUSTOMER
+  const fieldPartCoating = document.getElementById('field-part-coating'); // PART/COATING
 
-  // Middle Section
-  const fieldReceivingInitial = document.getElementById('field-receiving-initial');
-  const fieldShippingInitial = document.getElementById('field-shipping-initial');
-  const fieldSandblast = document.getElementById('field-sandblast');
-  const fieldAdditionalInfo = document.getElementById('field-additional-info');
+  // QC Result Checklist Checkboxes
+  const checkAccepted = document.getElementById('res-accepted');
+  const checkRework = document.getElementById('res-rework');
+  const checkHold = document.getElementById('res-hold');
+  const checkScrap = document.getElementById('res-scrap');
+  const resultCheckboxes = [checkAccepted, checkRework, checkHold, checkScrap];
 
-  // Footer Section
-  const fieldFooterRecDate = document.getElementById('field-footer-receiving-date');
-  const fieldFooterRecInitial = document.getElementById('field-footer-receiving-initial');
-  const fieldFooterQcInitial = document.getElementById('field-footer-qc-initial');
-  const fieldFooterShipDate = document.getElementById('field-footer-shipping-date');
-  const fieldFooterShipInitial = document.getElementById('field-footer-shipping-initial');
-  const fieldForTcs = document.getElementById('field-for-tcs');
+  // Signature Section
+  const fieldQcInitial = document.getElementById('field-qc-initial');
+  const fieldQcDate = document.getElementById('field-qc-date');
   const metaCreated = document.getElementById('meta-created');
   const metaModified = document.getElementById('meta-modified');
 
@@ -90,14 +84,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- PARTS TABLE DATA HELPERS ---
   function getPartsTableData() {
     const parts = [];
-    for (let i = 0; i < 7; i++) {
-      const partVal = document.getElementById(`part-row-${i}`).value.trim();
-      const qtyVal = document.getElementById(`qty-row-${i}`).value;
-      const sizeVal = document.getElementById(`size-row-${i}`).value.trim();
+    for (let i = 0; i < 8; i++) {
+      const partDesc = document.getElementById(`part-desc-row-${i}`).value.trim();
+      const qtyRec = document.getElementById(`qty-rec-row-${i}`).value;
+      const qtyInsp = document.getElementById(`qty-insp-row-${i}`).value;
+      const qtyApp = document.getElementById(`qty-app-row-${i}`).value;
+      const qtyRej = document.getElementById(`qty-rej-row-${i}`).value;
+      const notes = document.getElementById(`notes-row-${i}`).value.trim();
       parts.push({
-        part: partVal,
-        quantity: qtyVal !== '' ? parseInt(qtyVal) || '' : '',
-        size: sizeVal
+        partNoDescription: partDesc,
+        qtyReceived: qtyRec !== '' ? parseInt(qtyRec) || '' : '',
+        qtyInspected: qtyInsp !== '' ? parseInt(qtyInsp) || '' : '',
+        qtyApproved: qtyApp !== '' ? parseInt(qtyApp) || '' : '',
+        qtyRejected: qtyRej !== '' ? parseInt(qtyRej) || '' : '',
+        notes: notes
       });
     }
     return parts;
@@ -105,18 +105,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setPartsTableData(partsArray) {
     const parts = Array.isArray(partsArray) ? partsArray : [];
-    for (let i = 0; i < 7; i++) {
-      const partInput = document.getElementById(`part-row-${i}`);
-      const qtyInput = document.getElementById(`qty-row-${i}`);
-      const sizeInput = document.getElementById(`size-row-${i}`);
-      if (parts[i]) {
-        partInput.value = parts[i].part || '';
-        qtyInput.value = parts[i].quantity !== undefined && parts[i].quantity !== null ? parts[i].quantity : '';
-        sizeInput.value = parts[i].size || '';
+    for (let i = 0; i < 8; i++) {
+      const partInput = document.getElementById(`part-desc-row-${i}`);
+      const qtyRecInput = document.getElementById(`qty-rec-row-${i}`);
+      const qtyInspInput = document.getElementById(`qty-insp-row-${i}`);
+      const qtyAppInput = document.getElementById(`qty-app-row-${i}`);
+      const qtyRejInput = document.getElementById(`qty-rej-row-${i}`);
+      const notesInput = document.getElementById(`notes-row-${i}`);
+      
+      const item = parts[i];
+      if (item) {
+        partInput.value = item.partNoDescription || item.part || '';
+        qtyRecInput.value = item.qtyReceived !== undefined && item.qtyReceived !== null ? item.qtyReceived : (item.quantity !== undefined ? item.quantity : '');
+        qtyInspInput.value = item.qtyInspected !== undefined && item.qtyInspected !== null ? item.qtyInspected : (item.quantity !== undefined ? item.quantity : '');
+        qtyAppInput.value = item.qtyApproved !== undefined && item.qtyApproved !== null ? item.qtyApproved : (item.quantity !== undefined ? item.quantity : '');
+        qtyRejInput.value = item.qtyRejected !== undefined && item.qtyRejected !== null ? item.qtyRejected : '';
+        notesInput.value = item.notes || '';
       } else {
         partInput.value = '';
-        qtyInput.value = '';
-        sizeInput.value = '';
+        qtyRecInput.value = '';
+        qtyInspInput.value = '';
+        qtyAppInput.value = '';
+        qtyRejInput.value = '';
+        notesInput.value = '';
       }
     }
   }
@@ -124,13 +135,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Dynamically add a class to track empty values for print/PDF transparent overrides
   function updateEmptyClasses() {
     if (!workOrderForm) return;
-    const inputs = workOrderForm.querySelectorAll('input, select, textarea');
+    const inputs = workOrderForm.querySelectorAll('input[type="text"], input[type="date"], input[type="number"]');
     inputs.forEach(el => {
       if (el.id === 'field-id' && el.value === 'NEW') {
         el.classList.add('is-empty');
         return;
       }
-      if (el.value === '' || (el.tagName === 'SELECT' && el.selectedIndex === 0 && el.options[0].value === '')) {
+      if (el.value === '') {
         el.classList.add('is-empty');
       } else {
         el.classList.remove('is-empty');
@@ -138,17 +149,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // QC result checkboxes exclusivity toggles
+  function getCheckedFinalResult() {
+    const checked = resultCheckboxes.find(cb => cb && cb.checked);
+    return checked ? checked.value : '';
+  }
+
+  function setCheckedFinalResult(val) {
+    resultCheckboxes.forEach(cb => {
+      if (cb) {
+        cb.checked = (cb.value === val);
+      }
+    });
+  }
+
+  function setupCheckboxExclusivity() {
+    resultCheckboxes.forEach(cb => {
+      if (cb) {
+        cb.addEventListener('change', (e) => {
+          if (e.target.checked) {
+            resultCheckboxes.forEach(otherCb => {
+              if (otherCb && otherCb !== e.target) {
+                otherCb.checked = false;
+              }
+            });
+          }
+          checkDirtyState();
+          updateEmptyClasses();
+        });
+      }
+    });
+  }
+
   function updatePriorityStyles() {
-    if (!fieldPriority) return;
-    const val = fieldPriority.value;
-    fieldPriority.classList.remove('priority-high', 'priority-medium', 'priority-low');
-    if (val === 'High' || val === 'Rush') {
-      fieldPriority.classList.add('priority-high');
-    } else if (val === 'Medium' || val === 'Priority') {
-      fieldPriority.classList.add('priority-medium');
-    } else if (val === 'Low' || val === 'Standard') {
-      fieldPriority.classList.add('priority-low');
-    }
+    // Hidden priority field, stub method for compatibility
   }
 
   // --- INITIALIZATION ---
@@ -281,13 +315,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Compute Job Status
   function getJobStatus(record) {
+    if (record.finalResult) {
+      return record.finalResult;
+    }
     const shipDate = record.footerShippingDate || record.finishDate || '';
     if (shipDate !== '') {
-      return 'completed';
-    }
-    const recDate = record.receivingDate || record.startDate || '';
-    if (recDate !== '') {
-      return 'in-progress';
+      return 'All Accepted';
     }
     return 'pending';
   }
@@ -295,8 +328,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // Calculate & Refresh Stats Panel
   function updateStats() {
     statsTotal.textContent = workOrders.length;
-    statsHigh.textContent = workOrders.filter(w => w.priority === 'High' || w.priority === 'Rush').length;
-    statsPending.textContent = workOrders.filter(w => getJobStatus(w) === 'in-progress').length;
+    statsHigh.textContent = workOrders.filter(w => getJobStatus(w) === 'All Accepted').length;
+    statsPending.textContent = workOrders.filter(w => getJobStatus(w) === 'pending').length;
+  }
+
+  // HTML Escaping Helper to prevent XSS injection
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 
   // --- RECORD LIST VIEW / SIDEBAR RENDERING ---
@@ -313,35 +357,43 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = `record-card ${currentIndex !== null && filteredOrders[currentIndex]?.id === order.id ? 'active' : ''}`;
       card.dataset.index = index;
 
-      let priorityClass = 'badge-medium';
-      const p = order.priority ? order.priority.toLowerCase() : '';
-      if (p === 'high' || p === 'rush') {
-        priorityClass = 'badge-high';
-      } else if (p === 'medium' || p === 'priority') {
-        priorityClass = 'badge-medium';
-      } else if (p === 'low' || p === 'standard') {
-        priorityClass = 'badge-low';
-      }
       const status = getJobStatus(order);
+      let priorityClass = 'badge-medium';
+      if (status === 'All Accepted') {
+        priorityClass = 'badge-low'; // green badge
+      } else if (status === 'Rework Required' || status === 'Hold') {
+        priorityClass = 'badge-high'; // red badge
+      } else if (status === 'Scrap') {
+        priorityClass = 'badge-high'; // red badge
+      } else {
+        priorityClass = 'badge-medium'; // orange badge
+      }
 
       let statusIndicator = '';
-      if (status === 'completed') {
-        statusIndicator = `<span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-success); display: inline-block; margin-right: 4px;" title="Completed"></span>`;
-      } else if (status === 'in-progress') {
-        statusIndicator = `<span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--primary); display: inline-block; margin-right: 4px;" title="In Progress"></span>`;
+      if (status === 'All Accepted') {
+        statusIndicator = `<span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-success); display: inline-block; margin-right: 4px;" title="All Accepted"></span>`;
+      } else if (status === 'Rework Required') {
+        statusIndicator = `<span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-warning); display: inline-block; margin-right: 4px;" title="Rework Required"></span>`;
+      } else if (status === 'Hold') {
+        statusIndicator = `<span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-info); display: inline-block; margin-right: 4px;" title="Hold"></span>`;
+      } else if (status === 'Scrap') {
+        statusIndicator = `<span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-danger); display: inline-block; margin-right: 4px;" title="Scrap"></span>`;
       } else {
         statusIndicator = `<span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--text-muted); display: inline-block; margin-right: 4px;" title="Pending"></span>`;
       }
 
+      const displayPartCoating = order.partCoating || (order.partNo ? `${order.partNo} / ${order.coating || ''}` : 'N/A');
+      const displayDate = order.date || order.receivingDate || 'No Date';
+
       card.innerHTML = `
         <div class="record-card-header">
           <span class="record-card-id">#${order.id}</span>
-          <span class="record-card-date">${order.dueDate ? order.dueDate : 'No Due Date'}</span>
+          <span class="record-card-date">${escapeHtml(displayDate)}</span>
         </div>
-        <div class="record-card-name">${order.customerName || 'Unnamed'}</div>
+        <div class="record-card-name">${escapeHtml(order.customer || order.customerName || 'Unnamed')}</div>
         <div class="record-card-footer">
-          <span class="record-card-desc">${statusIndicator} ${order.partNo || 'N/A'}</span>
-          <span class="badge ${priorityClass}">${order.priority || 'Medium'}</span>
+          <span class="record-card-desc">${statusIndicator} ${escapeHtml(displayPartCoating)}</span>
+          <span class="badge ${priorityClass}">${escapeHtml(status)}</span>
         </div>
       `;
 
@@ -370,73 +422,42 @@ document.addEventListener('DOMContentLoaded', () => {
     // Hide welcome overlay
     welcomeOverlay.style.display = 'none';
 
-    // Make sure dynamically loaded coatings are appended to select if they don't exist
-    if (record.coating) {
-      const coatingOptions = Array.from(fieldCoating.options).map(opt => opt.value);
-      if (!coatingOptions.includes(record.coating)) {
-        const newOpt = document.createElement('option');
-        newOpt.value = record.coating;
-        newOpt.textContent = record.coating;
-        fieldCoating.appendChild(newOpt);
-      }
-    }
-
     // Populate Fields with fallback mapping for old schemas
     fieldId.value = record.id;
-    fieldPart.value = record.partNo || '';
-    fieldCoating.value = record.coating || '';
-    fieldName.value = record.customerName || '';
+    fieldDate.value = record.date || record.receivingDate || record.startDate || '';
     fieldPo.value = record.poNumber || '';
+    fieldInspector.value = record.inspector || record.receivingInitial || record.footerQcInitial || '';
+    fieldCustomer.value = record.customer || record.customerName || '';
 
-    // Fallback: receivingDate -> startDate
-    fieldReceivingDate.value = record.receivingDate || record.startDate || '';
+    // If partCoating is empty, combine partNo and coating for legacy records
+    if (record.partCoating) {
+      fieldPartCoating.value = record.partCoating;
+    } else {
+      const partsArr = [];
+      if (record.partNo) partsArr.push(record.partNo);
+      if (record.coating) partsArr.push(record.coating);
+      fieldPartCoating.value = partsArr.join(" / ");
+    }
 
-    // Map legacy priority values
-    let priorityVal = record.priority || 'Medium';
-    if (priorityVal === 'Rush' || priorityVal === 'High') priorityVal = 'High';
-    else if (priorityVal === 'Priority' || priorityVal === 'Medium') priorityVal = 'Medium';
-    else if (priorityVal === 'Standard' || priorityVal === 'Low') priorityVal = 'Low';
-    fieldPriority.value = priorityVal;
+    // QC Checkboxes
+    const currentStatus = getJobStatus(record);
+    setCheckedFinalResult(currentStatus);
 
-    updatePriorityStyles();
+    fieldQcInitial.value = record.qcInitial || record.footerQcInitial || record.receivingInitial || '';
+    fieldQcDate.value = record.qcDate || record.footerShippingDate || record.finishDate || '';
 
-    fieldDueDate.value = record.dueDate || '';
-    fieldInstructions.value = record.instructions || '';
-
-    // Middle initials, sandblast & additional info
-    fieldReceivingInitial.value = record.receivingInitial || '';
-    fieldShippingInitial.value = record.shippingInitial || '';
-
-    // Map legacy sandblast values
-    let sbValue = record.sandblast || '';
-    if (sbValue.toUpperCase() === 'NONE') sbValue = 'none';
-    else if (sbValue.toUpperCase() === 'FINE') sbValue = 'matte';
-    else if (sbValue.toUpperCase() === 'ROUGH') sbValue = 'satin';
-    fieldSandblast.value = sbValue;
-
-    fieldAdditionalInfo.value = record.additionalInfo || '';
-
-    // Footer items
-    fieldFooterRecDate.value = record.footerReceivingDate || record.receivingDate || record.startDate || '';
-    fieldFooterRecInitial.value = record.footerReceivingInitial || record.receivingInitial || '';
-    fieldFooterQcInitial.value = record.footerQcInitial || '';
-    fieldFooterShipDate.value = record.footerShippingDate || record.finishDate || '';
-    fieldFooterShipInitial.value = record.footerShippingInitial || record.shippingInitial || '';
-    fieldForTcs.value = record.forTcs || '';
-
-    // Parts & Quantities Table
+    // Parts & Quantities Table (Pad to 8 rows)
     let partsData = record.parts;
     if (!Array.isArray(partsData)) {
-      // Migrate old schema to parts table on-the-fly
       partsData = [
-        { part: record.partNo || '', quantity: record.quantity || '', size: '' }
+        { partNoDescription: record.partNo || '', qtyReceived: record.quantity || '', qtyInspected: record.quantity || '', qtyApproved: record.quantity || '', qtyRejected: '', notes: '' }
       ];
-      // Pad to 7 rows
-      while (partsData.length < 7) {
-        partsData.push({ part: '', quantity: '', size: '' });
-      }
     }
-    setPartsTableData(partsData);
+    const targetParts = [...partsData];
+    while (targetParts.length < 8) {
+      targetParts.push({ partNoDescription: '', qtyReceived: '', qtyInspected: '', qtyApproved: '', qtyRejected: '', notes: '' });
+    }
+    setPartsTableData(targetParts);
 
     // Track empty classes for print overrides
     updateEmptyClasses();
@@ -471,31 +492,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Aggregate current inputs into an object
   function getFormState() {
+    const finalRes = getCheckedFinalResult();
+    const partsData = getPartsTableData();
+    
+    // For backward compatibility and stats, we calculate total quantity
+    const totalQty = partsData.reduce((sum, item) => sum + (parseInt(item.qtyReceived) || 0), 0);
+    
+    // Pick the first part description as partNo for older systems
+    const firstPart = partsData.find(p => p.partNoDescription)?.partNoDescription || '';
+
     return {
       id: fieldId.value,
-      partNo: fieldPart.value.trim(),
-      coating: fieldCoating.value,
-      customerName: fieldName.value.trim(),
+      date: fieldDate.value,
       poNumber: fieldPo.value.trim(),
-      receivingDate: fieldReceivingDate.value,
-      priority: fieldPriority.value,
-      dueDate: fieldDueDate.value,
-      instructions: fieldInstructions.value.trim(),
-      receivingInitial: fieldReceivingInitial.value.trim(),
-      shippingInitial: fieldShippingInitial.value.trim(),
-      sandblast: fieldSandblast.value,
-      additionalInfo: fieldAdditionalInfo.value.trim(),
-      footerReceivingDate: fieldFooterRecDate.value,
-      footerReceivingInitial: fieldFooterRecInitial.value.trim(),
-      footerQcInitial: fieldFooterQcInitial.value.trim(),
-      footerShippingDate: fieldFooterShipDate.value,
-      footerShippingInitial: fieldFooterShipInitial.value.trim(),
-      forTcs: fieldForTcs.value.trim(),
-      parts: getPartsTableData(),
+      inspector: fieldInspector.value.trim(),
+      customer: fieldCustomer.value.trim(),
+      partCoating: fieldPartCoating.value.trim(),
+      finalResult: finalRes,
+      qcInitial: fieldQcInitial.value.trim(),
+      qcDate: fieldQcDate.value,
+      parts: partsData,
+      
       // Backward compatibility fields
-      startDate: fieldReceivingDate.value,
-      finishDate: fieldFooterShipDate.value,
-      quantity: getPartsTableData().reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0)
+      customerName: fieldCustomer.value.trim(),
+      receivingDate: fieldDate.value,
+      startDate: fieldDate.value,
+      receivingInitial: fieldInspector.value.trim(),
+      footerQcInitial: fieldQcInitial.value.trim(),
+      footerShippingDate: fieldQcDate.value,
+      finishDate: fieldQcDate.value,
+      partNo: firstPart,
+      quantity: totalQty
     };
   }
 
@@ -514,12 +541,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // It's a new unsaved record. Check if any fields are typed.
       const hasAnyInput = Object.keys(currentForm).some(key => {
         if (key === 'id') return false;
-        if (key === 'priority' && currentForm[key] === '') return false;
-        if (key === 'sandblast' && currentForm[key] === '') return false;
         if (key === 'quantity') return false;
         if (key === 'startDate' || key === 'finishDate') return false;
+        if (key === 'customerName' || key === 'receivingDate' || key === 'receivingInitial' || key === 'footerQcInitial' || key === 'footerShippingDate' || key === 'partNo') return false;
         if (key === 'parts') {
-          return currentForm.parts.some(p => p.part !== '' || p.quantity !== '' || p.size !== '');
+          return currentForm.parts.some(p => p.partNoDescription !== '' || p.qtyReceived !== '' || p.qtyInspected !== '' || p.qtyApproved !== '' || p.qtyRejected !== '' || p.notes !== '');
         }
         return currentForm[key] !== '' && currentForm[key] !== null;
       });
@@ -530,18 +556,28 @@ document.addEventListener('DOMContentLoaded', () => {
       // Compare values
       isDirty = Object.keys(currentForm).some(key => {
         if (key === 'quantity' || key === 'startDate' || key === 'finishDate') return false;
+        if (key === 'customerName' || key === 'receivingDate' || key === 'receivingInitial' || key === 'footerQcInitial' || key === 'footerShippingDate' || key === 'partNo') return false;
         if (key === 'parts') {
           const origParts = Array.isArray(original.parts) ? original.parts : [];
-          for (let i = 0; i < 7; i++) {
-            const curP = currentForm.parts[i] || { part: '', quantity: '', size: '' };
-            const origP = origParts[i] || { part: '', quantity: '', size: '' };
-            if ((curP.part || '') !== (origP.part || '') || (curP.quantity || '') !== (origP.quantity || '') || (curP.size || '') !== (origP.size || '')) {
+          for (let i = 0; i < 8; i++) {
+            const curP = currentForm.parts[i] || { partNoDescription: '', qtyReceived: '', qtyInspected: '', qtyApproved: '', qtyRejected: '', notes: '' };
+            const origP = origParts[i] || { partNoDescription: '', qtyReceived: '', qtyInspected: '', qtyApproved: '', qtyRejected: '', notes: '' };
+            const origDesc = origP.partNoDescription || origP.part || '';
+            const origQtyRec = origP.qtyReceived !== undefined && origP.qtyReceived !== null ? origP.qtyReceived : (origP.quantity !== undefined ? origP.quantity : '');
+            if ((curP.partNoDescription || '') !== origDesc || 
+                (curP.qtyReceived || '') !== origQtyRec || 
+                (curP.qtyInspected || '') !== (origP.qtyInspected !== undefined ? origP.qtyInspected : '') || 
+                (curP.qtyApproved || '') !== (origP.qtyApproved !== undefined ? origP.qtyApproved : '') || 
+                (curP.qtyRejected || '') !== (origP.qtyRejected !== undefined ? origP.qtyRejected : '') || 
+                (curP.notes || '') !== (origP.notes || '')) {
               return true;
             }
           }
           return false;
         }
-        return (currentForm[key] || '') !== (original[key] || '');
+        const curVal = currentForm[key] || '';
+        const origVal = original[key] || (key === 'date' ? original.receivingDate : (key === 'customer' ? original.customerName : ''));
+        return String(curVal) !== String(origVal || '');
       });
     }
 
@@ -568,11 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear and preset defaults
     workOrderForm.reset();
     fieldId.value = 'NEW';
-
-    // Clear dates to avoid default values showing in empty reports
-    fieldReceivingDate.value = '';
-    fieldFooterRecDate.value = '';
-    fieldDueDate.value = '';
+    setCheckedFinalResult('');
 
     // Reset controls
     navCurrentInput.value = '*';
@@ -586,11 +618,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.record-card').forEach(card => card.classList.remove('active'));
 
-    fieldName.focus();
+    fieldCustomer.focus();
     isDirty = false;
     unsavedAlert.style.display = 'none';
     updateEmptyClasses();
-    updatePriorityStyles();
   }
 
   // Handle Create New Record with modal check for unsaved changes
@@ -795,7 +826,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.record-card').forEach(card => card.classList.remove('active'));
     updateEmptyClasses();
-    updatePriorityStyles();
   }
 
   // --- FILTERING & SEARCH CONTROLS ---
@@ -808,26 +838,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Filter main dataset
     filteredOrders = workOrders.filter(order => {
-      // 1. Text Search (Matches ID, Customer Name, PO #, Coating, Part No, additional info, and parts list/size)
+      // 1. Text Search (Matches ID, Customer, PO #, Part/Coating, Inspector, parts list notes/descriptions)
       let matchesSearch = true;
       if (activeSearch !== '') {
         const partsMatch = Array.isArray(order.parts) && order.parts.some(p =>
+          (p.partNoDescription && p.partNoDescription.toLowerCase().includes(activeSearch)) ||
           (p.part && p.part.toLowerCase().includes(activeSearch)) ||
-          (p.size && p.size.toLowerCase().includes(activeSearch))
+          (p.notes && p.notes.toLowerCase().includes(activeSearch))
         );
         matchesSearch = (
           (order.id && order.id.toLowerCase().includes(activeSearch)) ||
+          (order.customer && order.customer.toLowerCase().includes(activeSearch)) ||
           (order.customerName && order.customerName.toLowerCase().includes(activeSearch)) ||
-          (order.partNo && order.partNo.toLowerCase().includes(activeSearch)) ||
           (order.poNumber && order.poNumber.toLowerCase().includes(activeSearch)) ||
-          (order.coating && order.coating.toLowerCase().includes(activeSearch)) ||
-          (order.instructions && order.instructions.toLowerCase().includes(activeSearch)) ||
-          (order.additionalInfo && order.additionalInfo.toLowerCase().includes(activeSearch)) ||
+          (order.partCoating && order.partCoating.toLowerCase().includes(activeSearch)) ||
+          (order.inspector && order.inspector.toLowerCase().includes(activeSearch)) ||
           partsMatch
         );
       }
 
-      // 2. Priority Filter
+      // 2. Priority Filter (Ignored as it's hidden now, but kept for compatibility)
       let matchesPriority = true;
       if (priority !== '') {
         const orderPriority = (order.priority || '').toLowerCase();
@@ -1036,44 +1066,34 @@ document.addEventListener('DOMContentLoaded', () => {
   // Export Database to CSV file
   function exportToCsv() {
     const csvHeaders = [
-      "Work Order ID", "Customer Name", "Priority", "Part No", "PO Number", "Due Date",
-      "Coating", "Receiving Date", "Instructions", "Receiving Initial", "Shipping Initial",
-      "Sandblast", "Additional Information", "Footer Receiving Date", "Footer Receiving Initial", "Footer QC Initial",
-      "Footer Shipping Date", "Footer Shipping Initial", "For TCS Notes", "Parts List"
+      "Work Order ID", "Customer Name", "PO Number", "Date", "Inspector", "Part/Coating", "QC Initial", "QC Date", "Final Result", "Parts List"
     ];
 
     const csvRows = [csvHeaders.join(",")];
 
     workOrders.forEach(order => {
       const partsText = Array.isArray(order.parts) ?
-        order.parts.filter(p => p.part || p.quantity || p.size).map(p => {
-          let partInfo = p.part || 'Unnamed';
+        order.parts.filter(p => p.partNoDescription || p.qtyReceived || p.notes).map(p => {
+          let partInfo = p.partNoDescription || 'Unnamed';
           let details = [];
-          if (p.quantity !== undefined && p.quantity !== '') details.push(`Qty: ${p.quantity}`);
-          if (p.size) details.push(`Size: ${p.size}`);
+          if (p.qtyReceived !== undefined && p.qtyReceived !== '') details.push(`Received: ${p.qtyReceived}`);
+          if (p.qtyInspected !== undefined && p.qtyInspected !== '') details.push(`Inspected: ${p.qtyInspected}`);
+          if (p.qtyApproved !== undefined && p.qtyApproved !== '') details.push(`Approved: ${p.qtyApproved}`);
+          if (p.qtyRejected !== undefined && p.qtyRejected !== '') details.push(`Rejected: ${p.qtyRejected}`);
+          if (p.notes) details.push(`Notes: ${p.notes}`);
           return details.length > 0 ? `${partInfo} (${details.join(", ")})` : partInfo;
         }).join(" | ") : "";
 
       const values = [
         order.id || '',
-        order.customerName || '',
-        order.priority || '',
-        order.partNo || '',
+        order.customer || order.customerName || '',
         order.poNumber || '',
-        order.dueDate || '',
-        order.coating || '',
-        order.receivingDate || '',
-        order.instructions || '',
-        order.receivingInitial || '',
-        order.shippingInitial || '',
-        order.sandblast || '',
-        order.additionalInfo || '',
-        order.footerReceivingDate || '',
-        order.footerReceivingInitial || '',
-        order.footerQcInitial || '',
-        order.footerShippingDate || '',
-        order.footerShippingInitial || '',
-        order.forTcs || '',
+        order.date || order.receivingDate || '',
+        order.inspector || order.receivingInitial || '',
+        order.partCoating || (order.partNo ? `${order.partNo} / ${order.coating || ''}` : ''),
+        order.qcInitial || order.footerQcInitial || '',
+        order.qcDate || order.footerShippingDate || '',
+        getJobStatus(order),
         partsText
       ];
 
@@ -1210,38 +1230,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const headers = lines[0].map(h => h.trim());
     const propertyMapping = {
       "Work Order ID": "id", "Work Order": "id", "id": "id",
-      "Batch Num": "batchNum", "Batch #": "batchNum", "batchNum": "batchNum",
-      "Part No": "partNo", "Part #": "partNo", "partNo": "partNo",
-      "Description": "description", "description": "description",
-      "Coating": "coating", "coating": "coating",
-      "Material": "material", "material": "material",
-      "Start Date": "startDate", "startDate": "startDate",
-      "Finish Date": "finishDate", "finishDate": "finishDate",
-      "Quantity": "quantity", "quantity": "quantity",
-      "UM": "um", "um": "um",
-      "Customer Name": "customerName", "Name": "customerName", "customerName": "customerName",
+      "Customer Name": "customer", "Customer": "customer", "customer": "customer", "customerName": "customer",
       "PO Number": "poNumber", "PO #": "poNumber", "poNumber": "poNumber",
-      "Sales Ord": "salesOrd", "Sales Order": "salesOrd", "salesOrd": "salesOrd",
-      "Due Date": "dueDate", "dueDate": "dueDate",
-      "Contact": "contact", "contact": "contact",
-      "Priority": "priority", "priority": "priority",
-      "Specs": "specs", "specs": "specs",
-      "Instructions": "instructions", "instructions": "instructions",
-      "Visual Assessment": "visual", "Visual": "visual", "visual": "visual",
-      "Substrate Hardness": "hardness", "Hardness": "hardness", "hardness": "hardness",
-      "Created Time": "createdTime", "createdTime": "createdTime",
-      "Last Modified Time": "lastModifiedTime", "lastModifiedTime": "lastModifiedTime",
-      "Receiving Date": "receivingDate", "receivingDate": "receivingDate",
-      "Receiving Initial": "receivingInitial", "receivingInitial": "receivingInitial",
-      "Shipping Initial": "shippingInitial", "shippingInitial": "shippingInitial",
-      "Sandblast": "sandblast", "sandblast": "sandblast",
-      "Additional Information": "additionalInfo", "additionalInfo": "additionalInfo",
-      "Footer Receiving Date": "footerReceivingDate", "footerReceivingDate": "footerReceivingDate",
-      "Footer Receiving Initial": "footerReceivingInitial", "footerReceivingInitial": "footerReceivingInitial",
-      "Footer QC Initial": "footerQcInitial", "footerQcInitial": "footerQcInitial",
-      "Footer Shipping Date": "footerShippingDate", "footerShippingDate": "footerShippingDate",
-      "Footer Shipping Initial": "footerShippingInitial", "footerShippingInitial": "footerShippingInitial",
-      "For TCS Notes": "forTcs", "forTcs": "forTcs",
+      "Date": "date", "date": "date", "receivingDate": "date", "startDate": "date",
+      "Inspector": "inspector", "inspector": "inspector", "receivingInitial": "inspector",
+      "Part/Coating": "partCoating", "partCoating": "partCoating", "partNo": "partCoating",
+      "QC Initial": "qcInitial", "qcInitial": "qcInitial", "footerQcInitial": "qcInitial",
+      "QC Date": "qcDate", "qcDate": "qcDate", "footerShippingDate": "qcDate", "finishDate": "qcDate",
+      "Final Result": "finalResult", "finalResult": "finalResult",
       "Parts List": "parts"
     };
 
@@ -1253,35 +1249,41 @@ document.addEventListener('DOMContentLoaded', () => {
       headers.forEach((header, colIdx) => {
         const prop = propertyMapping[header] || header;
         let val = rowData[colIdx] || '';
-        if (prop === 'quantity') {
-          val = parseInt(val) || 0;
-        }
 
         if (prop === 'parts') {
           const partsArray = [];
           if (val) {
             const items = val.split(' | ');
             items.forEach(item => {
-              const qtyMatch = item.match(/Qty:\s*(\d+)/i);
+              const qtyRecMatch = item.match(/Received:\s*(\d+)/i) || item.match(/Qty:\s*(\d+)/i);
+              const qtyInspMatch = item.match(/Inspected:\s*(\d+)/i);
+              const qtyAppMatch = item.match(/Approved:\s*(\d+)/i);
+              const qtyRejMatch = item.match(/Rejected:\s*(\d+)/i);
+              const notesMatch = item.match(/Notes:\s*([^,)]+)/i);
               const sizeMatch = item.match(/Size:\s*([^,)]+)/i);
-              let partName = item;
-              let qty = '';
-              let size = '';
-              if (qtyMatch) {
-                qty = parseInt(qtyMatch[1]) || '';
-              }
-              if (sizeMatch) {
-                size = sizeMatch[1].trim();
-              }
-              partName = item.replace(/\s*\([^)]+\)/g, '').trim();
-              if (partName || qty || size) {
-                partsArray.push({ part: partName, quantity: qty, size: size });
+              
+              let partName = item.replace(/\s*\([^)]+\)/g, '').trim();
+              let qtyRec = qtyRecMatch ? parseInt(qtyRecMatch[1]) || '' : '';
+              let qtyInsp = qtyInspMatch ? parseInt(qtyInspMatch[1]) || '' : qtyRec;
+              let qtyApp = qtyAppMatch ? parseInt(qtyAppMatch[1]) || '' : qtyRec;
+              let qtyRej = qtyRejMatch ? parseInt(qtyRejMatch[1]) || '' : '';
+              let notes = notesMatch ? notesMatch[1].trim() : (sizeMatch ? `Size: ${sizeMatch[1].trim()}` : '');
+              
+              if (partName || qtyRec || qtyInsp || qtyApp || qtyRej || notes) {
+                partsArray.push({
+                  partNoDescription: partName,
+                  qtyReceived: qtyRec,
+                  qtyInspected: qtyInsp,
+                  qtyApproved: qtyApp,
+                  qtyRejected: qtyRej,
+                  notes: notes
+                });
               }
             });
           }
-          // Pad to 7 rows
-          while (partsArray.length < 7) {
-            partsArray.push({ part: '', quantity: '', size: '' });
+          // Pad to 8 rows
+          while (partsArray.length < 8) {
+            partsArray.push({ partNoDescription: '', qtyReceived: '', qtyInspected: '', qtyApproved: '', qtyRejected: '', notes: '' });
           }
           record[prop] = partsArray;
         } else {
@@ -1366,20 +1368,27 @@ document.addEventListener('DOMContentLoaded', () => {
     navCurrentInput.addEventListener('keydown', handlePageInput);
 
     // Form change alerts tracking
+    setupCheckboxExclusivity();
+
     const formFields = [
-      fieldPart, fieldCoating, fieldName, fieldPo, fieldReceivingDate,
-      fieldPriority, fieldDueDate, fieldInstructions,
-      fieldReceivingInitial, fieldShippingInitial, fieldSandblast, fieldAdditionalInfo,
-      fieldFooterRecDate, fieldFooterRecInitial, fieldFooterQcInitial,
-      fieldFooterShipDate, fieldFooterShipInitial, fieldForTcs
+      fieldDate, fieldPo, fieldInspector, fieldCustomer, fieldPartCoating,
+      fieldQcInitial, fieldQcDate
     ];
 
     // Add Parts Table inputs for change alert tracking
-    for (let i = 0; i < 7; i++) {
-      formFields.push(document.getElementById(`part-row-${i}`));
-      formFields.push(document.getElementById(`qty-row-${i}`));
-      formFields.push(document.getElementById(`size-row-${i}`));
+    for (let i = 0; i < 8; i++) {
+      formFields.push(document.getElementById(`part-desc-row-${i}`));
+      formFields.push(document.getElementById(`qty-rec-row-${i}`));
+      formFields.push(document.getElementById(`qty-insp-row-${i}`));
+      formFields.push(document.getElementById(`qty-app-row-${i}`));
+      formFields.push(document.getElementById(`qty-rej-row-${i}`));
+      formFields.push(document.getElementById(`notes-row-${i}`));
     }
+
+    // Add checkboxes
+    resultCheckboxes.forEach(cb => {
+      if (cb) formFields.push(cb);
+    });
 
     formFields.forEach(field => {
       if (field) {

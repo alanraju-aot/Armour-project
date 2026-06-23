@@ -1,55 +1,91 @@
 [
   {
     "id": "3281",
-    "customerName": "Deepwater Energy Corp",
-    "priority": "High",
-    "partNo": "SS-7711-V",
+    "date": "2026-05-25",
     "poNumber": "PO-77402-DW",
-    "dueDate": "2026-06-08",
-    "coating": "ALPHA-TC-TICN",
-    "receivingDate": "2026-05-25",
-    "instructions": "Bake at 375°F for 4 hours within 3 hours of plating. Inspect critical seal surfaces under 10x magnification. Ensure no micro-cracking.",
+    "inspector": "ER",
+    "customer": "Deepwater Energy Corp",
+    "partCoating": "SS-7711-V / ALPHA-TC-TICN",
+    "finalResult": "Hold",
+    "qcInitial": "QC2",
+    "qcDate": "2026-05-28",
     "parts": [
       {
-        "part": "SS-7711-V Valve Stem Alpha",
-        "quantity": 6
+        "partNoDescription": "SS-7711-V Valve Stem Alpha",
+        "qtyReceived": 6,
+        "qtyInspected": 6,
+        "qtyApproved": 6,
+        "qtyRejected": "",
+        "notes": ""
       },
       {
-        "part": "SS-7711-V Valve Stem Beta",
-        "quantity": 6
+        "partNoDescription": "SS-7711-V Valve Stem Beta",
+        "qtyReceived": 6,
+        "qtyInspected": 6,
+        "qtyApproved": 6,
+        "qtyRejected": "",
+        "notes": ""
       },
       {
-        "part": "",
-        "quantity": ""
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
       },
       {
-        "part": "",
-        "quantity": ""
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
       },
       {
-        "part": "",
-        "quantity": ""
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
       },
       {
-        "part": "",
-        "quantity": ""
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
       },
       {
-        "part": "",
-        "quantity": ""
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
+      },
+      {
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
       }
     ],
+    "customerName": "Deepwater Energy Corp",
+    "receivingDate": "2026-05-25",
+    "startDate": "2026-05-25",
     "receivingInitial": "ER",
-    "shippingInitial": "DB",
-    "sandblast": "ROUGH",
-    "footerReceivingDate": "2026-05-25",
-    "footerReceivingInitial": "ER",
     "footerQcInitial": "QC2",
     "footerShippingDate": "2026-05-28",
-    "footerShippingInitial": "DB",
-    "forTcs": "High Phosphorus ENP target achieved.",
+    "finishDate": "2026-05-28",
+    "partNo": "SS-7711-V Valve Stem Alpha",
+    "quantity": 12,
     "createdTime": "2026-05-25T14:20:00Z",
-    "lastModifiedTime": "2026-05-28T11:10:00Z"
+    "lastModifiedTime": "2026-06-23T16:22:41.669Z"
   },
   {
     "id": "3282",
@@ -165,5 +201,93 @@
     "quantity": 48,
     "createdTime": "2026-06-01T08:30:00Z",
     "lastModifiedTime": "2026-06-17T16:22:56.708Z"
+  },
+  {
+    "id": "3284",
+    "date": "60623-02-02",
+    "poNumber": "",
+    "inspector": "SpaceX",
+    "customer": "SPX-101 / GOLD-TC",
+    "partCoating": "23",
+    "finalResult": "All Accepted",
+    "qcInitial": "JS",
+    "qcDate": "60623-02-02",
+    "parts": [
+      {
+        "partNoDescription": "23",
+        "qtyReceived": 4,
+        "qtyInspected": 6,
+        "qtyApproved": 1,
+        "qtyRejected": 4,
+        "notes": "rejected"
+      },
+      {
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
+      },
+      {
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
+      },
+      {
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
+      },
+      {
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
+      },
+      {
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
+      },
+      {
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
+      },
+      {
+        "partNoDescription": "",
+        "qtyReceived": "",
+        "qtyInspected": "",
+        "qtyApproved": "",
+        "qtyRejected": "",
+        "notes": ""
+      }
+    ],
+    "customerName": "SPX-101 / GOLD-TC",
+    "receivingDate": "60623-02-02",
+    "startDate": "60623-02-02",
+    "receivingInitial": "SpaceX",
+    "footerQcInitial": "JS",
+    "footerShippingDate": "60623-02-02",
+    "finishDate": "60623-02-02",
+    "partNo": "23",
+    "quantity": 4,
+    "createdTime": "2026-06-23T16:24:27.550Z",
+    "lastModifiedTime": "2026-06-23T16:52:12.865Z"
   }
 ]

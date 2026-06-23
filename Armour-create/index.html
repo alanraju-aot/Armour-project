@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TITANIUM AERODYNAMICS, INC. - Work Order Report Manager</title>
+  <title>TITANIUM COATING SERVICES - QC Inspection Log</title>
   <!-- Google Fonts: Outfit (modern, geometric) and Inter (highly readable UI font) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,7 @@
           <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
-          <h2>TITANIUM AERODYNAMICS</h2>
+          <h2>TITANIUM COATING</h2>
         </div>
         <button class="toggle-btn" id="sidebar-toggle" title="Collapse Sidebar">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
@@ -44,17 +44,19 @@
         </div>
 
         <div class="filter-controls">
-          <select id="filter-priority" class="filter-select">
+          <select id="filter-priority" class="filter-select" style="display: none;">
             <option value="">All Priorities</option>
             <option value="High">High</option>
             <option value="Medium">Medium</option>
             <option value="Low">Low</option>
           </select>
-          <select id="filter-status" class="filter-select">
-            <option value="">All Statuses</option>
+          <select id="filter-status" class="filter-select" style="flex: 1;">
+            <option value="">All Results</option>
+            <option value="All Accepted">All Accepted</option>
+            <option value="Rework Required">Rework Required</option>
+            <option value="Hold">Hold</option>
+            <option value="Scrap">Scrap</option>
             <option value="pending">Pending</option>
-            <option value="in-progress">In Progress</option>
-            <option value="completed">Completed</option>
           </select>
         </div>
         <div class="sidebar-utilities" style="display: flex; gap: 0.5rem; margin-top: 0.25rem;">
@@ -94,11 +96,11 @@
           <span class="stat-value" id="stats-total">0</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">High Priority</span>
-          <span class="stat-value text-red" id="stats-high">0</span>
+          <span class="stat-label">Accepted</span>
+          <span class="stat-value text-green" id="stats-high" style="color: var(--color-success) !important;">0</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">In-Progress</span>
+          <span class="stat-label">Pending</span>
           <span class="stat-value text-blue" id="stats-pending">0</span>
         </div>
       </div>
@@ -152,13 +154,12 @@
           <!-- Corporate Banner Header -->
           <div class="corporate-banner">
             <div class="logo-container">
-              <img src="logo.jpg" class="company-logo" alt="Titanium Aerodynamics Logo">
+              <img src="logo.png" class="company-logo" alt="Titanium Coating Services Logo">
             </div>
-            <div class="banner-text">
-              <h1 class="company-name">TITANIUM AERODYNAMICS, INC.</h1>
-              <div class="banner-sub">Work Order</div>
+            <div class="header-title-box">
+              <div class="header-title-main">TITANIUM COATING SERVICES</div>
+              <div class="header-title-sub">QC - INSPECTION LOG</div>
             </div>
-            <div class="watermark">TITANIUM AERODYNAMICS</div>
           </div>
 
           <!-- Alert banner for unsaved changes -->
@@ -175,216 +176,169 @@
           <form class="work-order-form" id="work-order-form" autocomplete="off">
             <div class="form-grid">
 
-              <!-- Column 1: Identifiers & Coating -->
-              <div class="form-column col-1">
-                <div class="form-group">
-                  <label for="field-id">Work Order:</label>
+              <!-- Column 1: Date, Work Order No, PO Number -->
+              <div class="form-column">
+                <div class="field-box">
+                  <div class="field-label">DATE</div>
+                  <input type="date" id="field-date" name="date" required>
+                </div>
+                <div class="field-box">
+                  <div class="field-label">WORK ORDER NO</div>
                   <input type="text" id="field-id" name="id" readonly placeholder="AUTO-GEN">
                 </div>
-                <div class="form-group">
-                  <label for="field-part">Part No:-</label>
-                  <input type="text" id="field-part" name="partNo" placeholder="Enter part number">
-                </div>
-                <div class="form-group">
-                  <label for="field-coating">Coating:</label>
-                  <select id="field-coating" name="coating" required class="filter-select">
-                    <option value="">OTHER</option>
-                    <option value="ALPHA-T-TIN">ALPHA-T-TIN</option>
-                    <option value="ALPHA-TC-TICN">ALPHA-TC-TICN</option>
-                    <option value="ALPHA-AT-ALTIN">ALPHA-AT-ALTIN</option>
-                    <option value="ALPHA-ACR-AlCrN">ALPHA-ACR-AlCrN</option>
-                    <option value="AlPHA-ZR-ZrN">AlPHA-ZR-ZrN</option>
-                    <option value="ALPHA-CR-CrN">ALPHA-CR-CrN</option>
-                    <option value="BLACK PANTHER">BLACK PANTHER</option>
-                    <option value="TITANIUM-X-AlTiSiN">TITANIUM-X-AlTiSiN</option>
-                    <option value="BETA-DLC">BETA-DLC</option>
-                    <option value="ALPHA-TL-TiALN">ALPHA-TL-TiALN</option>
-                    <option value="ALPHA-TAC-TiAlCN">ALPHA-TAC-TiAlCN</option>
-                    <option value="SILIZIUM-X">SILIZIUM-X</option>
-                    <option value="ALPHA-ATCR-AlTiCrN">ALPHA-ATCR-AlTiCrN</option>
-                    <option value="ALPHA-TS">ALPHA-TS</option>
-                    <option value="FUSION-COPPER">FUSION-COPPER</option>
-                  </select>
+                <div class="field-box">
+                  <div class="field-label">PO NUMBER</div>
+                  <input type="text" id="field-po" name="poNumber" placeholder="Enter PO number">
                 </div>
               </div>
 
-              <!-- Column 2: Customer & Dates -->
-              <div class="form-column col-2">
-                <div class="form-group">
-                  <label for="field-name">Customer:</label>
-                  <input type="text" id="field-name" name="customerName" required placeholder="Customer company name">
+              <!-- Column 2: Inspector, Customer, Part/Coating -->
+              <div class="form-column">
+                <div class="field-box">
+                  <div class="field-label">INSPECTOR</div>
+                  <input type="text" id="field-inspector" name="inspector" placeholder="Enter Inspector name">
                 </div>
-                <div class="form-group">
-                  <label for="field-po">PO Number:</label>
-                  <input type="text" id="field-po" name="poNumber" placeholder="Purchase order #">
+                <div class="field-box">
+                  <div class="field-label">CUSTOMER</div>
+                  <input type="text" id="field-customer" name="customer" placeholder="Enter Customer name" required>
                 </div>
-                <div class="form-group">
-                  <label for="field-receiving-date">Receiving Date:</label>
-                  <input type="date" id="field-receiving-date" name="receivingDate" required>
+                <div class="field-box">
+                  <div class="field-label">PART/COATING</div>
+                  <input type="text" id="field-part-coating" name="partCoating" placeholder="Enter Part/Coating">
                 </div>
               </div>
 
-              <!-- Column 3: Priority, Due Date & Instructions -->
-              <div class="form-column col-3">
-                <div class="form-group">
-                  <label for="field-priority">Priority:</label>
-                  <select id="field-priority" name="priority">
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="field-due-date">Due Date:</label>
-                  <input type="date" id="field-due-date" name="dueDate" required>
-                </div>
-                <div class="form-group flex-grow">
-                  <label for="field-instructions">Instructions:</label>
-                  <textarea id="field-instructions" name="instructions"
-                    placeholder="Detailed processing steps, curing temperature/duration, thickness targets"></textarea>
-                </div>
-              </div>
             </div>
 
-            <!-- Double Divider Line -->
-            <div class="divider-double"></div>
-
-            <!-- Middle Section: Parts Table & Initial Info -->
-            <div class="form-middle-grid">
-              <!-- Left side: Interactive Parts List -->
-              <div class="parts-table-wrapper">
-                <table class="parts-table">
-                  <thead>
-                    <tr>
-                      <th class="col-part-name">PART</th>
-                      <th class="col-part-qty">QTY</th>
-                      <th class="col-part-size">SIZE</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-0"
-                          placeholder="Part description/serial..."></td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-0" min="0"
-                          placeholder="Qty"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-0" placeholder="Size...">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-1" placeholder="...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-1" min="0"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-1" placeholder="...">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-2" placeholder="...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-2" min="0"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-2" placeholder="...">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-3" placeholder="...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-3" min="0"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-3" placeholder="...">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-4" placeholder="...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-4" min="0"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-4" placeholder="...">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-5" placeholder="...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-5" min="0"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-5" placeholder="...">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-6" placeholder="...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-6" min="0"></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-6" placeholder="...">
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <!-- Right side: Sign-off Initials & Sandblast Options -->
-              <div class="middle-initials-col">
-                <div class="form-group">
-                  <label for="field-receiving-initial">Receiving Initial:</label>
-                  <input type="text" id="field-receiving-initial" name="receivingInitial" placeholder="Initials">
-                </div>
-                <div class="form-group">
-                  <label for="field-shipping-initial">Shipping Initial:</label>
-                  <input type="text" id="field-shipping-initial" name="shippingInitial" placeholder="Initials">
-                </div>
-                <div class="form-group">
-                  <label for="field-sandblast">Sandblast:</label>
-                  <select id="field-sandblast" name="sandblast">
-                    <option value="matte">Matte</option>
-                    <option value="satin">Satin</option>
-                    <option value="none">None</option>
-                  </select>
-                </div>
-                <div class="form-group flex-grow" style="margin-top: 0.25rem;">
-                  <label for="field-additional-info">Additional Information:</label>
-                  <textarea id="field-additional-info" name="additionalInfo" placeholder="Any additional information..."
-                    style="resize: none; height: 80px;"></textarea>
-                </div>
-              </div>
+            <!-- Part Inspection Details Header Box -->
+            <div class="section-header-box">
+              PART INSPECTION DETAILS
             </div>
 
-            <!-- Single Divider Line -->
-            <div class="divider-single"></div>
+            <!-- Parts Table Section -->
+            <div class="parts-table-wrapper">
+              <table class="parts-table">
+                <thead>
+                  <tr>
+                    <th class="col-part-desc">Part No / Description</th>
+                    <th class="col-qty-rec">Qty Received</th>
+                    <th class="col-qty-insp">Qty Inspected</th>
+                    <th class="col-qty-app">Qty Approved</th>
+                    <th class="col-qty-rej">Qty Rejected</th>
+                    <th class="col-notes">Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-0" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-0" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-0" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-0" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-notes" id="notes-row-0" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-1" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-1" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-1" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-1" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-1" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-notes" id="notes-row-1" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-2" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-2" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-2" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-2" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-2" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-notes" id="notes-row-2" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-3" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-3" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-3" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-3" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-3" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-notes" id="notes-row-3" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-4" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-4" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-4" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-4" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-4" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-notes" id="notes-row-4" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-5" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-5" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-5" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-5" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-5" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-notes" id="notes-row-5" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-6" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-6" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-6" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-6" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-6" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-notes" id="notes-row-6" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-desc" id="part-desc-row-7" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rec" id="qty-rec-row-7" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-insp" id="qty-insp-row-7" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-app" id="qty-app-row-7" min="0" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty-rej" id="qty-rej-row-7" min="0" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-notes" id="notes-row-7" placeholder="..."></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-            <!-- Footer Initials & For TCS Notes -->
-            <div class="form-footer-grid">
-              <!-- Left side: Dates and Initials stack -->
-              <div class="footer-initials-stack">
-                <div class="form-group-row">
-                  <div class="form-group w-65">
-                    <label for="field-footer-receiving-date">Receiving Date:</label>
-                    <input type="date" id="field-footer-receiving-date" name="footerReceivingDate">
-                  </div>
-                  <div class="form-group w-35">
-                    <label for="field-footer-receiving-initial">Initial:</label>
-                    <input type="text" id="field-footer-receiving-initial" name="footerReceivingInitial"
-                      placeholder="Initials">
-                  </div>
-                </div>
+            <!-- QC Result Section Header Box -->
+            <div class="section-header-box">
+              QC RESULT
+            </div>
 
-                <div class="form-group">
-                  <label for="field-footer-qc-initial">QC Initial:</label>
-                  <input type="text" id="field-footer-qc-initial" name="footerQcInitial" placeholder="QC Initials">
-                </div>
-
-                <div class="form-group-row">
-                  <div class="form-group w-65">
-                    <label for="field-footer-shipping-date">Shipping Date:</label>
-                    <input type="date" id="field-footer-shipping-date" name="footerShippingDate">
-                  </div>
-                  <div class="form-group w-35">
-                    <label for="field-footer-shipping-initial">Initial:</label>
-                    <input type="text" id="field-footer-shipping-initial" name="footerShippingInitial"
-                      placeholder="Initials">
-                  </div>
+            <!-- QC Result Area -->
+            <div class="qc-result-container">
+              <div class="qc-result-checklist">
+                <span class="checklist-label">Final Result:</span>
+                <div class="checklist-options">
+                  <label class="checklist-option">
+                    <input type="checkbox" id="res-accepted" class="result-checkbox" name="finalResult" value="All Accepted">
+                    <span class="custom-checkbox"></span>
+                    <span class="option-text">All Accepted</span>
+                  </label>
+                  <label class="checklist-option">
+                    <input type="checkbox" id="res-rework" class="result-checkbox" name="finalResult" value="Rework Required">
+                    <span class="custom-checkbox"></span>
+                    <span class="option-text">Rework Required</span>
+                  </label>
+                  <label class="checklist-option">
+                    <input type="checkbox" id="res-hold" class="result-checkbox" name="finalResult" value="Hold">
+                    <span class="custom-checkbox"></span>
+                    <span class="option-text">Hold</span>
+                  </label>
+                  <label class="checklist-option">
+                    <input type="checkbox" id="res-scrap" class="result-checkbox" name="finalResult" value="Scrap">
+                    <span class="custom-checkbox"></span>
+                    <span class="option-text">Scrap</span>
+                  </label>
                 </div>
               </div>
 
-              <!-- Right side: For TCS box -->
-              <div class="footer-tcs-wrapper">
-                <div class="form-group flex-grow height-100">
-                  <label for="field-for-tcs">For TCS:</label>
-                  <textarea id="field-for-tcs" name="forTcs" class="tcs-textarea"
-                    placeholder="Internal TCS notes, inspection logs, or comments..."></textarea>
+              <!-- Signature Fields Stacked inside Container -->
+              <div class="bottom-sig-grid">
+                <div class="field-box">
+                  <div class="field-label">QC INITIAL</div>
+                  <input type="text" id="field-qc-initial" name="qcInitial" placeholder="Enter initials">
+                </div>
+                <div class="field-box">
+                  <div class="field-label">DATE</div>
+                  <input type="date" id="field-qc-date" name="qcDate">
                 </div>
               </div>
             </div>
@@ -525,9 +479,9 @@
       <!-- Welcome Overlay / Information Pane when exited/no record selected -->
       <div class="welcome-overlay" id="welcome-overlay">
         <div class="overlay-card">
-          <h2>TITANIUM AERODYNAMICS, INC. DB</h2>
-          <p>Please select a work order from the sidebar panel, search using the navigation controls at the bottom, or
-            create a new order to begin editing.</p>
+          <h2>TITANIUM COATING SERVICES DB</h2>
+          <p>Please select an inspection log from the sidebar panel, search using the navigation controls at the bottom, or
+            create a new log to begin editing.</p>
           <div class="overlay-buttons">
             <button class="btn btn-new" id="overlay-btn-new">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
