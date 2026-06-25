@@ -11,7 +11,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=13">
 </head>
 
 <body>
@@ -180,10 +180,6 @@
                   <input type="text" id="field-id" name="id" readonly placeholder="AUTO-GEN">
                 </div>
                 <div class="form-group">
-                  <label for="field-part">Part No:-</label>
-                  <input type="text" id="field-part" name="partNo" placeholder="Enter part number">
-                </div>
-                <div class="form-group">
                   <label for="field-coating">Coating:</label>
                   <select id="field-coating" name="coating" required class="filter-select">
                     <option value="">OTHER</option>
@@ -203,6 +199,24 @@
                     <option value="ALPHA-TS">ALPHA-TS</option>
                     <option value="FUSION-COPPER">FUSION-COPPER</option>
                   </select>
+                </div>
+                <div class="form-group">
+                  <label for="field-ship-via">Ship Via:</label>
+                  <select id="field-ship-via" name="shipVia">
+                    <option value="">Select option</option>
+                    <option value="UPS">UPS</option>
+                    <option value="WILL CALL">WILL CALL</option>
+                    <option value="DELIVERY">DELIVERY</option>
+                    <option value="other">other</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="field-receiving-initial">Initial In:</label>
+                  <input type="text" id="field-receiving-initial" name="receivingInitial" placeholder="Initials">
+                </div>
+                <div class="form-group">
+                  <label for="field-shipping-initial">Initial Out:</label>
+                  <input type="text" id="field-shipping-initial" name="shippingInitial" placeholder="Initials">
                 </div>
               </div>
 
@@ -251,111 +265,10 @@
             <!-- Double Divider Line -->
             <div class="divider-double"></div>
 
-            <!-- Middle Section: Parts Table & Initial Info -->
-            <div class="form-middle-grid">
-              <!-- Left side: Interactive Parts List (Columns Swapped) -->
-              <div class="parts-table-wrapper">
-                <table class="parts-table">
-                  <thead>
-                    <tr>
-                      <th class="col-part-name">PART</th>
-                      <th class="col-part-size">SIZE</th>
-                      <th class="col-part-qty">QUANTITY</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-0"
-                          placeholder="Part description/serial..."></td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-0" placeholder="Size...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-0" min="0"
-                          placeholder="Qty"></td>
-                    </tr>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-1" placeholder="...">
-                      </td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-1" placeholder="...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-1" min="0"></td>
-                    </tr>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-2" placeholder="...">
-                      </td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-2" placeholder="...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-2" min="0"></td>
-                    </tr>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-3" placeholder="...">
-                      </td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-3" placeholder="...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-3" min="0"></td>
-                    </tr>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-4" placeholder="...">
-                      </td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-4" placeholder="...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-4" min="0"></td>
-                    </tr>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-5" placeholder="...">
-                      </td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-5" placeholder="...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-5" min="0"></td>
-                    </tr>
-                    <tr>
-                      <td><input type="text" class="parts-table-input parts-part" id="part-row-6" placeholder="...">
-                      </td>
-                      <td><input type="text" class="parts-table-input parts-size" id="size-row-6" placeholder="...">
-                      </td>
-                      <td><input type="number" class="parts-table-input parts-qty" id="qty-row-6" min="0"></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <!-- Right side: Ship Via, Initials & Other Info -->
-              <div class="middle-initials-col">
-                <div class="form-group">
-                  <label for="field-ship-via">Ship Via:</label>
-                  <select id="field-ship-via" name="shipVia">
-                    <option value="">Select option</option>
-                    <option value="UPS">UPS</option>
-                    <option value="WILL CALL">WILL CALL</option>
-                    <option value="DELIVERY">DELIVERY</option>
-                    <option value="other">other</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="field-receiving-initial">Initial In:</label>
-                  <input type="text" id="field-receiving-initial" name="receivingInitial" placeholder="Initials">
-                </div>
-                <div class="form-group">
-                  <label for="field-shipping-initial">Initial Out:</label>
-                  <input type="text" id="field-shipping-initial" name="shippingInitial" placeholder="Initials">
-                </div>
-                <div class="form-group">
-                  <label for="field-box-text">BOX(TEXT):</label>
-                  <input type="text" id="field-box-text" name="boxText" placeholder="BOX(TEXT)">
-                </div>
-                <div class="form-group">
-                  <label for="field-qc-text">QC(TEXT):</label>
-                  <input type="text" id="field-qc-text" name="qcText" placeholder="QC(TEXT)">
-                </div>
-              </div>
-            </div>
-
-            <!-- Single Divider Line -->
-            <div class="divider-single"></div>
-
-            <!-- Bottom Section: Description, Sandblast & Special Info -->
-            <div class="form-footer-grid">
-              <!-- Bottom Left: Description Options -->
-              <div class="bottom-column col-desc">
+            <!-- Middle Section: Metadata Grid (above parts table) -->
+            <div class="middle-metadata-grid">
+              <!-- Left Column: Description, Sandblast, Box, QC -->
+              <div class="metadata-column metadata-left">
                 <div class="form-group">
                   <label for="field-description">Description:</label>
                   <select id="field-description" name="description">
@@ -380,10 +293,6 @@
                     <option value="OTHER">OTHER</option>
                   </select>
                 </div>
-              </div>
-
-              <!-- Bottom Middle: Sandblast & Shipping Date -->
-              <div class="bottom-column col-sandblast">
                 <div class="form-group">
                   <label for="field-sandblast">Sandblast:</label>
                   <select id="field-sandblast" name="sandblast">
@@ -393,11 +302,18 @@
                     <option value="none">None</option>
                   </select>
                 </div>
-
+                <div class="form-group">
+                  <label for="field-box-text">BOX:</label>
+                  <input type="text" id="field-box-text" name="boxText" placeholder="BOX">
+                </div>
+                <div class="form-group">
+                  <label for="field-qc-text">QC:</label>
+                  <input type="text" id="field-qc-text" name="qcText" placeholder="QC">
+                </div>
               </div>
 
-              <!-- Bottom Right: Special Info -->
-              <div class="bottom-column col-spl-info">
+              <!-- Right Column: Special Info -->
+              <div class="metadata-column metadata-right">
                 <div class="form-group flex-grow height-100">
                   <label for="field-for-tcs">SPL INFO:</label>
                   <textarea id="field-for-tcs" name="forTcs" class="tcs-textarea"
@@ -406,8 +322,118 @@
               </div>
             </div>
 
+            <!-- Single Divider Line -->
+            <div class="divider-single"></div>
+
+            <!-- Parts Table Section (Full Width, below metadata grid) -->
+            <div class="parts-table-wrapper">
+              <table class="parts-table">
+                <thead>
+                  <tr>
+                    <th class="col-part-name">PART</th>
+                    <th class="col-part-size">SIZE</th>
+                    <th class="col-part-qty">QUANTITY</th>
+                    <th class="col-part-tracking">TRACKING NUMBER</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-0" placeholder="Part description/serial..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-0" placeholder="Size..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-0" min="0" placeholder="Qty"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-0" placeholder="Tracking number..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-1" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-1" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-1" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-1" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-2" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-2" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-2" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-2" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-3" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-3" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-3" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-3" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-4" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-4" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-4" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-4" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-5" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-5" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-5" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-5" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-6" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-6" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-6" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-6" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-7" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-7" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-7" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-7" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-8" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-8" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-8" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-8" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-9" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-9" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-9" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-9" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-10" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-10" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-10" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-10" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-11" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-11" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-11" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-11" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-12" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-12" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-12" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-12" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-13" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-13" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-13" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-13" placeholder="..."></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="parts-table-input parts-part" id="part-row-14" placeholder="..."></td>
+                    <td><input type="text" class="parts-table-input parts-size" id="size-row-14" placeholder="..."></td>
+                    <td><input type="number" class="parts-table-input parts-qty" id="qty-row-14" min="0"></td>
+                    <td><input type="text" class="parts-table-input parts-tracking" id="tracking-row-14" placeholder="..."></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
             <!-- Hidden inputs to preserve compatibility with existing data schemas -->
             <div style="display: none;">
+              <input type="text" id="field-part" name="partNo">
               <input type="date" id="field-footer-receiving-date" name="footerReceivingDate">
               <input type="text" id="field-footer-receiving-initial" name="footerReceivingInitial">
               <input type="text" id="field-footer-qc-initial" name="footerQcInitial">
@@ -631,8 +657,8 @@
 
   <!-- JS Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="samples.js?v=9"></script>
-  <script src="app.js?v=9"></script>
+  <script src="samples.js?v=13"></script>
+  <script src="app.js?v=13"></script>
 </body>
 
 </html>

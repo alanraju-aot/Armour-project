@@ -94,14 +94,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- PARTS TABLE DATA HELPERS ---
   function getPartsTableData() {
     const parts = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 15; i++) {
       const partVal = document.getElementById(`part-row-${i}`).value.trim();
       const qtyVal = document.getElementById(`qty-row-${i}`).value;
       const sizeVal = document.getElementById(`size-row-${i}`).value.trim();
+      const trackingVal = document.getElementById(`tracking-row-${i}`).value.trim();
       parts.push({
         part: partVal,
         quantity: qtyVal !== '' ? parseInt(qtyVal) || '' : '',
-        size: sizeVal
+        size: sizeVal,
+        tracking: trackingVal
       });
     }
     return parts;
@@ -109,18 +111,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setPartsTableData(partsArray) {
     const parts = Array.isArray(partsArray) ? partsArray : [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 15; i++) {
       const partInput = document.getElementById(`part-row-${i}`);
       const qtyInput = document.getElementById(`qty-row-${i}`);
       const sizeInput = document.getElementById(`size-row-${i}`);
+      const trackingInput = document.getElementById(`tracking-row-${i}`);
       if (parts[i]) {
         partInput.value = parts[i].part || '';
         qtyInput.value = parts[i].quantity !== undefined && parts[i].quantity !== null ? parts[i].quantity : '';
         sizeInput.value = parts[i].size || '';
+        trackingInput.value = parts[i].tracking || '';
       } else {
         partInput.value = '';
         qtyInput.value = '';
         sizeInput.value = '';
+        trackingInput.value = '';
       }
     }
   }
@@ -441,12 +446,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!Array.isArray(partsData)) {
       // Migrate old schema to parts table on-the-fly
       partsData = [
-        { part: record.partNo || '', quantity: record.quantity || '', size: '' }
+        { part: record.partNo || '', quantity: record.quantity || '', size: '', tracking: '' }
       ];
-      // Pad to 7 rows
-      while (partsData.length < 7) {
-        partsData.push({ part: '', quantity: '', size: '' });
-      }
+    }
+    // Pad to 15 rows
+    while (partsData.length < 15) {
+      partsData.push({ part: '', quantity: '', size: '', tracking: '' });
     }
     setPartsTableData(partsData);
 
@@ -549,10 +554,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (key === 'quantity' || key === 'startDate' || key === 'finishDate') return false;
         if (key === 'parts') {
           const origParts = Array.isArray(original.parts) ? original.parts : [];
-          for (let i = 0; i < 7; i++) {
-            const curP = currentForm.parts[i] || { part: '', quantity: '', size: '' };
-            const origP = origParts[i] || { part: '', quantity: '', size: '' };
-            if ((curP.part || '') !== (origP.part || '') || (curP.quantity || '') !== (origP.quantity || '') || (curP.size || '') !== (origP.size || '')) {
+          for (let i = 0; i < 15; i++) {
+            const curP = currentForm.parts[i] || { part: '', quantity: '', size: '', tracking: '' };
+            const origP = origParts[i] || { part: '', quantity: '', size: '', tracking: '' };
+            if ((curP.part || '') !== (origP.part || '') || 
+                (curP.quantity || '') !== (origP.quantity || '') || 
+                (curP.size || '') !== (origP.size || '') ||
+                (curP.tracking || '') !== (origP.tracking || '')) {
               return true;
             }
           }
@@ -1056,7 +1064,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const csvHeaders = [
       "Work Order ID", "Customer Name", "Priority", "Part No", "PO Number", "Due Date",
       "Coating", "Receiving Date", "Instructions", "Receiving Initial", "Shipping Initial",
-      "Sandblast", "BOX(TEXT)", "QC(TEXT)", "Footer Receiving Date", "Footer Receiving Initial", "Footer QC Initial",
+      "Sandblast", "BOX", "QC", "Footer Receiving Date", "Footer Receiving Initial", "Footer QC Initial",
       "Footer Shipping Date", "Footer Shipping Initial", "For TCS Notes", "Parts List", "Ship Via", "Description"
     ];
 
@@ -1064,11 +1072,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     workOrders.forEach(order => {
       const partsText = Array.isArray(order.parts) ?
-        order.parts.filter(p => p.part || p.quantity || p.size).map(p => {
+        order.parts.filter(p => p.part || p.quantity || p.size || p.tracking).map(p => {
           let partInfo = p.part || 'Unnamed';
           let details = [];
           if (p.quantity !== undefined && p.quantity !== '') details.push(`Qty: ${p.quantity}`);
           if (p.size) details.push(`Size: ${p.size}`);
+          if (p.tracking) details.push(`Tracking: ${p.tracking}`);
           return details.length > 0 ? `${partInfo} (${details.join(", ")})` : partInfo;
         }).join(" | ") : "";
 
@@ -1256,8 +1265,8 @@ document.addEventListener('DOMContentLoaded', () => {
       "Receiving Initial": "receivingInitial", "receivingInitial": "receivingInitial",
       "Shipping Initial": "shippingInitial", "shippingInitial": "shippingInitial",
       "Sandblast": "sandblast", "sandblast": "sandblast",
-      "BOX(TEXT)": "boxText", "boxText": "boxText",
-      "QC(TEXT)": "qcText", "qcText": "qcText",
+      "BOX": "boxText", "BOX(TEXT)": "boxText", "boxText": "boxText",
+      "QC": "qcText", "QC(TEXT)": "qcText", "qcText": "qcText",
       "Footer Receiving Date": "footerReceivingDate", "footerReceivingDate": "footerReceivingDate",
       "Footer Receiving Initial": "footerReceivingInitial", "footerReceivingInitial": "footerReceivingInitial",
       "Footer QC Initial": "footerQcInitial", "footerQcInitial": "footerQcInitial",
@@ -1288,24 +1297,29 @@ document.addEventListener('DOMContentLoaded', () => {
             items.forEach(item => {
               const qtyMatch = item.match(/Qty:\s*(\d+)/i);
               const sizeMatch = item.match(/Size:\s*([^,)]+)/i);
+              const trackingMatch = item.match(/Tracking:\s*([^,)]+)/i);
               let partName = item;
               let qty = '';
               let size = '';
+              let tracking = '';
               if (qtyMatch) {
                 qty = parseInt(qtyMatch[1]) || '';
               }
               if (sizeMatch) {
                 size = sizeMatch[1].trim();
               }
+              if (trackingMatch) {
+                tracking = trackingMatch[1].trim();
+              }
               partName = item.replace(/\s*\([^)]+\)/g, '').trim();
-              if (partName || qty || size) {
-                partsArray.push({ part: partName, quantity: qty, size: size });
+              if (partName || qty || size || tracking) {
+                partsArray.push({ part: partName, quantity: qty, size: size, tracking: tracking });
               }
             });
           }
-          // Pad to 7 rows
-          while (partsArray.length < 7) {
-            partsArray.push({ part: '', quantity: '', size: '' });
+          // Pad to 15 rows
+          while (partsArray.length < 15) {
+            partsArray.push({ part: '', quantity: '', size: '', tracking: '' });
           }
           record[prop] = partsArray;
         } else {
@@ -1416,10 +1430,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // Add Parts Table inputs for change alert tracking
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 15; i++) {
       formFields.push(document.getElementById(`part-row-${i}`));
       formFields.push(document.getElementById(`qty-row-${i}`));
       formFields.push(document.getElementById(`size-row-${i}`));
+      formFields.push(document.getElementById(`tracking-row-${i}`));
     }
 
     formFields.forEach(field => {
