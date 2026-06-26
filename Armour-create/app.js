@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- PARTS TABLE DATA HELPERS ---
   function getPartsTableData() {
     const parts = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 3; i++) {
       const partVal = document.getElementById(`part-row-${i}`).value.trim();
       const qtyVal = document.getElementById(`qty-row-${i}`).value;
       const sizeVal = document.getElementById(`size-row-${i}`).value.trim();
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setPartsTableData(partsArray) {
     const parts = Array.isArray(partsArray) ? partsArray : [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 3; i++) {
       const partInput = document.getElementById(`part-row-${i}`);
       const qtyInput = document.getElementById(`qty-row-${i}`);
       const sizeInput = document.getElementById(`size-row-${i}`);
@@ -443,8 +443,8 @@ document.addEventListener('DOMContentLoaded', () => {
       partsData = [
         { part: record.partNo || '', quantity: record.quantity || '', size: '' }
       ];
-      // Pad to 7 rows
-      while (partsData.length < 7) {
+      // Pad to 3 rows
+      while (partsData.length < 3) {
         partsData.push({ part: '', quantity: '', size: '' });
       }
     }
@@ -549,7 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (key === 'quantity' || key === 'startDate' || key === 'finishDate') return false;
         if (key === 'parts') {
           const origParts = Array.isArray(original.parts) ? original.parts : [];
-          for (let i = 0; i < 7; i++) {
+          for (let i = 0; i < 3; i++) {
             const curP = currentForm.parts[i] || { part: '', quantity: '', size: '' };
             const origP = origParts[i] || { part: '', quantity: '', size: '' };
             if ((curP.part || '') !== (origP.part || '') || (curP.quantity || '') !== (origP.quantity || '') || (curP.size || '') !== (origP.size || '')) {
@@ -1056,7 +1056,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const csvHeaders = [
       "Work Order ID", "Customer Name", "Priority", "Part No", "PO Number", "Due Date",
       "Coating", "Receiving Date", "Instructions", "Receiving Initial", "Shipping Initial",
-      "Sandblast", "BOX(TEXT)", "QC(TEXT)", "Footer Receiving Date", "Footer Receiving Initial", "Footer QC Initial",
+      "Sandblast", "BOX", "QC", "Footer Receiving Date", "Footer Receiving Initial", "Footer QC Initial",
       "Footer Shipping Date", "Footer Shipping Initial", "For TCS Notes", "Parts List", "Ship Via", "Description"
     ];
 
@@ -1256,8 +1256,8 @@ document.addEventListener('DOMContentLoaded', () => {
       "Receiving Initial": "receivingInitial", "receivingInitial": "receivingInitial",
       "Shipping Initial": "shippingInitial", "shippingInitial": "shippingInitial",
       "Sandblast": "sandblast", "sandblast": "sandblast",
-      "BOX(TEXT)": "boxText", "boxText": "boxText",
-      "QC(TEXT)": "qcText", "qcText": "qcText",
+      "BOX(TEXT)": "boxText", "BOX": "boxText", "boxText": "boxText",
+      "QC(TEXT)": "qcText", "QC": "qcText", "qcText": "qcText",
       "Footer Receiving Date": "footerReceivingDate", "footerReceivingDate": "footerReceivingDate",
       "Footer Receiving Initial": "footerReceivingInitial", "footerReceivingInitial": "footerReceivingInitial",
       "Footer QC Initial": "footerQcInitial", "footerQcInitial": "footerQcInitial",
@@ -1303,8 +1303,8 @@ document.addEventListener('DOMContentLoaded', () => {
               }
             });
           }
-          // Pad to 7 rows
-          while (partsArray.length < 7) {
+          // Pad to 3 rows
+          while (partsArray.length < 3) {
             partsArray.push({ part: '', quantity: '', size: '' });
           }
           record[prop] = partsArray;
@@ -1416,7 +1416,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // Add Parts Table inputs for change alert tracking
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 3; i++) {
       formFields.push(document.getElementById(`part-row-${i}`));
       formFields.push(document.getElementById(`qty-row-${i}`));
       formFields.push(document.getElementById(`size-row-${i}`));
