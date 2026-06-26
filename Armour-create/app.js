@@ -94,14 +94,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- PARTS TABLE DATA HELPERS ---
   function getPartsTableData() {
     const parts = [];
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 3; i++) {
       const partVal = document.getElementById(`part-row-${i}`).value.trim();
-      const qtyVal = document.getElementById(`qty-row-${i}`).value;
+      const qtyVal = document.getElementById(`qty-row-${i}`).value.trim();
       const sizeVal = document.getElementById(`size-row-${i}`).value.trim();
       const trackingVal = document.getElementById(`tracking-row-${i}`).value.trim();
       parts.push({
         part: partVal,
-        quantity: qtyVal !== '' ? parseInt(qtyVal) || '' : '',
+        quantity: qtyVal,
         size: sizeVal,
         tracking: trackingVal
       });
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setPartsTableData(partsArray) {
     const parts = Array.isArray(partsArray) ? partsArray : [];
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 3; i++) {
       const partInput = document.getElementById(`part-row-${i}`);
       const qtyInput = document.getElementById(`qty-row-${i}`);
       const sizeInput = document.getElementById(`size-row-${i}`);
@@ -449,8 +449,11 @@ document.addEventListener('DOMContentLoaded', () => {
         { part: record.partNo || '', quantity: record.quantity || '', size: '', tracking: '' }
       ];
     }
-    // Pad to 15 rows
-    while (partsData.length < 15) {
+    // Slice if longer and pad to 3 rows
+    if (partsData.length > 3) {
+      partsData = partsData.slice(0, 3);
+    }
+    while (partsData.length < 3) {
       partsData.push({ part: '', quantity: '', size: '', tracking: '' });
     }
     setPartsTableData(partsData);
@@ -515,7 +518,12 @@ document.addEventListener('DOMContentLoaded', () => {
       // Backward compatibility fields
       startDate: fieldReceivingDate.value,
       finishDate: fieldFooterShipDate.value,
-      quantity: getPartsTableData().reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0)
+      quantity: getPartsTableData().reduce((sum, item) => {
+        const val = String(item.quantity || '');
+        const lines = val.split(/[\r\n]+/);
+        const lineSum = lines.reduce((acc, line) => acc + (parseInt(line.trim()) || 0), 0);
+        return sum + lineSum;
+      }, 0)
     };
   }
 
@@ -554,7 +562,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (key === 'quantity' || key === 'startDate' || key === 'finishDate') return false;
         if (key === 'parts') {
           const origParts = Array.isArray(original.parts) ? original.parts : [];
-          for (let i = 0; i < 15; i++) {
+          for (let i = 0; i < 3; i++) {
             const curP = currentForm.parts[i] || { part: '', quantity: '', size: '', tracking: '' };
             const origP = origParts[i] || { part: '', quantity: '', size: '', tracking: '' };
             if ((curP.part || '') !== (origP.part || '') || 
@@ -1317,8 +1325,8 @@ document.addEventListener('DOMContentLoaded', () => {
               }
             });
           }
-          // Pad to 15 rows
-          while (partsArray.length < 15) {
+          // Pad to 3 rows
+          while (partsArray.length < 3) {
             partsArray.push({ part: '', quantity: '', size: '', tracking: '' });
           }
           record[prop] = partsArray;
@@ -1430,7 +1438,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // Add Parts Table inputs for change alert tracking
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 3; i++) {
       formFields.push(document.getElementById(`part-row-${i}`));
       formFields.push(document.getElementById(`qty-row-${i}`));
       formFields.push(document.getElementById(`size-row-${i}`));

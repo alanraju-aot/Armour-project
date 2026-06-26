@@ -754,7 +754,8 @@ textarea {
 }
 
 [data-theme="dark"] #field-coating,
-[data-theme="dark"] #field-instructions {
+[data-theme="dark"] #field-instructions,
+[data-theme="dark"] .parts-table-input {
   background-color: rgba(99, 102, 241, 0.08);
   border-color: rgba(99, 102, 241, 0.5);
   color: var(--text-main);
@@ -814,18 +815,40 @@ textarea {
 
 .parts-table-input {
   width: 100%;
-  border: none;
-  background-color: transparent;
+  border: 1px solid rgba(99, 102, 241, 0.45);
+  background-color: rgba(99, 102, 241, 0.04);
   padding: 0.35rem 0.5rem;
   font-size: 0.85rem;
   color: var(--text-main);
   outline: none;
+  border-radius: var(--border-radius-sm);
   transition: var(--transition);
+  font-family: inherit;
+  line-height: 1.4;
 }
 
 .parts-table-input:focus {
-  background-color: rgba(var(--primary-hue), var(--primary-sat), 6%);
-  border-radius: var(--border-radius-sm);
+  background-color: rgba(99, 102, 241, 0.08);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.parts-table-input.parts-row-0 {
+  height: 180px;
+  resize: none;
+}
+
+.parts-table-input.parts-row-1,
+.parts-table-input.parts-row-2 {
+  height: 80px;
+  resize: none;
+}
+
+.table-spacer-row td {
+  height: 15px;
+  padding: 0 !important;
+  border: none !important;
+  background-color: transparent !important;
 }
 
 .col-part-name {
@@ -1752,11 +1775,28 @@ textarea {
   }
 
   .parts-table-input {
+    border: 1px solid #3b82f6 !important;
+    background-color: #eff6ff !important;
+    color: #1e3a8a !important;
+    padding: 2px 4px !important;
+    border-radius: 0 !important;
+    font-size: 8.5pt !important;
+  }
+
+  .parts-table-input.parts-row-0 {
+    height: 160px !important;
+  }
+
+  .parts-table-input.parts-row-1,
+  .parts-table-input.parts-row-2 {
+    height: 75px !important;
+  }
+
+  .table-spacer-row td {
+    height: 10px !important;
+    padding: 0 !important;
     border: none !important;
     background: transparent !important;
-    color: #000000 !important;
-    padding: 0 !important;
-    font-size: 8.5pt !important;
   }
 
   .parts-table th {
@@ -1811,7 +1851,8 @@ textarea {
   }
 
   #field-coating,
-  #field-instructions {
+  #field-instructions,
+  .parts-table-input {
     color: #1e3a8a !important;
     background-color: #eff6ff !important;
     border-color: #3b82f6 !important;
